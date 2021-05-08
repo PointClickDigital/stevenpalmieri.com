@@ -8,5 +8,6 @@ wp-content/upgrade/*
 wp-content/debug.log
 /mail.stevenpalmieri.com/
 sitemap.*
-wp-content.zip
-WzlRoEyYoyLtI6-2021-05-04-f88a3af.sql
+
+# Include these files in previously blocked directories
+!wp-content/uploads/.htaccess
