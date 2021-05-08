@@ -1,0 +1,4 @@
+
+#split-cart {padding: 40px 0; clear: both;}
+#split-cart.checkout {opacity: 0.50; filter: alpha(opacity =50);}
+#split-cart .split-cart-item {padding-top: 20px}

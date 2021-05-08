@@ -1,0 +1,12 @@
+wp-config.php
+/wp-admin/
+/wp-includes/
+wp-content/uploads/*
+wp-content/cache/*
+wp-content/backup/*
+wp-content/upgrade/*
+wp-content/debug.log
+/mail.stevenpalmieri.com/
+sitemap.*
+wp-content.zip
+WzlRoEyYoyLtI6-2021-05-04-f88a3af.sql

@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Project-Id-Version: AffiliateWP - Group Switcher\n"
+"POT-Creation-Date: 2018-06-11 15:58+0800\n"
+"PO-Revision-Date: 2018-06-19 06:51+1000\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: affiliatewp-group-switcher.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Last-Translator: \n"
+"Language: zh_CN\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: includes/class-licenses.php:260
+msgid "Your license is valid. <br><br>"
+msgstr "你的许可证是有效的。<br><br>"
+
+#: includes/class-licenses.php:271
+msgid "Your license is invalid"
+msgstr "您的许可证无效"
+
+#: includes/class-licenses.php:276
+msgid ""
+"Your license has expired. Plugin features remain enabled but auto updates "
+"are disabled<br><a href=\"https://www.clickstudio.com.au/checkout/?"
+"edd_license_key="
+msgstr ""
+"您的许可证已过期。 插件功能保持启用状态，但自动更新已禁用<br> <a href "
+"=“https://www.clickstudio.com.au/checkout/?edd_license_key="
+
+#: includes/class-licenses.php:284
+msgid "Enter your license key and save the settings to activate."
+msgstr "输入您的许可证密钥并保存设置以激活。"
+
+#: includes/class-licenses.php:290
+msgid ""
+"A licence was previously deactivated for this site. License activation is "
+"now required to restore functionality."
+msgstr "此网站先前已停用许可证。 许可证激活现在需要恢复功能。"
+
+#: includes/class-licenses.php:298
+msgid ""
+"Deactivating your license on this site will disable all plugin features. Be "
+"careful!"
+msgstr "在此网站上停用许可证将禁用所有插件功能。 小心！"
+
+#: includes/class-licenses.php:302
+msgid "An activated license is required to enable plugin features."
+msgstr "激活的许可证需要启用插件功能。"
+
+#: includes/class-updater.php:243
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr "新版本  %1$s  可用。 %2$s 查看版本 %3$s 详情 %4$s 。"
+
+#: includes/class-updater.php:251
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+"有一个新的版本的 %1$s 可用。 %2$s  查看版本 %3$s  更新内容 %4$s   或者 "
+"%5$s  现在更新 %6$s."
+
+#: includes/class-updater.php:442
+msgid "You do not have permission to install plugin updates"
+msgstr "您无权安装插件更新"
+
+#: includes/class-updater.php:442
+msgid "Error"
+msgstr "错误"
+
+#: plugin_core/class-settings-old.php:90 plugin_core/class-settings.php:136
+msgid "License Settings"
+msgstr "许可证设置"
+
+#: plugin_core/class-settings-old.php:96 plugin_core/class-settings.php:142
+msgid "License Key"
+msgstr "许可密钥"
+
+#: plugin_core/class-settings.php:186
+msgid "Group Switching Rules"
+msgstr "组切换规则"
+
+#: plugin_core/class-settings.php:249
+msgid "Switcher Rules"
+msgstr "切换规则"
+
+#: plugin_core/class-settings.php:297
+msgid "Trigger"
+msgstr "触发"
+
+#: plugin_core/class-settings.php:298
+msgid "Affiliate Earnings Tier"
+msgstr "联盟佣金层级"
+
+#: plugin_core/class-settings.php:299
+msgid "Affiliate Referrals Tier"
+msgstr "联盟推广层级"
+
+#: plugin_core/class-settings.php:302
+msgid "WC Membership Status Change"
+msgstr "会员状态更改"
+
+#: plugin_core/class-settings.php:306
+msgid "PMP Level Change"
+msgstr "PMP层级变化"
+
+#: plugin_core/class-settings.php:316
+msgid "Paid Earnings eg: 500"
+msgstr "已付佣金 例如：500"
+
+#: plugin_core/class-settings.php:322
+msgid "Paid Referrals. eg: 100"
+msgstr "已付推广 例如：500"
+
+#: plugin_core/class-settings.php:376
+msgid "Run this rule after affiliate registration form"
+msgstr "在联盟注册表格后运行此规则"
+
+#: plugin_core/class-settings.php:393
+msgid "Affiliate Group Changes"
+msgstr "联盟组更改"
+
+#: plugin_core/class-settings.php:399
+msgid "Reset to this group"
+msgstr "重置到此组"
+
+#: plugin_core/class-settings.php:400
+msgid "Add Group"
+msgstr "添加组"
+
+#: plugin_core/class-settings.php:401
+msgid "Remove Group"
+msgstr "移除组"
+
+#: plugin_core/class-settings.php:402
+msgid "Remove All Groups"
+msgstr "移除所有组"
+
+#. Plugin Name of the plugin/theme
+msgid "AffiliateWP - Group Switcher"
+msgstr "联盟  - 群组切换器"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "http://clickstudio.com.au"
+msgstr "http://clickstudio.com.au"
+
+#. Description of the plugin/theme
+msgid "Dynamic group switching"
+msgstr "动态组切换"
+
+#. Author of the plugin/theme
+msgid "Click Studio"
+msgstr "Click Studio"

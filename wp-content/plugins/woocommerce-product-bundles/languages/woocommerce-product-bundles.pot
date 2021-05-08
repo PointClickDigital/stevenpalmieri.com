@@ -1,0 +1,1989 @@
+# Copyright (C) 2021 SomewhereWarm
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Product Bundles 6.8.0\n"
+"Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
+"POT-Creation-Date: 2021-03-22 10:48:51+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: includes/admin/class-wc-pb-admin-ajax.php:252
+msgid ""
+"The selected product cannot be bundled. Please select a simple product, a "
+"variable product, or a simple/variable subscription."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:256
+msgid "The selected product is invalid."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:422
+msgid "The submitted configuration is invalid."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:635
+msgid "Deleted bundled line items: %s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:639
+#: includes/admin/class-wc-pb-admin-order.php:197
+msgid "Added bundled line items: %s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:643
+msgid "Adjusted bundled line items: %s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:350
+msgid "<strong>WooCommerce Product Bundles</strong> is updating your database.%s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:355
+msgid ""
+"<strong>WooCommerce Product Bundles</strong> has been updated! To keep "
+"things running smoothly, your database needs to be updated, as well."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:356
+msgid ""
+"Before you proceed, please take a few minutes to <a href=\"%s\" "
+"target=\"_blank\">learn more</a> about best practices when updating."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:361
+msgid ""
+"<strong>WooCommerce Product Bundles</strong> has not finished updating your "
+"database.%s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:370
+msgid ""
+"<strong>WooCommerce Product Bundles</strong> database update complete. "
+"Thank you for updating to the latest version!"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:398
+msgid "Ready to bundle some products?"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:399
+msgid "Thank you for installing WooCommerce Product Bundles."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:399
+msgid "Let's get started by creating your first bundle!"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:400
+msgid "Let's go!"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:475
+msgid "Update database"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:495
+msgid "run it manually"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:496
+msgid ""
+" The process seems to be taking a little longer than usual, so let's try to "
+"%s."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:512
+msgid "get in touch with us"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:513
+msgid ""
+" If this message persists, please restore your database from a backup, or "
+"%s."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:658
+msgid ""
+"Did you know that you can use <strong>Product Bundles</strong> to offer "
+"bulk quantity discounts? "
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:659
+msgid ""
+"Grab the free <strong>Bulk Discounts</strong> add-on, and offer lower "
+"prices to those who purchase more!"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:666
+msgid "Ready to start offering bulk discounts?"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:675
+msgid "Learn more"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:699
+msgid "Action failed. Please refresh the page and retry."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-notices.php:703
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-order.php:257
+#: includes/admin/class-wc-pb-admin.php:318
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-order.php:259
+#: includes/admin/class-wc-pb-admin.php:317
+msgid "Configure"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-order.php:293
+msgid "Done"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-post-types.php:49
+#: includes/admin/class-wc-pb-admin.php:418
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1395
+#: includes/class-wc-bundled-item.php:2183 includes/class-wc-pb-display.php:211
+#: includes/class-wc-pb-display.php:213
+#: includes/class-wc-product-bundle.php:1324
+#: tests/unit/test-wc-product-bundle.php:609
+msgid "Insufficient stock"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-post-types.php:54
+msgid "View Report"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin.php:159
+msgid ""
+"The installed version of <strong>Product Bundles</strong> is not compatible "
+"with the <code>selectSW</code> library found on your system. Please update "
+"Product Bundles to the latest version."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin.php:190
+msgid "Product Bundles does not collect, store or share any personal data."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin.php:319
+msgid ""
+"Failed to initialize form. If this issue persists, please reload the page "
+"and try again."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin.php:320
+msgid ""
+"Failed to validate configuration. If this issue persists, please reload the "
+"page and try again."
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin.php:462
+msgid ""
+"You are currently viewing a filtered version of this report for "
+"<strong>%1$s</strong>. <a href=\"%2$s\" class=\"wc_pb_forward\">Clear "
+"Filter</a>"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:54
+#: includes/admin/import/class-wc-pb-product-import.php:50
+#: includes/admin/import/class-wc-pb-product-import.php:73
+msgid "Bundled Items (JSON-encoded)"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:55
+#: includes/admin/import/class-wc-pb-product-import.php:51
+#: includes/admin/import/class-wc-pb-product-import.php:74
+#: includes/modules/min-max-items/includes/admin/class-wc-pb-mmi-admin.php:53
+msgid "Min Bundle Size"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:56
+#: includes/admin/import/class-wc-pb-product-import.php:52
+#: includes/admin/import/class-wc-pb-product-import.php:75
+#: includes/modules/min-max-items/includes/admin/class-wc-pb-mmi-admin.php:63
+msgid "Max Bundle Size"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:57
+#: includes/admin/import/class-wc-pb-product-import.php:53
+#: includes/admin/import/class-wc-pb-product-import.php:76
+msgid "Bundle Layout"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:58
+#: includes/admin/import/class-wc-pb-product-import.php:54
+#: includes/admin/import/class-wc-pb-product-import.php:77
+msgid "Bundle Group Mode"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:59
+#: includes/admin/import/class-wc-pb-product-import.php:55
+#: includes/admin/import/class-wc-pb-product-import.php:78
+msgid "Bundle Cart Editing"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:60
+#: includes/admin/import/class-wc-pb-product-import.php:56
+#: includes/admin/import/class-wc-pb-product-import.php:79
+msgid "Bundle Sold Individually"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:61
+#: includes/admin/import/class-wc-pb-product-import.php:57
+#: includes/admin/import/class-wc-pb-product-import.php:80
+msgid "Bundle Form Location"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:62
+#: includes/admin/import/class-wc-pb-product-import.php:58
+#: includes/admin/import/class-wc-pb-product-import.php:81
+msgid "Bundle Sells"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:63
+#: includes/admin/import/class-wc-pb-product-import.php:59
+#: includes/admin/import/class-wc-pb-product-import.php:82
+msgid "Bundle Sells Title"
+msgstr ""
+
+#: includes/admin/export/class-wc-pb-product-export.php:64
+#: includes/admin/import/class-wc-pb-product-import.php:60
+#: includes/admin/import/class-wc-pb-product-import.php:83
+msgid "Bundle Sells Discount"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:102
+msgid ""
+"&quot;%1$s&quot; is not purchasable just yet. But, fear not &ndash; setting "
+"up <a href=\"%2$s\" target=\"_blank\">pricing options</a> only takes a "
+"minute! <ul class=\"pb_notice_list\"><li>To give &quot;%1$s&quot; a static "
+"base price, navigate to <strong>Product Data > General</strong> and fill in "
+"the <strong>Regular Price</strong> field.</li><li>To preserve the prices "
+"and taxes of individual bundled products, go to <strong>Product Data > "
+"Bundled Products</strong> and enable <strong>Priced Individually</strong> "
+"for each bundled product whose price must be preserved.</li></ul> Then, "
+"save your changes."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:133
+msgid "Sold individually"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:135
+msgid "No"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:136
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:137
+msgid "Matching configurations only"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:141
+msgid ""
+"Allow only one of this bundle to be bought in a single order. Choose the "
+"<strong>Matching configurations only</strong> option to only prevent "
+"<strong>identically configured</strong> bundles from being purchased "
+"together."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:165
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1361
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1418
+msgid "Bundled Products"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:216
+msgid ""
+"By default, the sale of a product within a bundle has the same effect on "
+"its stock as an individual sale. There are no separate inventory settings "
+"for bundled items. However, managing stock at bundle level can be very "
+"useful for allocating bundle stock quota, or for keeping track of bundled "
+"item sales."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:248
+msgid "Unassembled"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:249
+msgid ""
+"Bundled products preserve their individual dimensions, weight and shipping "
+"classes. A virtual container item keeps them grouped together in the cart."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:254
+msgid "Assembled"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:255
+msgid ""
+"Bundled products are assembled and shipped in a new physical container with "
+"the specified dimensions, weight and shipping class. The entire bundle "
+"appears as a single physical item.</br></br>To ship a bundled product "
+"outside this container, navigate to the <strong>Bundled Products</strong> "
+"tab, expand its settings and enable <strong>Shipped Individually</strong>. "
+"Bundled products that are <strong>Shipped Individually</strong> preserve "
+"their own dimensions, weight and shipping classes."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:265
+msgid "Bundle type"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:286
+msgid "What happened to the shipping options?"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:287
+msgid ""
+"The contents of this bundle preserve their dimensions, weight and shipping "
+"classes. <a href=\"%s\" target=\"_blank\">Unassembled</a> bundles do not "
+"have a physical container &ndash; or any shipping options to configure."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:298
+msgid "Assembled weight"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:299
+msgid ""
+"Controls whether to ignore or preserve the weight of assembled bundled "
+"items.</br></br> <strong>Ignore</strong> &ndash; The specified Weight is "
+"the total weight of the entire bundle.</br></br> <strong>Preserve</strong> "
+"&ndash; The specified Weight is treated as a container weight. The total "
+"weight of the bundle is the sum of: i) the container weight, and ii) the "
+"weight of all assembled bundled items."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:302
+msgid "Ignore"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:303
+msgid "Preserve"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:368
+msgid ""
+"Product Bundles has detected that your server may have failed to process "
+"and save some of the data on this page. Please get in touch with your "
+"server's host or administrator and (kindly) ask them to <a href=\"%1$s\" "
+"target=\"_blank\">increase the number of variables</a> that PHP scripts can "
+"post and process%2$s."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:368
+msgid " (currently %s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:456
+msgid ""
+"Please add at least one product to the bundle before publishing. To add "
+"products, click on the <strong>Bundled Products</strong> tab."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:477
+msgid ""
+"Your changes have not been saved &ndash; please wait for the "
+"<strong>WooCommerce Product Bundles Data Update</strong> routine to "
+"complete before creating new bundles or making changes to existing ones."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:497
+msgid ""
+"%1$s is only supported by <a href=\"%2$s\" "
+"target=\"_blank\">unassembled</a> bundles with an empty <a href=\"%3$s\" "
+"target=\"_blank\">base price</a>."
+msgid_plural ""
+"%1$s are only supported by <a href=\"%2$s\" "
+"target=\"_blank\">unassembled</a> bundles with an empty <a href=\"%3$s\" "
+"target=\"_blank\">base price</a>."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:499
+msgid "The chosen <strong>Item Grouping</strong> option is invalid. %s"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:508
+msgid ""
+"This bundle does not contain any mandatory items. To control the minimum "
+"and/or maximum number of items that customers must choose in this bundle, "
+"use the <strong>Min Bundle Size</strong> and <strong>Max Bundle "
+"Size</strong> fields under <strong>Product Data > Bundled Products</strong>."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:573
+msgid ""
+"<strong>%s</strong> was not saved. WooCommerce Subscriptions version 2.0 or "
+"higher is required in order to bundle Subscription products."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:583
+msgid ""
+"<strong>%s</strong> is sold individually and cannot be bundled more than "
+"once."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:654
+msgid ""
+"<strong>%s</strong> is sold individually &ndash; its <strong>Min "
+"Quantity</strong> cannot be higher than 1."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:661
+msgid ""
+"The minimum quantity of <strong>%s</strong> was not valid and has been "
+"reset. Please enter a non-negative integer <strong>Min Quantity</strong> "
+"value."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:680
+msgid ""
+"<strong>%s</strong> is sold individually &ndash; <strong>Max "
+"Quantity</strong> cannot be higher than 1."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:688
+msgid ""
+"The maximum quantity of <strong>%s</strong> was not valid and has been "
+"reset. Please enter a positive integer equal to or higher than <strong>Min "
+"Quantity</strong>, or leave the <strong>Max Quantity</strong> field empty "
+"for an unlimited maximum quantity."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:711
+msgid ""
+"The default quantity of <strong>%s</strong> was not valid and has been "
+"reset. Please enter an integer between the <strong>Min Quantity</strong> "
+"and <strong>Max Quantity</strong>."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:727
+msgid ""
+"The <strong>Discount</strong> of <strong>%s</strong> was not valid and has "
+"been reset. Please enter a positive number between 0-100."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:769
+msgid ""
+"Failed to save <strong>Filter Variations</strong> for <strong>%s</strong>. "
+"Please choose at least one variation."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:819
+msgid ""
+"The default variation attribute values of <strong>%s</strong> are "
+"inconsistent with the set of active variations and have been reset."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:856
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:866
+msgid ""
+"To hide <strong>%s</strong> from the single-product template, please enable "
+"the <strong>Override Default Selections</strong> option and choose default "
+"variation attribute values."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:926
+msgid "Filter Variations"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:929
+msgid "Check to enable only a subset of the available variations."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:942
+msgid "Choose variations&hellip;"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:981
+msgid "Search for variations&hellip;"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:993
+msgid "Override Default Selections"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:995
+msgid ""
+"In effect for this bundle only. When <strong>Filter Variations</strong> is "
+"enabled, double-check your selections to make sure they correspond to an "
+"active variation."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1012
+msgid "No default %s&hellip;"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1059
+msgid "Optional"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1061
+msgid "Check this option to mark the bundled product as optional."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1067
+msgid "Min Quantity"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1069
+msgid "The minimum quantity of this bundled product."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1075
+msgid "Max Quantity"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1077
+msgid ""
+"The maximum quantity of this bundled product. Leave the field empty for an "
+"unlimited maximum quantity."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1083
+msgid "Default Quantity"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1085
+msgid "The default quantity of this bundled product."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1093
+msgid "Shipped Individually"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1095
+msgid ""
+"Check this option if this bundled item is shipped separately from the "
+"bundle."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1103
+msgid "Priced Individually"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1105
+msgid ""
+"Check this option to have the price of this bundled item added to the base "
+"price of the bundle."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1111
+msgid "Discount %"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1113
+msgid ""
+"Discount applied to the price of this bundled product when Priced "
+"Individually is checked. If a Discount is applied to a bundled product "
+"which has a sale price defined, the sale price will be overridden."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1146
+msgid "Visibility"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1149
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1169
+msgid "Product details"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1150
+msgid ""
+"Controls the visibility of the bundled item in the single-product template "
+"of this bundle."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1154
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1174
+msgid "Cart/checkout"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1155
+msgid "Controls the visibility of the bundled item in cart/checkout templates."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1159
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1179
+msgid "Order details"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1160
+msgid ""
+"Controls the visibility of the bundled item in order-details and e-mail "
+"templates."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1166
+msgid "Price Visibility"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1170
+msgid ""
+"Controls the visibility of the bundled-item price in the single-product "
+"template of this bundle."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1175
+msgid ""
+"Controls the visibility of the bundled-item price in cart/checkout "
+"templates."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1180
+msgid ""
+"Controls the visibility of the bundled-item price in order-details and "
+"e-mail templates."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1186
+msgid "Override Title"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1188
+msgid "Check this option to override the default product title."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1201
+msgid "Override Short Description"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1203
+msgid "Check this option to override the default short product description."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1216
+msgid "Hide Thumbnail"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1218
+msgid "Check this option to hide the thumbnail image of this bundled product."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1255
+msgid "Layout"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1256
+msgid ""
+"Select the <strong>Tabular</strong> option to have the thumbnails, "
+"descriptions and quantities of bundled products arranged in a table. "
+"Recommended for displaying multiple bundled products with configurable "
+"quantities."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1289
+msgid "Form Location"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1318
+msgid "Item Grouping"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1319
+msgid "Controls the grouping of parent/child line items in cart/order templates."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1335
+msgid "Edit in Cart"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1337
+msgid ""
+"Enable this option to allow changing the configuration of this bundle in "
+"the cart. Applicable to bundles with configurable attributes and/or "
+"quantities."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1367
+msgid "Close all"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1368
+msgid "Expand all"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1391
+#: includes/class-wc-bundled-item.php:2194
+#: templates/single-product/bundled-product-unavailable.php:26
+msgid "Out of stock"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1402
+msgid "Low stock"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1406
+msgid "On backorder"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1419
+msgid "You have not added any products to this bundle."
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1420
+msgid "Add some now?"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1438
+msgid "Add a bundled product&hellip;"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1446
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:55
+msgid "Search for a product&hellip;"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1473
+msgid "Basic Settings"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1477
+msgid "Advanced Settings"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundle-edit-form.php:15
+#: includes/wc-pb-template-functions.php:594
+msgid "Product"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundle-edit-form.php:16
+#: includes/wc-pb-template-functions.php:595
+msgid "Quantity"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundled-product.php:25
+msgid "Click to toggle"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundled-product.php:26
+msgid "Drag and drop to set order"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundled-product.php:27
+msgid "Remove"
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:38
+msgid "No products found with insufficient stock."
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:191
+msgid "Bundled product"
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:192
+msgid "Bundle"
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:193
+msgid "Units required"
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:194
+msgid "Stock status"
+msgstr ""
+
+#: includes/admin/reports/class-wc-pb-report-insufficient-stock.php:195
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:18
+msgid "Product Bundles"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:23
+msgid "Database version"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:24
+msgid ""
+"The version of Product Bundles reported by the database. This should be the "
+"same as the plugin version."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:31
+msgid "Database version mismatch."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:37
+msgid "Loopback test"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:38
+msgid ""
+"Loopback requests are used by Product Bundles to process tasks in the "
+"background."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:47
+msgid "Loopback test failed."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:53
+msgid "Template overrides"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:54
+msgid "Shows any files overriding the default Product Bundles templates."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-status-report.php:71
+#. Translators: %1$s: Template name, %2$s: Template version, %3$s: Core
+#. version.
+msgid "%1$s version %2$s (out of date)"
+msgstr ""
+
+#: includes/class-wc-bundled-item.php:1850 includes/class-wc-pb-display.php:224
+msgid "optional"
+msgstr ""
+
+#: includes/class-wc-bundled-item.php:2189
+#: includes/class-wc-bundled-item.php:2206
+msgid "(only %s left in stock)"
+msgstr ""
+
+#: includes/class-wc-bundled-item.php:2200 includes/class-wc-pb-display.php:212
+#: includes/class-wc-pb-display.php:214
+#: includes/class-wc-product-bundle.php:1330
+#: tests/unit/test-wc-product-bundle.php:634
+msgid "Available on backorder"
+msgstr ""
+
+#: includes/class-wc-bundled-item.php:2390
+msgid "Weight"
+msgstr ""
+
+#: includes/class-wc-bundled-item.php:2397
+msgid "Dimensions"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:59 includes/class-wc-pb-cart.php:68
+#: includes/class-wc-pb-display.php:75 includes/class-wc-pb-display.php:84
+#: includes/class-wc-pb-order.php:66 includes/class-wc-pb-order.php:75
+#: includes/compatibility/class-wc-pb-compatibility.php:67
+#: includes/compatibility/class-wc-pb-compatibility.php:76
+#: includes/modules/class-wc-pb-modules.php:51
+#: includes/modules/class-wc-pb-modules.php:58
+#: woocommerce-product-bundles.php:72 woocommerce-product-bundles.php:81
+msgid "Foul!"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:182
+msgid "The submitted bundle configuration could not be added to the cart."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:188 includes/class-wc-pb-order.php:399
+#: includes/class-wc-pb-rest-api.php:1172
+msgid "A bundle with this ID does not exist."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:546
+msgid ""
+"&quot;%1$s&quot; cannot be purchased &ndash; some of its contents are "
+"missing from your cart."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:564
+msgid "The quantity of &quot;%1$s&quot; cannot be lower than %2$d."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:567 includes/class-wc-pb-cart.php:581
+#: includes/class-wc-pb-cart.php:604 includes/class-wc-pb-cart.php:631
+#: includes/class-wc-pb-cart.php:699 includes/class-wc-pb-cart.php:745
+#: includes/class-wc-pb-stock-manager.php:236
+#: includes/class-wc-pb-stock-manager.php:254
+#: includes/class-wc-pb-stock-manager.php:268
+#: includes/class-wc-pb-stock-manager.php:288
+#: includes/class-wc-pb-stock-manager.php:310
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:603
+msgid "&quot;%1$s&quot; cannot be added to your cart. %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:569 includes/class-wc-pb-cart.php:583
+#: includes/class-wc-pb-cart.php:633 includes/class-wc-pb-cart.php:701
+#: includes/class-wc-pb-cart.php:747 includes/class-wc-pb-stock-manager.php:256
+#: includes/class-wc-pb-stock-manager.php:270
+#: includes/class-wc-pb-stock-manager.php:290
+#: includes/class-wc-pb-stock-manager.php:312
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:605
+msgid "&quot;%1$s&quot; cannot be purchased. %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:578
+msgid "The quantity of &quot;%1$s&quot; cannot be higher than %2$d."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:601
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:600
+msgid "&quot;%s&quot; cannot be purchased."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:625
+msgid "The chosen &quot;%s&quot; variation cannot be purchased."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:627
+msgid "The chosen &quot;%s&quot; variation is unavailable."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:689
+msgid "%1$s is a required &quot;%2$s&quot; field."
+msgid_plural "%1$s are required &quot;%2$s&quot; fields."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-wc-pb-cart.php:692
+msgid "Please choose &quot;%s&quot; options&hellip;"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:694
+msgid "&quot;%s&quot; is missing some required options."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:742 includes/class-wc-pb-display.php:230
+msgid "Please choose at least 1 item."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1219
+msgid "Cart update failed. The quantity of &quot;%s&quot; must be a multiple of %d."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1225
+msgid "Cart update failed. The quantity of &quot;%s&quot; must be at least %d."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1231
+msgid "Cart update failed. The quantity of &quot;%s&quot; cannot be higher than %d."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1264
+msgid "Cart updated."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1329 includes/class-wc-pb-cart.php:1331
+#: includes/class-wc-pb-cart.php:1858
+#: includes/class-wc-pb-stock-manager.php:295
+msgid "View Cart"
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1329
+msgid "You cannot add another &quot;%s&quot; to your cart."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1331 includes/class-wc-pb-cart.php:1858
+msgid ""
+"You have already added an identical &quot;%s&quot; to your cart. You cannot "
+"add another one."
+msgstr ""
+
+#: includes/class-wc-pb-cart.php:1374 includes/class-wc-pb-cart.php:1382
+#: includes/class-wc-pb-cart.php:1415
+msgid ""
+"The requested configuration of &quot;%s&quot; cannot be purchased at the "
+"moment."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:206
+#: includes/class-wc-product-bundle.php:1233
+#: includes/class-wc-product-bundle.php:1281
+msgid "Free!"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:207
+msgid "Total: "
+msgstr ""
+
+#: includes/class-wc-pb-display.php:208
+msgid "Subtotal: "
+msgstr ""
+
+#: includes/class-wc-pb-display.php:215
+msgid "Please choose product options."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:216
+msgid "Please choose %s options."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:217
+msgid "Please enter valid amounts."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:218
+msgid "Please enter a valid %s amount."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:225 includes/class-wc-pb-display.php:1334
+msgid "Includes"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:228
+#: includes/wc-pb-template-functions.php:93
+msgid "This product is currently unavailable."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:229
+msgid "Please resolve all pending issues before adding this product to your cart."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:382
+msgid ""
+"You are currently editing &quot;%1$s&quot;. When finished, click the "
+"<strong>Update Cart</strong> button."
+msgstr ""
+
+#: includes/class-wc-pb-display.php:674 includes/class-wc-pb-display.php:697
+#: includes/class-wc-pb-display.php:1426 includes/class-wc-pb-display.php:1442
+msgid "Subtotal"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:865
+msgid "Remove this item"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:1059 includes/class-wc-pb-order.php:1054
+msgid "Part of"
+msgstr ""
+
+#: includes/class-wc-pb-install.php:103
+msgid "Product bundle"
+msgstr ""
+
+#: includes/class-wc-pb-install.php:563
+msgid "Documentation"
+msgstr ""
+
+#: includes/class-wc-pb-install.php:564
+msgid "Support"
+msgstr ""
+
+#: includes/class-wc-pb-order.php:389 includes/class-wc-pb-rest-api.php:1167
+msgid "The submitted bundle configuration could not be added to this order."
+msgstr ""
+
+#: includes/class-wc-pb-product-prices.php:742
+msgid "%1$s <span class=\"bundled_item_price_quantity\">each</span>"
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:146
+msgid ""
+"Single-product details page layout. Applicable for bundle-type products "
+"only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:152
+msgid ""
+"Controls the form location of the product in the single-product page. "
+"Applicable to bundle-type products."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:158
+msgid ""
+"Controls whether the configuration of this product can be modified from the "
+"cart page. Applicable to bundle-type products."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:163
+msgid "Sold Individually option context. Applicable to bundle-type products."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:169
+msgid ""
+"Controls the display of bundle container/child items in cart/order "
+"templates. Applicable for bundle-type products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:175
+msgid "Min bundle size. Applicable for bundle-type products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:180
+msgid "Max bundle size. Applicable for bundle-type products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:185
+msgid "List of product bundle IDs that contain this product."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:194
+msgid ""
+"List of bundled items contained in this product. Applicable for bundle-type "
+"products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:201 includes/class-wc-pb-rest-api.php:929
+msgid "Bundled item ID."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:207
+msgid "Set to true to delete the bundled item with the specified ID."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:212 includes/class-wc-pb-rest-api.php:934
+msgid "Bundled product ID."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:217
+msgid "Bundled item menu order."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:222
+msgid "Minimum bundled item quantity."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:227
+msgid "Maximum bundled item quantity."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:232
+msgid "Default bundled item quantity."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:237
+msgid ""
+"Indicates whether the price of this bundled item is added to the base price "
+"of the bundle."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:242
+msgid "Indicates whether the bundled product is shipped separately from the bundle."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:247
+msgid ""
+"Indicates whether the title of the bundled product is overridden in "
+"front-end and e-mail templates."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:252 includes/class-wc-pb-rest-api.php:944
+msgid ""
+"Title of the bundled product to display instead of the original product "
+"title, if overridden."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:257
+msgid ""
+"Indicates whether the short description of the bundled product is "
+"overridden in front-end templates."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:262
+msgid ""
+"Short description of the bundled product to display instead of the original "
+"product short description, if overridden."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:267
+msgid "Indicates whether the bundled item is optional."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:272
+msgid ""
+"Indicates whether the bundled product thumbnail is hidden in the "
+"single-product template."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:277
+msgid ""
+"Discount applied to the bundled product, applicable when the Priced "
+"Individually option is enabled."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:282
+msgid ""
+"Indicates whether variations filtering is active, applicable for variable "
+"bundled products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:287
+msgid ""
+"List of enabled variation IDs, applicable when variations filtering is "
+"active."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:295
+msgid ""
+"Indicates whether the default variation attribute values are overridden, "
+"applicable for variable bundled products only."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:300
+msgid "Overridden default variation attribute values, if applicable."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:307
+msgid "Attribute ID."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:312
+msgid "Attribute name."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:317
+msgid "Selected attribute term name."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:325
+msgid ""
+"Indicates whether the bundled product is visible in the single-product "
+"template."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:331
+msgid "Indicates whether the bundled product is visible in cart templates."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:337
+msgid "Indicates whether the bundled product is visible in order/e-mail templates."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:343
+msgid ""
+"Indicates whether the bundled product price is visible in the "
+"single-product template, applicable when the Priced Individually option is "
+"enabled."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:349
+msgid ""
+"Indicates whether the bundled product price is visible in cart templates, "
+"applicable when the Priced Individually option is enabled."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:355
+msgid ""
+"Indicates whether the bundled product price is visible in order/e-mail "
+"templates, applicable when the Priced Individually option is enabled."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:361
+msgid "Stock status of the bundled item, taking minimum quantity into account."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:495
+msgid "Bundled item ID #%s does not exist in bundle."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:499
+msgid "Bundled product ID undefined."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:519
+msgid "Product ID #%s is invalid."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:901
+msgid "Item ID of parent line item, applicable if the item is part of a Bundle."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:907
+msgid ""
+"Item IDs of bundled line items, applicable if the item is a Bundle "
+"container."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:916
+msgid ""
+"Title of the bundled product to display instead of the original product "
+"title."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:922
+msgid ""
+"Bundle configuration array. Must be defined when adding a bundle-type line "
+"item to an order, to ensure bundled line items are added to the order as "
+"well."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:939
+msgid "Chosen bundled item quantity."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:949
+msgid ""
+"Indicates whether the bundled product is selected. Applicable to optional "
+"bundled items."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:954
+msgid "Chosen variation ID, if applicable."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:959
+msgid "Chosen variation data to pass into 'WC_Order::add_product', if applicable."
+msgstr ""
+
+#: includes/class-wc-pb-rest-api.php:964
+msgid "Additional arguments to pass into 'WC_Order::add_product', if applicable."
+msgstr ""
+
+#: includes/class-wc-pb-stock-manager.php:233
+msgid "Only 1 &quot;%s&quot; may be purchased."
+msgstr ""
+
+#: includes/class-wc-pb-stock-manager.php:251
+msgid "&quot;%s&quot; is out of stock."
+msgstr ""
+
+#: includes/class-wc-pb-stock-manager.php:265
+msgid "There is not enough stock of &quot;%1$s&quot; (%2$s remaining)."
+msgstr ""
+
+#: includes/class-wc-pb-stock-manager.php:285
+msgid ""
+"There is not enough stock of &quot;%1$s&quot; (%2$s in stock, %3$s in your "
+"cart)."
+msgstr ""
+
+#: includes/class-wc-pb-stock-manager.php:307
+msgid "The product is currently unavailable."
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:1369
+#: tests/unit/test-wc-product-bundle.php:662
+msgid "Read more"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:1374
+#: tests/unit/test-wc-product-bundle.php:654
+msgid "Select options"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:1376
+#: includes/class-wc-product-bundle.php:1391
+#: tests/unit/test-wc-product-bundle.php:679
+msgid "Add to cart"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:1398
+msgid "Update Cart"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2769
+msgid "Default"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2770
+msgid "The add-to-cart form is displayed inside the single-product summary."
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2773
+msgid "Before Tabs"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2774
+msgid ""
+"The add-to-cart form is displayed before the single-product tabs. Usually "
+"allocates the entire page width for displaying form content. Note that some "
+"themes may not support this option."
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2789
+msgid "Standard"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2790
+msgid "Tabular"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2791
+msgid "Grid"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2863
+msgid "Grouped"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2868
+msgid "Flat"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:2873
+msgid "None"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:322
+msgid "Composite Products"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:323
+msgid "WooCommerce Composite Products"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:325
+#: includes/compatibility/class-wc-pb-compatibility.php:341
+#: includes/compatibility/class-wc-pb-compatibility.php:384
+msgid ""
+"The installed version of <strong>%1$s</strong> is not supported by "
+"<strong>Product Bundles</strong>. Please update <a href=\"%2$s\" "
+"target=\"_blank\">%3$s</a> to version <strong>%4$s</strong> or higher."
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:338
+msgid "Product Add-Ons"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:339
+msgid "WooCommerce Product Add-Ons"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:349
+msgid ""
+"The <strong>Tabular Layout</strong> mini-extension has been rolled into "
+"<strong>Product Bundles</strong>. Please deactivate and remove the "
+"<strong>Product Bundles - Tabular Layout</strong> feature plugin."
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:355
+msgid ""
+"The <strong>Bundle-Sells</strong> mini-extension has been rolled into "
+"<strong>Product Bundles</strong>. Please deactivate and remove the "
+"<strong>Product Bundles - Bundle-Sells</strong> feature plugin."
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:361
+msgid ""
+"The <strong>Min/Max Items</strong> mini-extension has been rolled into "
+"<strong>Product Bundles</strong>. Please deactivate and remove the "
+"<strong>Product Bundles - Min/Max Items</strong> feature plugin. If you "
+"have localized Min/Max Items in your language, please be aware that all "
+"localizable strings have been moved into the Product Bundles text domain."
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:370
+msgid "Product Bundles - Top Add to Cart Button"
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:371
+msgid ""
+"The installed version of <strong>%1$s</strong> is not supported by "
+"<strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to "
+"version <strong>%2$s</strong> or higher."
+msgstr ""
+
+#: includes/compatibility/class-wc-pb-compatibility.php:382
+msgid "Product Bundles - Bulk Discounts"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-addons-compatibility.php:132
+msgid "Disable Add-Ons"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-addons-compatibility.php:134
+msgid ""
+"Check this option to disable any Product Add-Ons associated with this "
+"bundled product."
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:513
+msgid "This item cannot be purchased at the moment."
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:741
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:772
+msgid "No selection"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-cp-compatibility.php:925
+msgid "Please check your &quot;%1$s&quot; configuration: %2$s"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-et-compatibility.php:97
+msgid "Unavailable when using the Divi builder."
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-pip-compatibility.php:377
+#: includes/compatibility/modules/class-wc-pb-pip-compatibility.php:379
+msgid "Packaged in:"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-subscriptions-compatibility.php:83
+msgid "&quot;%1$s&quot; cannot be purchased due to payment gateway restrictions."
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-wl-compatibility.php:172
+#: includes/compatibility/modules/class-wc-pb-wl-compatibility.php:187
+msgid "*"
+msgstr ""
+
+#: includes/compatibility/modules/class-wc-pb-wl-compatibility.php:172
+msgid "For up-to-date pricing details, please add the product to your cart."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:54
+msgid "Bundle-sells"
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:73
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:76
+msgid "Supported product types: Simple, Simple subscription."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:73
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:76
+msgid "Supports Simple products only."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:74
+msgid ""
+"Bundle-sells are optional products that can be selected and added to the "
+"cart along with this product. %s"
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:83
+msgid "Bundle-sells title"
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:84
+msgid "Text to display above the bundle-sells section."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:85
+msgid "e.g. \"Frequently Bought Together\""
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:94
+msgid "Bundle-sells discount"
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:95
+msgid "Discount to apply to bundle-sells (%). Accepts values from 0 to 100."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/admin/class-wc-pb-bs-admin.php:149
+msgid ""
+"Invalid bundle-sells discount value. Please enter a positive number between "
+"0-100."
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/class-wc-pb-bs-display.php:234
+msgid "Discount"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/admin/class-wc-pb-mmi-admin.php:55
+msgid "Minimum combined quantity of bundled items."
+msgstr ""
+
+#: includes/modules/min-max-items/includes/admin/class-wc-pb-mmi-admin.php:65
+msgid "Maximum combined quantity of bundled items."
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:79
+msgid "&quot;%s&quot; cannot be added to the cart"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:83
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:145
+msgid "please choose 1 item"
+msgid_plural "please choose %s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:85
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:147
+msgid "please choose at least 1 item"
+msgid_plural "please choose at least %s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:87
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:149
+msgid "please limit your selection to 1 item"
+msgid_plural "please choose up to %s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:91
+msgid " (you have chosen 1)"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:93
+msgid " (you have chosen %s)"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:142
+msgid "&quot;%s&quot; cannot be purchased"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:53
+msgid "Please choose an item."
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:54
+msgid "Please choose 1 item.%s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:55
+msgid "Please choose at least 1 item.%s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:56
+msgid "Please choose up to 1 item.%s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:57
+msgid "Please choose at least %1$s items.%2$s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:58
+msgid "Please choose up to %1$s items.%2$s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:59
+msgid "Please choose %1$s items.%2$s"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:60
+msgid "%s items selected"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:61
+msgid "1 item selected"
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:101
+msgid ""
+"The Product Bundles database is updating in the background. During this "
+"time, all bundles on your site will be unavailable. If this message "
+"persists, please <a href=\"%s\" target=\"_blank\">get in touch</a> with our "
+"support team. Note: This message is visible to store managers only."
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:103
+msgid ""
+"&quot;%1$s&quot; is not purchasable just yet. But, fear not &ndash; setting "
+"up <a href=\"%2$s\" target=\"_blank\">pricing options</a> only takes a "
+"minute! <ul class=\"pb_notice_list\"><li>To give &quot;%1$s&quot; a static "
+"base price, navigate to <strong>Product Data > General</strong> and fill in "
+"the <strong>Regular Price</strong> field.</li><li>To preserve the prices "
+"and taxes of individual bundled products, go to <strong>Product Data > "
+"Bundled Products</strong> and enable <strong>Priced Individually</strong> "
+"for each bundled product whose price must be preserved.</li></ul>Note: This "
+"message is visible to store managers only."
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:105
+msgid ""
+"Please make sure that all products contained in this bundle have a price. "
+"WooCommerce does not allow products with a blank price to be purchased. "
+"Note: This message is visible to store managers only."
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:107
+msgid ""
+"Please enable <strong>Mixed Checkout</strong> under <strong>WooCommerce > "
+"Settings > Subscriptions</strong>. Bundles that contain subscription-type "
+"products cannot be purchased when <strong>Mixed Checkout</strong> is "
+"disabled. Note: This message is visible to store managers only."
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:432
+msgid " for %s"
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:436
+msgid " from %s"
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:450
+msgid " &quot;%s&quot;"
+msgstr ""
+
+#: includes/wc-pb-template-functions.php:763
+msgid "Clear"
+msgstr ""
+
+#: templates/single-product/bundled-item-image.php:42
+msgid "Bundled product placeholder image"
+msgstr ""
+
+#: templates/single-product/bundled-item-optional.php:21
+msgid "Add%1$s%2$s%3$s"
+msgstr ""
+
+#: templates/single-product/bundled-item-title.php:27
+msgid "View product"
+msgstr ""
+
+#: templates/single-product/bundled-product-unavailable.php:26
+msgid "Temporarily unavailable"
+msgstr ""
+
+#: templates/single-product/bundled-product-variable.php:34
+msgid "Required option"
+msgstr ""
+
+#: woocommerce-product-bundles.php:187
+msgid ""
+"WooCommerce Product Bundles requires at least WooCommerce "
+"<strong>%s</strong>."
+msgstr ""
+
+#: woocommerce-product-bundles.php:195
+msgid ""
+"WooCommerce Product Bundles requires at least PHP <strong>%1$s</strong>. "
+"Learn <a href=\"%2$s\">how to update PHP</a>."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Product Bundles"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://woocommerce.com/products/product-bundles/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Offer product bundles, bulk discount packages and assembled products."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SomewhereWarm"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://somewherewarm.com/"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:428
+msgctxt "edit bundle in order: formatted validation message"
+msgid "%1$s %2$s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:620
+#: includes/admin/class-wc-pb-admin-order.php:174
+msgctxt "bundled items stock change note sku with id format"
+msgid "%1$s:%2$s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:626
+#: includes/admin/class-wc-pb-admin-order.php:187
+msgctxt "bundled items stock change note format"
+msgid "%1$s (%2$s) &ndash; %3$s"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-order.php:179
+msgctxt "bundled items stock change note format"
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#: includes/admin/class-wc-pb-admin-ajax.php:628
+msgctxt "bundled items change note format"
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1239
+msgctxt "bundled product id"
+msgid "Item ID: %s"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-wc-pb-meta-box-product-data.php:1445
+msgctxt "new bundled product button"
+msgid "Add Product"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/html-bundled-product.php:23
+msgctxt "bundled product sku"
+msgid "SKU: %s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:209
+msgctxt "\"Total/Subtotal\" string followed by price followed by price suffix"
+msgid "%1$s%2$s%3$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:210
+msgctxt "Sale/strikeout price"
+msgid "<del>%1$s</del> <ins>%2$s</ins>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:211
+msgctxt "insufficiently stocked items template"
+msgid "<p class=\"stock out-of-stock insufficient-stock\">%1$s &rarr; %2$s</p>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:212
+msgctxt "backordered items template"
+msgid "<p class=\"stock available-on-backorder\">%1$s &rarr; %2$s</p>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:213
+msgctxt "insufficiently stocked item exists template"
+msgid "<p class=\"stock out-of-stock insufficient-stock\">%s</p>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:214
+msgctxt "backordered item exists template"
+msgid "<p class=\"stock available-on-backorder\">%s</p>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:219
+msgctxt "string list item"
+msgid "&quot;%s&quot;"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:220 includes/class-wc-pb-helpers.php:330
+msgctxt "string list item separator"
+msgid "%1$s, %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:221 includes/class-wc-pb-helpers.php:328
+msgctxt "string list item last separator"
+msgid "%1$s and %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:222 includes/class-wc-pb-helpers.php:294
+msgctxt "qty string"
+msgid " &times; %s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:223
+msgctxt "suffix"
+msgid " &mdash; %s"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:302
+msgctxt "suffix"
+msgid " &ndash; %s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:226
+msgctxt "title followed by meta"
+msgid "%1$s &ndash; %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:227 includes/class-wc-pb-helpers.php:305
+msgctxt "title, quantity, price, suffix"
+msgid "%1$s%2$s%3$s%4$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:231
+#: includes/class-wc-product-bundle.php:1145
+msgctxt "subscription price html"
+msgid "%1$s,</br>%2$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:232
+#: includes/class-wc-product-bundle.php:1140
+msgctxt "subscription price html"
+msgid "%1$s, and</br>%2$s"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:754
+#: includes/class-wc-product-bundle.php:1152
+msgctxt "subscription price html"
+msgid "%1$s<span class=\"bundled_subscriptions_price_html\"> one time%2$s</span>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:674 includes/class-wc-pb-display.php:697
+#: includes/class-wc-pb-display.php:1426 includes/class-wc-pb-display.php:1442
+msgctxt "bundled product subtotal"
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:942 includes/class-wc-pb-display.php:958
+msgctxt "edit in cart link text"
+msgid "Edit"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:943
+msgctxt "edit in cart text"
+msgid ""
+"%1$s<br/><a class=\"edit_bundle_in_cart_text edit_in_cart_text\" "
+"rel=\"no-follow\" href=\"%2$s\"><small>%3$s</small></a>"
+msgstr ""
+
+#: includes/class-wc-pb-display.php:959
+msgctxt "edit in cart text"
+msgid ""
+"%1$s<br/><a class=\"edit_bundle_in_cart_text edit_in_cart_text\" "
+"href=\"%2$s\"><small>%3$s</small></a>"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:257
+msgctxt "product title followed by meta and sku in parenthesis"
+msgid "%1$s &ndash; %2$s (%3$s)"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:259
+msgctxt "sku followed by product title and meta"
+msgid "%1$s &ndash; %2$s &ndash; %3$s"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:263
+msgctxt "product title followed by sku in parenthesis"
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:265
+msgctxt "sku followed by product title"
+msgid "%1$s &ndash; %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:269
+msgctxt "product title followed by meta in parenthesis"
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:271
+msgctxt "product title followed by meta"
+msgid "%1$s &ndash; %2$s"
+msgstr ""
+
+#: includes/class-wc-pb-helpers.php:298
+msgctxt "price suffix"
+msgid " &ndash; %s"
+msgstr ""
+
+#: includes/class-wc-pb-order.php:507
+msgctxt "bundled order item qty meta key"
+msgid "Qty"
+msgstr ""
+
+#: includes/class-wc-pb-order.php:513
+msgctxt "bundled order item SKU meta key"
+msgid "SKU"
+msgstr ""
+
+#: includes/class-wc-product-bundle.php:1158
+#: includes/class-wc-product-bundle.php:1218
+#: includes/class-wc-product-bundle.php:1239
+msgctxt "Price range: from"
+msgid "%1$s%2$s"
+msgstr ""
+
+#: includes/modules/bundle-sells/includes/class-wc-pb-bs-display.php:229
+msgctxt "bundle-sell discount"
+msgid "%s&#37; (applied by %2$s)"
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:96
+msgctxt "add-to-cart validation error: action, resolution, status"
+msgid "%1$s &ndash; %2$s%3$s."
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-cart.php:152
+msgctxt "cart validation error: action, resolution"
+msgid "%1$s &ndash; %2$s."
+msgstr ""
+
+#: includes/modules/min-max-items/includes/class-wc-pb-mmi-display.php:62
+msgctxt "validation error status format"
+msgid "<span class=\"bundled_items_selection_status\">%s</span>"
+msgstr ""
