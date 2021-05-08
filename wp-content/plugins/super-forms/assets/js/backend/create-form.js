@@ -10,7 +10,44 @@
         }
         return JSON.stringify(obj) === JSON.stringify({});
     }
+    SUPER.ui = {
+        // Update form settings
+        updateSettings: function(e, el, setting){
+            var i,
+                tab = el.closest('.super-tab-content'),
+                nodes = tab.querySelectorAll('[name]'),
+                formSettings = JSON.parse(document.querySelector('.super-raw-code-form-settings textarea').value),
+                data = {},
+                value = '',
+                names;
 
+            for(i=0; i < nodes.length; i++){
+                value = nodes[i].value;
+                if(nodes[i].type==='checkbox') value = nodes[i].checked;
+                if(nodes[i].type==='radio') value = tab.querySelector('[name="'+nodes[i].name+'"]:checked').value; 
+                if(value===true) value = "true"; 
+                if(value===false) value = "false"; 
+                names = nodes[i].name.split('.');
+                if(names.length>1){
+                    if(typeof data[names[0]] === 'undefined'){
+                        data[names[0]] = {};
+                    }
+                    if(names.length>2){
+                        if(typeof data[names[0]][names[1]] === 'undefined'){
+                            data[names[0]][names[1]] = {};
+                        }
+                        data[names[0]][names[1]][names[2]] = value;
+                    }else{
+                        data[names[0]][names[1]] = value;
+                    }
+                }else{
+                    data[nodes[i].name] = value;
+                }
+            }
+            formSettings[setting] = data;
+            document.querySelector('.super-raw-code-form-settings textarea').value = JSON.stringify(formSettings);
+        }
+    };
     SUPER.update_form_elements = function(string){
         document.querySelector('.super-raw-code-form-elements textarea').value = SUPER.get_form_elements(string);
     };
@@ -31,7 +68,7 @@
     SUPER.get_form_settings = function(string){
         if(typeof string === 'undefined') string = false;
         var $settings = {};
-        $('.super-create-form .super-form-settings .element-field').each(function () {
+        $('.super-create-form .super-form-settings .super-element-field').each(function () {
             var $this = $(this);
             var $hidden = false;
 
@@ -51,12 +88,50 @@
                 $settings[$name] = $value;
             }
         });
+        // Tab settings
+        $settings = SUPER.get_tab_settings($settings, 'pdf');
+        //$settings = SUPER.get_tab_settings($settings, 'stripe');
         if(string===true) {
             if(!isEmpty($settings)) return JSON.stringify($settings, undefined, 4);
             return '';
         }
         return $settings;
     };
+    SUPER.get_tab_settings = function(settings, slug){
+        var i,
+            tab = document.querySelector('.super-tab-content.super-tab-'+slug),
+            nodes = tab.querySelectorAll('[name]:not(.sfui-exclude)'),
+            data = {},
+            value = '',
+            names;
+        if(tab.querySelector('.super_transient')){
+            for(i=0; i < nodes.length; i++){
+                value = nodes[i].value;
+                if(nodes[i].type==='checkbox') value = nodes[i].checked;
+                if(nodes[i].type==='radio') value = tab.querySelector('[name="'+nodes[i].name+'"]:checked').value;
+                if(value===true) value = "true"; 
+                if(value===false) value = "false"; 
+                names = nodes[i].name.split('.');
+                if(names.length>1){
+                    if(typeof data[names[0]] === 'undefined'){
+                        data[names[0]] = {};
+                    }
+                    if(names.length>2){
+                        if(typeof data[names[0]][names[1]] === 'undefined'){
+                            data[names[0]][names[1]] = {};
+                        }
+                        data[names[0]][names[1]][names[2]] = value;
+                    }else{
+                        data[names[0]][names[1]] = value;
+                    }
+                }else{
+                    data[nodes[i].name] = value;
+                }
+            }
+            settings['_'+slug] = data;
+        }
+        return settings;
+    }
     SUPER.get_translation_settings = function(string){
         if(typeof string === 'undefined') string = false;
         var $translations = {};
@@ -104,9 +179,9 @@
 
         if (typeof value === 'undefined') value = field.val();
         // Update element style
-        var input = field.parents('.field-input');
+        var input = field.parents('.super-field-input');
         if (typeof input !== 'undefined') {
-            var _styles = field.parents('.field-input').data('styles');
+            var _styles = field.parents('.super-field-input').data('styles');
             if (typeof _styles !== 'undefined') {
                 Object.keys(_styles).forEach(function (selector) {
                     var editing = $('.super-preview-elements .super-element.editing'),
@@ -196,8 +271,8 @@
     SUPER.loading_states = function (button, status) {
         status = status || 'loading';
         if (status == 'loading') {
-            var old_html = button.html();
-            button.data('old-html', old_html);
+            var oldHtml = button.html();
+            button.data('old-html', oldHtml);
             button.parents('.super-form-button:eq(0)').addClass('super-loading');
             button.html('<i class="fas fa-refresh fa-spin"></i>');
         } else {
@@ -519,12 +594,12 @@
         $('.super-element-settings .super-elements-container .multi-items-json').each(function () {
             $items = [];
             $this = $(this);
-            $parent = $this.parents('.field-input:eq(0)');
+            $parent = $this.parents('.super-field-input:eq(0)');
             $field_name = $this.parents('.super-elements-container:eq(0)').find('input[name="name"]').val();
 
             // Only proceed if not hidden
             $field = $this.parents('.super-field:eq(0)');
-            if ($field.hasClass('hidden')) return true;
+            if ($field.hasClass('super-hidden')) return true;
 
             // Loop over all the items
             $parent.find('.super-multi-items').each(function () {
@@ -809,6 +884,26 @@
             i18n: $initial_i18n, // @since 4.7.0 translation
             i18n_switch: ($('.super-i18n-switch').hasClass('super-active') ? 'true' : 'false') // @since 4.7.0 translation
         };
+
+        // @since 4.9.6 - secrets
+        var localSecrets = [], 
+            globalSecrets = [],
+            nodes = document.querySelectorAll('.super-local-secrets > ul > li');
+        for(i=0; i<nodes.length; i++){
+            localSecrets.push({
+                name: nodes[i].querySelector('input[name="secretName"]').value,
+                value: nodes[i].querySelector('input[name="secretValue"]').value
+            });
+        }
+        nodes = document.querySelectorAll('.super-global-secrets > ul > li');
+        for(i=0; i<nodes.length; i++){
+            globalSecrets.push({
+                name: nodes[i].querySelector('input[name="secretName"]').value,
+                value: nodes[i].querySelector('input[name="secretValue"]').value
+            });
+        }
+        params.localSecrets = localSecrets;
+        params.globalSecrets = globalSecrets;
         params = SUPER.save_form_params_filter(params);
         params = $.param(params);
         xhttp.send(params);
@@ -968,6 +1063,7 @@
     jQuery(document).ready(function ($) {
 
         $('body.wp-admin').addClass('folded');
+        init_form_settings_container_heights();
 
         var $doc = $(document),
             $super_hints,
@@ -976,7 +1072,6 @@
             $activePanel = SUPER.get_session_data('_super_builder_last_active_panel'),
             $activeFormSettingsTab = SUPER.get_session_data('_super_builder_last_active_form_settings_tab'),
             $activeElementSettingsTab = SUPER.get_session_data('_super_builder_last_active_element_settings_tab');
-
 
         document.querySelector('.super-raw-code-form-settings textarea').value = SUPER.get_form_settings(true);
         document.querySelector('.super-raw-code-translation-settings textarea').value = SUPER.get_translation_settings(true);
@@ -1026,6 +1121,7 @@
             }
             // Remember which TAB was active for the last time
             SUPER.set_session_data('_super_builder_last_active_panel', $(this).parent().index());
+            init_form_settings_container_heights();
             return false;
         });
 
@@ -1051,6 +1147,78 @@
                 $('.super-preview-elements').removeClass('super-transfering');
             }
         }, 300); // check every 3 milli seconds
+
+
+        // @since 4.9.6 - Secrets
+        $doc.on('click', '.super-add-secret', function(){
+            var clone = this.closest('li').cloneNode(true);
+            // Empty field
+            clone.querySelector('input[name="secretName"]').value = '';
+            clone.querySelector('input[name="secretValue"]').value = '';
+            clone.querySelector('.super-secret-tag').innerHTML = '&nbsp;';
+            this.closest('ul').appendChild(clone);
+            if(this.closest('.super-global-secrets')){
+                var node = this.closest('li');
+                var nodes = node.querySelectorAll('input');
+                for(var i=0; i<nodes.length; i++){
+                    nodes[i].disabled = true;
+                }
+            }
+        });
+        $doc.on('click', '.super-delete-secret', function(){
+            // Only delete if there are more than 1 items
+            if(this.closest('ul').children.length>1){
+                // Confirm if deleting a global secret
+                if(this.closest('.super-global-secrets')){
+                    var $delete = confirm(super_create_form_i18n.confirm_deletion);
+                    if ($delete === true) {
+                        this.closest('li').remove();
+                    }
+                }else{
+                    this.closest('li').remove();
+                }
+            }
+        });
+        $doc.on('click', '.super-edit-secret', function(){
+            var node = this.closest('li');
+            var nodes = node.querySelectorAll('input');
+            for(var i=0; i<nodes.length; i++){
+                nodes[i].disabled = false;
+            }
+        });
+        $doc.on('change keyup blur', '.super-secrets input[name="secretName"]', function () {
+            var value = this.value.replace(/\s+/gi, '_');
+            value = value.replace(/ /g, "_");
+            value = value.replace(/\//g, "");
+            value = value.replace(/[^a-zA-Z0-9-_.]+/g, "");
+            value = value.replace(/\.+/g, "_");
+            value = value.replace(/[--]+/g, "-");
+            value = value.replace(/[__]+/g, "_");
+            this.value = value;
+            // Update the {@tag}
+            if(value===''){
+                this.closest('li').querySelector('.super-secret-tag').innerHTML = '';
+            }else{
+                this.closest('li').querySelector('.super-secret-tag').innerHTML = '{@'+value+'}';
+            }
+            // Check if exact same secret name exists, if so notify user visually about it
+            var nodes = document.querySelectorAll('.super-secrets input[name="secretName"]');
+            var duplicateFound = false;
+            for(var i=0; i<nodes.length; i++){
+                if(nodes[i]===this) continue;
+                if(nodes[i].value === value){
+                    nodes[i].classList.add('super-error');
+                    duplicateFound = true;
+                }else{
+                    nodes[i].classList.remove('super-error');
+                }
+            }
+            if(duplicateFound){
+                alert(super_create_form_i18n.alert_duplicate_secret_names);
+            }else{
+                this.classList.remove('super-error');
+            }
+        });
 
         // @since 4.9.0 - update form code manually
         $doc.on('click', '.super-update-raw-code', function () {
@@ -1383,6 +1551,7 @@
                         alert(super_create_form_i18n.export_form_error);
                     },
                     complete: function () {
+                        init_form_settings_container_heights();
                         // Disable sortable functionality
                         if ($('.super-create-form').hasClass('super-translation-mode')) {
                             $('.super-preview-elements').sortable('disable');
@@ -1490,7 +1659,7 @@
 
         });
         $doc.on('click', '.super-delete-backups', function () {
-            var $old_html = $(this).html();
+            var $oldHtml = $(this).html();
             var $button = $(this);
             $button.html(super_create_form_i18n.deleting).addClass('super-loading');
             $.ajax({
@@ -1503,7 +1672,7 @@
                 success: function () {
                     $('.super-wizard-backup-history > ul').remove();
                     $('<i>' + super_create_form_i18n.no_backups_found + '</i>').appendTo($('.super-wizard-backup-history'));
-                    $button.html($old_html).removeClass('super-loading');
+                    $button.html($oldHtml).removeClass('super-loading');
                 }
             });
         });
@@ -1744,7 +1913,7 @@
             $element_data = $element_data.replace('"name":"' + $old_name + '"', '"name":"' + $new_field_name + '"');
             $element_data_field.val($element_data);
             if ($parent.hasClass('editing')) {
-                $('.super-elements-container .super-field .element-field[name="name"]').val($new_field_name);
+                $('.super-elements-container .super-field .super-element-field[name="name"]').val($new_field_name);
             }
             SUPER.regenerate_element_inner();
         });
@@ -1755,8 +1924,10 @@
             if ($minimized === 'undefined') $minimized = 'no';
             if ($minimized == 'yes') {
                 $this.attr('data-minimized', 'no').removeClass('super-minimized');
+                $(this).tooltipster('content', 'Minimize');
             } else {
                 $this.attr('data-minimized', 'yes').addClass('super-minimized');
+                $(this).tooltipster('content', 'Maximize');
             }
             SUPER.init_resize_element_labels();
             SUPER.init_drag_and_drop();
@@ -1861,7 +2032,7 @@
         SUPER.update_element_check_errors = function () {
             var $error = false;
             // First check for empty required fields
-            $('.super-element-settings .element-field[required="true"]').each(function () {
+            $('.super-element-settings .super-element-field[required="true"]').each(function () {
                 var $this = $(this);
                 if ($this.val() === '') {
                     var $hidden = false;
@@ -1916,15 +2087,16 @@
                 radios,
                 value,
                 defaultValue,
-                allow_empty,
+                allowEmpty,
                 fields = {},
                 elementField;
 
             nodes = document.querySelectorAll('.super-element-settings .super-field');
             for (i = 0; i < nodes.length; ++i) {
-                if(!nodes[i].classList.contains('hidden')){
+                if(!nodes[i].classList.contains('super-hidden')){
                     // Find element field
-                    elementField = nodes[i].querySelector('.element-field');
+                    elementField = nodes[i].querySelector('.super-element-field');
+                    if(typeof elementField==='undefined') continue;
                     value = elementField.value;
                     if(elementField.type=='radio'){
                         radios = nodes[i].querySelectorAll('input[name="'+elementField.name+'"]');
@@ -1935,16 +2107,19 @@
                             }
                         }
                     }
+                    defaultValue = undefined;
+                    if(elementField.closest('.super-field-input')) defaultValue = elementField.closest('.super-field-input').dataset.default;
                     if( (value!=='') && (value!=defaultValue) ) {
-                        if($(elementField).parents('.field-input:eq(0)').find('.super-multi-items').length){
+                        if($(elementField).parents('.super-field-input:eq(0)').find('.super-multi-items').length){
                             fields[elementField.name] = $.parseJSON(value);
                         }else{
                             fields[elementField.name] = value;
                         }
                     }else{
                         if( value==='' ) {
-                            allow_empty = $(elementField).parents('.field-input:eq(0)').attr('data-allow-empty');
-                            if( typeof allow_empty !== 'undefined' ) {
+                            allowEmpty = undefined;
+                            if(elementField.closest('.super-field-input')) allowEmpty = elementField.closest('.super-field-input').dataset.allowEmpty;
+                            if( typeof allowEmpty !== 'undefined' ) {
                                 fields[elementField.name] = value;
                             }
                         } 
@@ -1957,11 +2132,11 @@
         SUPER.update_element_name_required = function ($fields, $button) {
             if ((typeof $fields.name !== 'undefined') && ($fields.name === '')) {
                 $button.removeClass('super-loading');
-                $('.super-element-settings .element-field[name="name"]').css('border', '1px solid #ff9898').css('background-color', '#ffefef');
+                $('.super-element-settings .super-element-field[name="name"]').css('border', '1px solid #ff9898').css('background-color', '#ffefef');
                 alert(super_create_form_i18n.alert_empty_field_name);
                 return false;
             }
-            $('.super-element-settings .element-field[name="name"]').css('border', '').css('background-color', '');
+            $('.super-element-settings .super-element-field[name="name"]').css('border', '').css('background-color', '');
 
         };
         // Update the currently editing field element data
@@ -1985,7 +2160,7 @@
                     $fields.i18n = $element_data.i18n;
                 }
             }
-            $element_data = JSON.stringify($fields);
+            $element_data = JSON.stringify($fields).replace(/\\+"/g, '\\"');
             $element.children('textarea[name="element-data"]').val($element_data);
             return $element;
         };
@@ -2088,7 +2263,11 @@
                             '1/4': 'super_one_fourth',
                             '1/5': 'super_one_fifth'
                         };
-                        $element.attr('class', 'super-element drop-here ' + $sizes[$fields.size] + ' editing');
+                        if ($fields.align_elements !== ''){
+                            $element.attr('class', 'super-element ' + $sizes[$fields.size] + ' super-column drop-here super-builder-align-inner-elements-' + $fields.align_elements + ' ui-sortable-handle editing');
+                        }else{
+                            $element.attr('class', 'super-element ' + $sizes[$fields.size] + ' super-column drop-here ui-sortable-handle editing');
+                        }
                         $element.attr('data-size', $fields.size).find('.super-element-header .super-resize .current').html($fields.size);
                     }
                     SUPER.regenerate_element_inner();
@@ -2149,9 +2328,10 @@
         $doc.on('click', '.super-checkbox input[type="checkbox"]', function () {
             var i, selected = '', counter = 0,
                 parent = this.closest('.super-checkbox'),
-                field = parent.parentNode.querySelector('.element-field'),
+                field = parent.parentNode.querySelector('.super-element-field'),
                 nodes = parent.querySelectorAll('input[type="checkbox"]');
-
+            if(!field) return;
+            
             for( i=0; i < nodes.length; i++ ) {
                 if (nodes[i].checked) {
                     if (counter === 0) {
@@ -2171,7 +2351,7 @@
         });
 
         $doc.on('click', '.super-multi-items .super-sorting span.up i', function () {
-            var $parent = $(this).parents('.field-input:eq(0)');
+            var $parent = $(this).parents('.super-field-input:eq(0)');
             var $count = $parent.find('.super-multi-items').length;
             if ($count > 1) {
                 var $this = $(this).parents('.super-multi-items:eq(0)');
@@ -2186,7 +2366,7 @@
         });
 
         $doc.on('click', '.super-multi-items .super-sorting span.down i', function () {
-            var $parent = $(this).parents('.field-input:eq(0)');
+            var $parent = $(this).parents('.super-field-input:eq(0)');
             var $count = $parent.find('.super-multi-items').length;
             if ($count > 1) {
                 var $this = $(this).parents('.super-multi-items:eq(0)');
@@ -2211,7 +2391,7 @@
 
         $doc.on('click', '.super-multi-items.super-dropdown-item input[type="radio"]', function () {
             var $prev = $(this).attr('data-prev');
-            $(this).parents('.field-input:eq(0)').find('input[type="radio"]').prop('checked', false).attr('data-prev', 'false');
+            $(this).parents('.super-field-input:eq(0)').find('input[type="radio"]').prop('checked', false).attr('data-prev', 'false');
             if ($prev == 'true') {
                 $(this).prop('checked', false).attr('data-prev', 'false');
             } else {
@@ -2321,7 +2501,7 @@
 
         $doc.on('click', '.super-create-form .super-actions .super-save', function () {
             if($('.super-tab-code.super-active').length){
-                alert(super_create_form_i18n.alert_save_not_allowed);
+                alert(super_create_form_i18n.alert_save_not_allowed_code_tab);
                 return false;
             }
             var $this = $(this);
@@ -2330,47 +2510,50 @@
 
         $doc.on('click', '.super-create-form .super-actions .super-preview', function () {
             var $this = $('.super-create-form .super-actions .super-preview:eq(3)');
-            if ($(this).hasClass('mobile')) {
-                $('.super-live-preview').removeClass('tablet');
-                $('.super-create-form .super-actions .super-preview.tablet').removeClass('super-active');
-                $('.super-create-form .super-actions .super-preview.desktop').removeClass('super-active');
+            if ($(this).hasClass('super-mobile')) {
+                $('.super-live-preview').removeClass('super-tablet');
+                $('.super-create-form .super-actions .super-preview.super-tablet').removeClass('super-active');
+                $('.super-create-form .super-actions .super-preview.super-desktop').removeClass('super-active');
                 $(this).addClass('super-active');
-                $('.super-live-preview').addClass('mobile');
+                $('.super-live-preview').addClass('super-mobile');
                 if (!$this.hasClass('super-active')) {
                     $this.html('Loading...');
                     SUPER.save_form($('.super-actions .super-save'), 1, undefined, undefined, function () {
                         $('.super-tabs-content').css('display', 'none');
                     });
+                    return false; // Do not execute responsiveness yet, must first save form then reload it then apply responsiveness
                 }
                 SUPER.init_super_responsive_form_fields();
                 return false;
             }
-            if ($(this).hasClass('tablet')) {
-                $('.super-live-preview').removeClass('mobile');
-                $('.super-create-form .super-actions .super-preview.mobile').removeClass('super-active');
-                $('.super-create-form .super-actions .super-preview.desktop').removeClass('super-active');
+            if ($(this).hasClass('super-tablet')) {
+                $('.super-live-preview').removeClass('super-mobile');
+                $('.super-create-form .super-actions .super-preview.super-mobile').removeClass('super-active');
+                $('.super-create-form .super-actions .super-preview.super-desktop').removeClass('super-active');
                 $(this).addClass('super-active');
-                $('.super-live-preview').addClass('tablet');
+                $('.super-live-preview').addClass('super-tablet');
                 if (!$this.hasClass('super-active')) {
                     $this.html('Loading...');
                     SUPER.save_form($('.super-actions .super-save'), 1, undefined, undefined, function () {
                         $('.super-tabs-content').css('display', 'none');
                     });
+                    return false; // Do not execute responsiveness yet, must first save form then reload it then apply responsiveness
                 }
                 SUPER.init_super_responsive_form_fields();
                 return false;
             }
-            if ($(this).hasClass('desktop')) {
-                $('.super-live-preview').removeClass('tablet');
-                $('.super-live-preview').removeClass('mobile');
-                $('.super-create-form .super-actions .super-preview.mobile').removeClass('super-active');
-                $('.super-create-form .super-actions .super-preview.tablet').removeClass('super-active');
+            if ($(this).hasClass('super-desktop')) {
+                $('.super-live-preview').removeClass('super-tablet');
+                $('.super-live-preview').removeClass('super-mobile');
+                $('.super-create-form .super-actions .super-preview.super-mobile').removeClass('super-active');
+                $('.super-create-form .super-actions .super-preview.super-tablet').removeClass('super-active');
                 $(this).addClass('super-active');
                 if (!$this.hasClass('super-active')) {
                     $this.html('Loading...');
                     SUPER.save_form($('.super-actions .super-save'), 1, undefined, undefined, function () {
                         $('.super-tabs-content').css('display', 'none');
                     });
+                    return false; // Do not execute responsiveness yet, must first save form then reload it then apply responsiveness
                 }
                 SUPER.init_super_responsive_form_fields();
                 return false;
@@ -2758,7 +2941,7 @@
                         },
                         showNext: false,
                         selector: '.super-element.super-form-elements .super-elements-container .super-shortcode-email',
-                        description: '<h1>Let\'s drag the "Email Address" field on to your "Canvas"</h1>',
+                        description: '<h1>Let\'s drag the "E-mail Address" field on to your "Canvas"</h1>',
                     },
                     {
                         onBeforeStart: function () {
@@ -2872,7 +3055,7 @@
                         selector: '.super-element.super-element-settings .super-element-settings-tabs > select',
                         event: 'change',
                         showNext: false,
-                        description: '<h1>We have devided all element settings into sections which you can choose from via this dropdown, Open the dropdown and switch to a different section to find out about all the other features and settings for the element you are editing.</h1><span class="super-tip">Remember that all elements have different settings and features, so make sure to explore them all!</span><span class="super-tip">Note that the Email Address element that we added to our form, is a <a target="_blank" href="' + $git + 'text">Text field</a>. It is a predefined element that basically has the <a target="_blank" href="' + $git + 'validation?id=email-address">Email address validation</a> enabled by default. There are several other predefined elements for you just to make building even easier for you.',
+                        description: '<h1>We have devided all element settings into sections which you can choose from via this dropdown, Open the dropdown and switch to a different section to find out about all the other features and settings for the element you are editing.</h1><span class="super-tip">Remember that all elements have different settings and features, so make sure to explore them all!</span><span class="super-tip">Note that the E-mail Address element that we added to our form, is a <a target="_blank" href="' + $git + 'text">Text field</a>. It is a predefined element that basically has the <a target="_blank" href="' + $git + 'validation?id=email-address">E-mail address validation</a> enabled by default. There are several other predefined elements for you just to make building even easier for you.',
                     },
                     {
                         selector: '.super-element.super-element-settings',
@@ -2987,7 +3170,7 @@
                     {
                         selector: '#collapse-menu',
                         event: 'click',
-                        description: '<h1>Open the the WordPres menu</h1>'
+                        description: '<h1>Open the WordPres menu</h1>'
                     },
                     {
                         selector: '.wp-submenu a[href*="page=super_demos"]',
@@ -3362,7 +3545,7 @@
         $doc.on('click', '.super-element-settings .super-checkbox input[type="checkbox"]', function () {
             var editing = $('.super-element.editing'),
                 parent = editing.children('.super-element-inner').children('.super-tabs'),
-                field = $(this).parents('.field-input:eq(0)').children('input[name="tab_show_prev_next"]'),
+                field = $(this).parents('.super-field-input:eq(0)').children('input[name="tab_show_prev_next"]'),
                 show = field.val();
             // If location of TABs need to become vertical then add the proper class
             if (show == 'true') {
@@ -3423,7 +3606,7 @@
         // @IMPORTANT - must be executed at the very last, before life updates are being done to the canvas
         $doc.on('click', '.super-multi-items .super-delete', function () {
             var $this = $(this);
-            var $parent = $this.parents('.field-input:eq(0)');
+            var $parent = $this.parents('.super-field-input:eq(0)');
             if ($parent.find('.super-multi-items').length <= 2) {
                 $parent.find('.super-delete').css('visibility', 'hidden');
             } else {

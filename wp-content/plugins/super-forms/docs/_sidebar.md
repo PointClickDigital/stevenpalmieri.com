@@ -14,6 +14,7 @@
     - [Dropdown](dropdown.md)
     - [Checkbox](checkbox.md)
     - [Radio buttons](radio-buttons.md)
+    - [Datepicker](datepicker.md)
     - [Other Form Elements](other-form-elements.md)
   
   - [HTML Elements](html-elements.md)
@@ -23,6 +24,7 @@
   - [Conditional Validation](conditional-validation.md)
 
 - Features
+  - [Secrets](secrets.md)
   - [File uploads](file-uploads.md)
   - [Translation System](build-in-translation-system.md)
   - [Tags system](tags-system.md)
@@ -62,8 +64,8 @@
 
 - Add-ons / Extensions
   - [All Add-ons](add-ons)
+    - [PDF Generator](pdf-generator-add-on)
     - [Calculator](calculator-add-on)
-    - [WooCommerce Custom Orders](woocommerce-custom-orders-add-on)
     - [WooCommerce Checkout](woocommerce-checkout-add-on)
     - [PayPal](paypal-add-on)
     - [Signature](signature-add-on)
@@ -72,11 +74,12 @@
     - [MailChimp](mailchimp-add-on)
     - [Mailster](mailster-add-on)
     - [CSV Attachment](csv-attachment-add-on)
-    - [Password Protect & User Lockout & Hide](password-protect-user-lockout-hide-add-on)
+    - [Password Protect & Hide](password-protect-user-lockout-hide-add-on)
+    - [User Lockout](password-protect-user-lockout-hide-add-on)
     - [Register & Login](register-login-add-on)
     - [Popups](popups-add-on)
-    - [Email Templates](email-templates-add-on)
-    - [Email Reminders](email-reminders-add-on)
+    - [E-mail Templates](email-templates-add-on)
+    - [E-mail Reminders](email-reminders-add-on)
 
 - [FAQ](faq.md)
 

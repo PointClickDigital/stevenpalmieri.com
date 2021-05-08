@@ -11,7 +11,7 @@
  * Plugin Name: Super Forms - Signature
  * Plugin URI:  http://codecanyon.net/item/super-forms-drag-drop-form-builder/13979866
  * Description: Adds an extra element that allows users to sign their signature before submitting the form
- * Version:     1.6.0
+ * Version:     1.6.3
  * Author:      feeling4design
  * Author URI:  http://codecanyon.net/user/feeling4design
  * Text Domain: super-forms
@@ -39,7 +39,7 @@ if(!class_exists('SUPER_Signature')) :
          *
          *	@since		1.0.0
         */
-        public $version = '1.6.0';
+        public $version = '1.6.3';
 
 
         /**
@@ -276,8 +276,8 @@ if(!class_exists('SUPER_Signature')) :
         public static function load_scripts($atts) {
             if($atts['ajax']) {
                 wp_enqueue_style( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/css/frontend/signature.css', array(), SUPER_Signature()->version );
-                wp_enqueue_script( 'jquery-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/jquery.signature.js', array( 'jquery', 'jquery-touch-punch', 'jquery-ui-mouse' ), SUPER_Signature()->version );
-                wp_enqueue_script( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/signature.js', array( 'super-common', 'jquery-signature' ), SUPER_Signature()->version );
+                wp_enqueue_script( 'super-jquery-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/jquery.signature.js', array( 'jquery', 'jquery-touch-punch', 'jquery-ui-mouse' ), SUPER_Signature()->version );
+                wp_enqueue_script( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/signature.js', array( 'super-common', 'super-jquery-signature' ), SUPER_Signature()->version );
             }
         }
 
@@ -357,8 +357,7 @@ if(!class_exists('SUPER_Signature')) :
          *
          *  @since      1.0.0
         */
-        public static function signature( $tag, $atts, $inner, $shortcodes=null, $settings=null, $i18n=null ) {
-         
+        public static function signature( $tag, $atts, $inner, $shortcodes=null, $settings=null, $i18n=null, $builder, $entry_data, $dynamic, $dynamic_field_names, $inner_field_names, $formProgress ) {
             // Fallback check for older super form versions
             if (method_exists('SUPER_Common','generate_array_default_element_settings')) {
                 $defaults = SUPER_Common::generate_array_default_element_settings($shortcodes, 'form_elements', $tag);
@@ -366,6 +365,8 @@ if(!class_exists('SUPER_Signature')) :
                 $defaults = array(
                     'name' => 'subtotal',
                     'thickness' => 2,
+                    'color' => '#000000',
+                    'disallowEdit' => 'true',
                     'bg_size' => 150,
                     'width' => 0,
                     'height' => 100,
@@ -383,6 +384,7 @@ if(!class_exists('SUPER_Signature')) :
             if(empty($atts['width'])) $atts['width'] = 0;
             if(empty($atts['height'])) $atts['height'] = 100;
             if(empty($atts['thickness'])) $atts['thickness'] = 2;
+            if(empty($atts['color'])) $atts['color'] = '#000000';
 
             $result = '';
             if( SUPER_Signature()->is_request('ajax') ){
@@ -392,17 +394,11 @@ if(!class_exists('SUPER_Signature')) :
             }else{
                 wp_enqueue_style( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/css/frontend/signature.css', array(), SUPER_Signature()->version );
             }
-            wp_enqueue_script( 'jquery-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/jquery.signature.js', array( 'jquery', 'jquery-touch-punch', 'jquery-ui-mouse' ), SUPER_Signature()->version );
-			wp_enqueue_script( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/signature.js', array( 'jquery-signature' ), SUPER_Signature()->version );
+            wp_enqueue_script( 'super-jquery-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/jquery.signature.js', array( 'jquery', 'jquery-touch-punch', 'jquery-ui-mouse' ), SUPER_Signature()->version );
+			wp_enqueue_script( 'super-signature', plugin_dir_url( __FILE__ ) . 'assets/js/frontend/signature.js', array( 'super-jquery-signature' ), SUPER_Signature()->version );
 
             $result .= SUPER_Shortcodes::opening_tag( $tag, $atts );
 	        $result .= SUPER_Shortcodes::opening_wrapper( $atts, $inner, $shortcodes, $settings );
-	        if( ( !isset( $atts['value'] ) ) || ( $atts['value']=='' ) ) {
-	            $atts['value'] = '';
-	        }else{
-	            $atts['value'] = SUPER_Common::email_tags( $atts['value'] );
-	        }
-            $styles = '';
             
             if( !isset( $atts['background_img'] ) ) $atts['background_img'] = 0;
             $attachment_id = absint($atts['background_img']);
@@ -411,16 +407,34 @@ if(!class_exists('SUPER_Signature')) :
             }else{
                 $url = wp_get_attachment_url( $attachment_id );
             }
-	        $styles .= 'height:' . $atts['height'] . 'px;';
+            $styles = '';
+            $styles .= 'height:' . $atts['height'] . 'px;';
 	        $styles .= 'background-image:url(\'' . esc_url($url) . '\');';
 	        $styles .= 'background-size:' . $atts['bg_size'] . 'px;';
 	        $result .= '<div class="super-signature-canvas" style="' . $styles . '"></div>';
-	        $result .= '<span class="super-signature-clear"></span>';
+            $result .= '<span class="super-signature-clear"></span>';
 	        $result .= '<textarea style="display:none;" class="super-shortcode-field"';
-	        $result .= ' name="' . $atts['name'] . '"';
-	        $result .= ' data-thickness="' . $atts['thickness'] . '"';
-	        $result .= SUPER_Shortcodes::common_attributes( $atts, $tag );
-	        $result .= ' />' . $atts['value'] . '</textarea>';
+	        $result .= ' name="' . esc_attr($atts['name']) . '"';
+	        $result .= ' data-thickness="' . esc_attr($atts['thickness']) . '"';
+	        $result .= ' data-color="' . esc_attr($atts['color']) . '"';
+            $result .= SUPER_Shortcodes::common_attributes( $atts, $tag );
+            // Get the value for from entry data
+            $entry_data_value = SUPER_Shortcodes::get_entry_data_value( $tag, '', $atts['name'], $entry_data );
+            if(!isset($atts['value'])) $atts['value'] = '';
+            if(!empty($entry_data_value)){
+                $atts['value'] = $entry_data_value;
+            }
+            if($formProgress===false && $atts['disallowEdit']==='true' && $atts['value']!==''){
+                $result .= ' data-disallowEdit="' . esc_attr($atts['disallowEdit']) . '"';
+            }
+            $result .= ' />' . $atts['value'] . '</textarea>';
+            $result .= '<textarea style="display:none;" class="super-signature-lines">';
+            if(isset($entry_data[$atts['name']])){
+                if(!empty($entry_data[$atts['name']]['signatureLines'])){
+                    $result .= wp_unslash($entry_data[$atts['name']]['signatureLines']);
+                }
+            }
+            $result .= '</textarea>';
 	        $result .= '</div>';
 	        $result .= SUPER_Shortcodes::loop_conditions( $atts, $tag );
 	        $result .= '</div>';
@@ -468,7 +482,20 @@ if(!class_exists('SUPER_Signature')) :
 	                        'label' => $label,
 	                        'description'=>$description,
 	                        'thickness' => SUPER_Shortcodes::width( $attributes=null, $default='', $min=1, $max=20, $steps=1, $name=esc_html__( 'Line Thickness', 'super-forms' ), $desc=esc_html__( 'The thickness of the signature when drawing', 'super-forms' ) ),
-	                        'background_img' => array(
+                            'color' => array(
+                                'name' => esc_html__( 'Line color', 'super-forms' ),
+                                'default' => (!isset($attributes['color']) ? '' : $attributes['color']),
+                                'type' => 'color'
+                            ),
+                            'disallowEdit' => array(
+                                'default'=> (!isset($attributes['disallowEdit']) ? 'true' : $attributes['disallowEdit']),
+                                'type'=>'checkbox', 
+                                'values'=>array(
+                                    'true' => esc_html__( 'Disallow users to change existing signature when form was populated with data', 'super-forms' ), 
+                                ),
+                                'allow_empty' => true // For backward compatibility with older forms
+                            ),
+                            'background_img' => array(
 				                'name' => esc_html__( 'Custom sign here image', 'super-forms' ),
 				                'desc' => esc_html__( 'Background image to show the user they can draw a signature', 'super-forms' ),
 				                'default' => SUPER_Settings::get_value( 1, 'background_img', null, '' ),
@@ -487,6 +514,7 @@ if(!class_exists('SUPER_Signature')) :
                                 )
                             ),
 	                        'error' => $error,
+	                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
 	                    ),
 	                ),
 	                'advanced' => array(

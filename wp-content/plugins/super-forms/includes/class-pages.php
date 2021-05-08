@@ -22,6 +22,33 @@ class SUPER_Pages {
 
 
     /**
+     * Handles the output for the Add-ons page in admin
+     */
+    public static function addons() {
+        // Include the file that handles the view
+        include_once( SUPER_PLUGIN_DIR . '/includes/class-ajax.php' );
+        $userEmail = SUPER_Common::get_user_email();
+        $addOnsActivated = SUPER_Common::get_activated_addons();
+        $custom_args = array(
+            'body' => array(
+                'action' => 'super_api_subscribe_addon',
+                'api_endpoint' => SUPER_API_ENDPOINT,
+                'api_version' => SUPER_API_VERSION,
+                'home_url' => get_home_url(),
+                'site_url' => site_url(),
+                'protocol' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http",
+                'email' => $userEmail,
+                'addons_activated' => $addOnsActivated,
+                'addons_url' => admin_url( 'admin.php?page=super_addons' ),
+                'ajax_url' => admin_url( 'admin-ajax.php', 'relative' ),
+                'reset_password' => (isset($_GET['reset_password']) ? $_GET['reset_password'] : '')
+            )
+        );
+        echo SUPER_Ajax::api_do_request('addons/list', $custom_args);
+    }
+
+
+    /**
      * Handles the output for the settings page in admin
      */
     public static function settings() {
@@ -52,9 +79,112 @@ class SUPER_Pages {
         <style type="text/css"><?php echo apply_filters( 'super_form_styles_filter', $style_content, array( 'id'=>$form_id, 'settings'=>$settings ) ) . $settings['theme_custom_css']; ?></style>
         <?php
     }
+    
+    /**
+     * Handle TAB outputs for secrets tab
+     * Secrets can be used to store and retrieve data on server side
+     * This can be useful if you do not want to place sensitive data in the form source code
+     * A good usecase would be if you are conditionally sending to a specific email address
+     * In that case you might not want to add the email address in the HTML source code (to avoid SPAM)
+     * You can define a secret for each email address, which would be linked to a specific tag name e.g: {$secret_XXXXX}
+     * This tag can then be used anywhere in your form settings
+     * (secrets will only work upon form submission, it will not work on page load, this is the whole purpose of secrets really)
+     * You can define local secrets and global secrets, local secrets can only be used on the current form, while global secrets can be used on any form you create.
+     * This includes forms you created in the past, and forms you will create in the future.
+     */
+    public static function secrets_tab($atts) {
+        extract($atts);
+        echo '<div class="super-secrets">';
+            echo '<div class="sfui-notice sfui-yellow">';
+                echo '<strong>' . esc_html__('Not sure what secrets are?', 'super-forms') . ':</strong> <a href="https://renstillmann.github.io/super-forms/#/secrets" target="_blank">' . esc_html__( 'Read the documentation here!', 'super-forms' ) . '</a>';
+            echo '</div>';
+            echo '<div class="sfui-notice sfui-desc">';
+                echo '<strong>' . esc_html__('Tip', 'super-forms') . ':</strong> ';
+                echo esc_html__( 'It is best practice to use local secrets unless you have a specific use case that requires the use for global secrets.', 'super-forms');
+            echo '</div>';
+            echo '<div class="super-local-secrets">';
+                echo '<h3>' . esc_html__( 'Local secrets', 'super-forms' ) . '</h3>';
+                echo '<div class="sfui-notice sfui-desc">';
+                    echo '<strong>' . esc_html__('Info', 'super-forms') . ':</strong> ';
+                    echo esc_html__( 'Local secrets can only be used in this form only', 'super-forms' );
+                echo '</div>';
+                echo '<ul>';
+                    if( (is_array($secrets['local'])) && (!empty($secrets['local'])) ) {
+                        foreach($secrets['local'] as $k => $v){
+                            echo '<li>';
+                                echo '<span class="super-secret-tag">{@' . $v['name'] . '}</span>';
+                                echo '<input value="' . $v['name'] . '" type="text" name="secretName" placeholder="' . esc_html__('Local secret name', 'super-forms') . '" />';
+                                echo '<input value="' . $v['value'] . '" type="text" name="secretValue" placeholder="' . esc_html__('Local secret value', 'super-forms') . '" />';
+                                echo '<span class="super-delete-secret sfui-btn sfui-icon sfui-red">';
+                                    echo '<i class="fas fa-trash"></i>';
+                                echo '</span>';
+                                echo '<span class="super-add-secret sfui-btn sfui-icon sfui-grey">';
+                                    echo '<i class="fas fa-plus"></i>';
+                                echo '</span>';
+                            echo '</li>';
+                        }
+                    }else{
+                        echo '<li>';
+                            echo '<span class="super-secret-tag"></span>';
+                            echo '<input type="text" name="secretName" placeholder="' . esc_html__('Local secret name', 'super-forms') . '" />';
+                            echo '<input type="text" name="secretValue" placeholder="' . esc_html__('Local secret value', 'super-forms') . '" />';
+                            echo '<span class="super-delete-secret sfui-btn sfui-icon sfui-red">';
+                                echo '<i class="fas fa-trash"></i>';
+                            echo '</span>';
+                            echo '<span class="super-add-secret sfui-btn sfui-icon sfui-grey">';
+                                echo '<i class="fas fa-plus"></i>';
+                            echo '</span>';
+                        echo '</li>';
+                    }
+                echo '</ul>';
+            echo '</div>';
+            echo '<div class="super-global-secrets">';
+                echo '<h3>' . esc_html__( 'Global secrets', 'super-forms' ) . '</h3>';
+                echo '<div class="sfui-notice sfui-desc">';
+                    echo '<strong>' . esc_html__('Info', 'super-forms') . ':</strong> ';
+                    echo esc_html__( 'Global secrets can be used in all your forms. Make sure to not alter any existing secrets or it could possibly impact previously created forms that are using global secrets.', 'super-forms' );
+                echo '</div>';
+                echo '<ul>';
+                    if( (is_array($secrets['global'])) && (!empty($secrets['global'])) ) {
+                        foreach($secrets['global'] as $k => $v){
+                            echo '<li>';
+                                echo '<span class="super-secret-tag">{@' . $v['name'] . '}</span>';
+                                echo '<input value="' . $v['name'] . '" disabled type="text" name="secretName" placeholder="' . esc_html__('Global secret name', 'super-forms') . '" />';
+                                echo '<input value="' . $v['value'] . '" disabled type="text" name="secretValue" placeholder="' . esc_html__('Global secret value', 'super-forms') . '" />';
+                                echo '<span class="super-delete-secret sfui-btn sfui-icon sfui-red">';
+                                    echo '<i class="fas fa-trash"></i>';
+                                echo '</span>';
+                                echo '<span class="super-edit-secret sfui-btn sfui-icon sfui-green">';
+                                    echo '<i class="fas fa-pencil-alt"></i>';
+                                echo '</span>';
+                                echo '<span class="super-add-secret sfui-btn sfui-icon sfui-grey">';
+                                    echo '<i class="fas fa-plus"></i>';
+                                echo '</span>';
+                            echo '</li>';
+                        }
+                    }else{
+                        echo '<li>';
+                            echo '<span class="super-secret-tag"></span>';
+                            echo '<input disabled type="text" name="secretName" placeholder="' . esc_html__('Global secret name', 'super-forms') . '" />';
+                            echo '<input disabled type="text" name="secretValue" placeholder="' . esc_html__('Global secret value', 'super-forms') . '" />';
+                            echo '<span class="super-delete-secret sfui-btn sfui-icon sfui-red">';
+                                echo '<i class="fas fa-trash"></i>';
+                            echo '</span>';
+                            echo '<span class="super-edit-secret sfui-btn sfui-icon sfui-green">';
+                                echo '<i class="fas fa-pencil-alt"></i>';
+                            echo '</span>';
+                            echo '<span class="super-add-secret sfui-btn sfui-icon sfui-grey">';
+                                echo '<i class="fas fa-plus"></i>';
+                            echo '</span>';
+                        echo '</li>';
+                    }
+                echo '</ul>';
+            echo '</div>';
+        echo '</div>';
+    }
 
     /**
-     * Handle TAB outputs on code page (edit raw form code)
+     * Handle TAB outputs for code tab (edit raw form code)
      */
     public static function code_tab($atts) {
         extract($atts);
@@ -77,9 +207,9 @@ class SUPER_Pages {
             echo sprintf( esc_html__( '%sTranslation settings:%s (this only includes the translation settings, not the actual strings, this is stored in the "Form elements" code)', 'super-forms' ), '<strong>', '</strong>' );
             echo '</p>';
             echo '<textarea></textarea>';
-            echo '<span class="super-update-raw-code sfui-btn sfui-green">';
+            echo '<span class="super-update-raw-code sfui-btn sfui-icon sfui-green">';
                 echo '<i class="fas fa-save"></i>';
-                echo esc_html__( 'Update all', 'super-forms' );
+                echo '<span>' . esc_html__( 'Update all', 'super-forms' ) . '<span>';
             echo '</span>';
         echo '</div>';
 
@@ -120,7 +250,7 @@ class SUPER_Pages {
                             <ul class="super-dropdown-items">
                                 <?php
                                 foreach($flags as $k => $v){
-                                    echo '<li class="super-item" data-value="' . $k . '"><img src="'. SUPER_PLUGIN_FILE . 'assets/images/blank.gif" class="flag flag-' . $k . '" />' . $v . '</li>';
+                                    echo '<li class="super-item" data-value="' . $k . '"><img src="'. esc_url(SUPER_PLUGIN_FILE . 'assets/images/blank.gif') . '" class="flag flag-' . $k . '" />' . $v . '</li>';
                                 }
                                 ?>
                             </ul>
@@ -165,12 +295,12 @@ class SUPER_Pages {
                                 }
                                 ?>
                                 <div class="super-dropdown" data-name="flag" data-placeholder="- <?php echo $flags_placeholder; ?> -">
-                                    <div class="super-dropdown-placeholder"><?php echo '<img src="'. SUPER_PLUGIN_FILE . 'assets/images/blank.gif" class="flag flag-' . $v['flag'] . '" />' . $flags[$v['flag']]; ?></div>
+                                    <div class="super-dropdown-placeholder"><?php echo '<img src="'. esc_url(SUPER_PLUGIN_FILE . 'assets/images/blank.gif') . '" class="flag flag-' . $v['flag'] . '" />' . $flags[$v['flag']]; ?></div>
                                     <div class="super-dropdown-search"><input type="text" placeholder="<?php echo esc_html__( 'Filter', 'super-forms' ); ?>..." /></div>
                                     <ul class="super-dropdown-items">
                                         <?php
                                         foreach($flags as $fk => $fv){
-                                            echo '<li data-value="' . $fk . '" class="super-item' . ($fk==$v['flag'] ? ' super-active' : '') . '"><img src="'. SUPER_PLUGIN_FILE . 'assets/images/blank.gif" class="flag flag-' . $fk . '" />' . $fv . '</li>';
+                                            echo '<li data-value="' . $fk . '" class="super-item' . ($fk==$v['flag'] ? ' super-active' : '') . '"><img src="'. esc_url(SUPER_PLUGIN_FILE . 'assets/images/blank.gif') . '" class="flag flag-' . $fk . '" />' . $fv . '</li>';
                                         }
                                         ?>
                                     </ul>
@@ -226,7 +356,7 @@ class SUPER_Pages {
                                 <ul class="super-dropdown-items">
                                     <?php
                                     foreach($flags as $k => $v){
-                                        echo '<li class="super-item" data-value="' . $k . '"><img src="'. SUPER_PLUGIN_FILE . 'assets/images/blank.gif" class="flag flag-' . $k . '" />' . $v . '</li>';
+                                        echo '<li class="super-item" data-value="' . $k . '"><img src="'. esc_url(SUPER_PLUGIN_FILE . 'assets/images/blank.gif') . '" class="flag flag-' . $k . '" />' . $v . '</li>';
                                     }
                                     ?>
                                 </ul>
@@ -306,6 +436,10 @@ class SUPER_Pages {
         // @since 4.7.0 - translations
         $translations = SUPER_Common::get_form_translations($form_id);
 
+        // @since 4.9.6 - secrets
+        $localSecrets = get_post_meta($form_id, '_super_local_secrets', true);
+        $globalSecrets = get_option( 'super_global_secrets' );
+
         // Include the file that handles the view
         include_once( SUPER_PLUGIN_DIR . '/includes/admin/views/page-create-form.php' );
        
@@ -352,7 +486,14 @@ class SUPER_Pages {
             $data = get_post_meta($_GET['id'], '_super_contact_entry_data', true);
             if(is_array($data)){
                 foreach($data as $k => $v){
-                    if((isset($v['type'])) && (($v['type']=='varchar') || ($v['type']=='var') || ($v['type']=='text') || ($v['type']=='field') || ($v['type']=='barcode') || ($v['type']=='files'))){
+                    if( (isset($v['type'])) && (
+                        ($v['type']=='varchar') || 
+                        ($v['type']=='var') || 
+                        ($v['type']=='text') || 
+                        ($v['type']=='google_address') || 
+                        ($v['type']=='field') || 
+                        ($v['type']=='barcode') || 
+                        ($v['type']=='files')) ) {
                         $data['fields'][] = $v;
                     }elseif((isset($v['type'])) && ($v['type']=='form_id')){
                         $data['form_id'][] = $v;
@@ -397,7 +538,7 @@ class SUPER_Pages {
                                                     <span><?php echo esc_html__('IP-address', 'super-forms' ).':'; ?> <strong><?php if(empty($ip)){ echo esc_html__('Unknown', 'super-forms' ); }else{ echo $ip; } ?></strong></span>
                                                 </div>
                                                 <div class="misc-pub-section">
-                                                    <?php echo '<span>' . esc_html__('Based on Form', 'super-forms' ) . ': <strong><a href="admin.php?page=super_create_form&id=' . $data['form_id'][0]['value'] . '">' . get_the_title( $data['form_id'][0]['value'] ) . '</a></strong></span>'; ?>
+                                                    <?php echo '<span>' . esc_html__('Based on Form', 'super-forms' ) . ': <strong><a href="' . esc_url('admin.php?page=super_create_form&id=' . $data['form_id'][0]['value']) . '">' . get_the_title( $data['form_id'][0]['value'] ) . '</a></strong></span>'; ?>
                                                 </div>
                                                 <?php
                                                 if(SUPER_WC_ACTIVE){
@@ -405,7 +546,7 @@ class SUPER_Pages {
                                                     if(!empty($wc_order_id)){
                                                         ?>
                                                         <div class="misc-pub-section">
-                                                            <span><?php echo esc_html__('WooCommerce Order', 'super-forms' ).':'; ?> <strong><?php echo '<a href="'.get_edit_post_link($wc_order_id,'').'">#'.$wc_order_id.'</a>'; ?></strong></span>
+                                                            <span><?php echo esc_html__('WooCommerce Order', 'super-forms' ).':'; ?> <strong><?php echo '<a href="' . esc_url(get_edit_post_link($wc_order_id,'')).'">#'.$wc_order_id.'</a>'; ?></strong></span>
                                                         </div>
                                                         <?php
                                                     }
@@ -415,7 +556,7 @@ class SUPER_Pages {
                                                 if( !empty($post_author_id) ) {
                                                     $user_info = get_userdata($post_author_id);
                                                     echo '<div class="misc-pub-section">';
-                                                        echo '<span>' . esc_html__( 'Submitted by', 'super-forms' ) . ': <a href="' . get_edit_user_link($user_info->ID) . '"><strong>' . $user_info->display_name . '</strong></a></span>';
+                                                        echo '<span>' . esc_html__( 'Submitted by', 'super-forms' ) . ': <a href="' . esc_url(get_edit_user_link($user_info->ID)) . '"><strong>' . $user_info->display_name . '</strong></a></span>';
                                                     echo '</div>';
                                                 }
                                                 ?>
@@ -503,7 +644,7 @@ class SUPER_Pages {
                                                             echo '<input type="text" disabled="disabled" value="' . esc_html__( 'No files uploaded', 'super-forms' ) . '" />';
                                                             echo '</span></td></tr>';
                                                         }
-                                                    }else if( ($v['type']=='varchar') || ($v['type']=='var') || ($v['type']=='field') ) {
+                                                    }else if( ($v['type']=='varchar') || ($v['type']=='var') || ($v['type']=='field') || ($v['type']=='google_address') ) {
                                                         if( !isset($v['value']) ) $v['value'] = '';
                                                         if ( strpos( $v['value'], 'data:image/png;base64,') !== false ) {
                                                             echo '<tr class="super-signature"><th align="right">' . esc_html( $v['label'] );

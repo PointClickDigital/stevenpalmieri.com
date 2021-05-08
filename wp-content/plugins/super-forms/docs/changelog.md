@@ -1,8 +1,247 @@
 # Super Forms - Changelog
 
-## Jun 11, 2020 - Version 4.9.467
+## PDF Generator Add-on now available! More info here:
 
-- **Fix:** Bug with dynamic columns and field name incremention
+- [PDF Generator Add-on](https://renstillmann.github.io/super-forms/#/pdf-generator-add-on)
+
+## Mar 16, 2021 - Version 4.9.800
+- **Added:** `WooCommerce Checkout Add-on` option under `Super Forms > Settings > WooCommerce Checkout` to exclude products the shop so that they can only be ordered via the form
+- **Added:** `WooCommerce Checkout Add-on` option under `Super Forms > Settings > WooCommerce Checkout` to replace the default "Add to cart" section with a specific form
+- **Added:** `Signature Add-on` Option to set signature line color
+- **Added:** Options to define the `region` and `language` for the Googla Maps API. This will affect the `Google Map` element, `Address autocomplete` and `Distance calculation` features
+- **Added:** Option to use `{tags}` for `Time picker` settings `The time that should appear first in the dropdown list (Minimum Time)` and `The time that should appear last in the dropdown list (Maximum Time)` which makes it possible to retrieve a "manipulated" timestamp which could for instance be set 6 hours in the future based on the current time. This can be used in combination with the `Calculator Add-on` demo form available here: [Dynamic time picker that is always 6 hours in the future](https://webrehab.zendesk.com/hc/en-gb/articles/360018108338)
+- **Added:** New option for column element `Align inner elements` which allows you to center, left, right align directly inner elements
+- **Added:** New `Retrieve method` called `Current Page or Post terms` for dropdown, radio, checkboxes to retrieve specific taxonomy terms based on the current page/post the form is on
+- **Added:** Predefined tags `{post_term_names_****}`, `{post_term_slugs_****}`, `{post_term_ids_****}`. This way you can retrieve specific terms based on taxonomy. For instance to retrieve category names of a post you could use `{post_term_names_category}`
+- **Added:** When `Prevent submitting form when entry title already exists` is enabled there is an extra option called `Also compare against trashed contact entries` which allows you to also check against possible trashed contact entries
+- **Added:** `Calculator Add-on` option to use space for Decimal and Thousand seperator under `Advanced` tab
+- **Improved:** Add missing escaped attributes
+- **Fix:** PDF Generator Add-on fix for iPhone specifically, psuedo elements `:after`, `:before` not being generated 
+- **Fix:** When using google address autocomplete field, the value was not being displayed on the entry page in the back-end `Super Forms > Contact Entry`
+- **Fix:** `Signature Add-on` Changing signature line thickness not working
+- **Fix:** Some hosts use a firewall rule that didn't allow to upload files due to it being uploaded inside a folder called `uploads` and `files` (uploads/php/files). This is now changed to (u/f) which solves a 403 error returned by the host
+- **Fix:** JavaScript error when using Google Map in combination with PDF Generator Add-on
+- **Fix:** Undo code that would speed up form loading time when using a lot of HTML elements with tags, however this code caused issues when using variable fields. Temporarily disabled / undo the code until we find a work-around or alternative
+- **Fix:** A recent speed improvement in the code caused issues with variable fields that contains more than one {tag} as value. Only the first {tag} would be replaced with a value, skipping any other {tags}.
+- **Fix:** Arbitrary File Upload to Remote Code Execution
+- **Fix:** When saving contact entry with default title, make sure there is a space between the entry ID and the title
+
+## Jan 28, 2021 - Version 4.9.700
+
+- **Fix:** Typo `from` should be `form`, causing issues with PDF generator when using `Currency` field together with `Calculator` element
+- **Improved:** Time picker element now uses WP core `current_time()` function when `Return current time as default value` is enabled to get time with the GMT offset in the WordPress option.
+- **Improved:** Contact entry search will also trigger when "copy/pasting" text into the input field on mobile devices
+- **Added:** Back-end translations:
+  - Afrikaans
+  - Arabic
+  - Bengali (Bangladesh)
+  - Czech
+  - Danish
+  - Dutch
+  - French (Canada)
+  - French (France)
+  - German
+  - Gujarati
+  - Hindi
+  - Hungarian
+  - Indonesian
+  - Italian
+  - Japanese
+  - Javanese
+  - Kannada
+  - Korean
+  - Marathi
+  - Norwegian (Nynorsk)
+  - Persian
+  - Polish
+  - Portuguese (Portugal)
+  - Punjabi
+  - Russian
+  - Spanish (Spain)
+  - Swahili
+  - Swedish
+  - Tamil
+  - Telugu
+  - Thai
+  - Turkish
+  - Urdu
+  - Vietnamese
+  - 香港中文版
+  - 繁體中文
+  - 简体中文
+
+## Jan 19, 2021 - Version 4.9.600
+
+- **Added:** Option to prevent saving contact entry if a contact entry with the same title already exists, more info here:
+  - [Prevent/disallow duplicate contact entry titles](https://webrehab.zendesk.com/hc/en-gb/articles/360017147758)
+- **Added:** `MailChimp Add-on` option to unsubscribe users by setting `Send the Mailchimp confirmation email` to `No` and setting `Subscriber status after submitting the form` to `Unsubscribed`
+- **Improved:** Form loading speed when using many HTML elements that contain many {tags}. Super Forms now remembers tag values and will not re-process these if they haven't changed since. This speeds up the loading speed significantly for forms that are using many HTML elements with many {tags}
+- **Fix:** When `Enable form POST method` is enabled in combination with `Enable custom parameter string for POST method` do not store `Thank you message` into a session, otherwise it would be displayed twice when user navigates to a different page.
+- **Fix:** When using multiple google address autocomplete elements in a form they would conflict with eachother.
+
+## Jan 14, 2021 - Version 4.9.584
+
+- **Added:** Option to add field {tags} inside the `Default value` setting, which would populate it on page load with the value from that field value. Previously you could only use predefined tags.
+- **Added:** `Calculator Add-on` option to directly retrieve [predefined tags](https://webrehab.zendesk.com/hc/en-gb/articles/360016934317#h_01EVVEFFDD34J8V4FM6W4ZPC6N) inside math, e.g: to retrieve current year, month or price of current WooCommerce product etc.
+- **Added:** Option to set separate error messages for validation error or empty field `Validation error message`, `Empty error message` more info here:
+  - [Displaying a separate error message for validation and when a field is empty](https://webrehab.zendesk.com/hc/en-gb/articles/360017041918-Displaying-a-separate-error-message-for-validation-and-when-a-field-is-empty)
+- **Fix:** Bug with `Date` element when setting `Allow user to choose a maximum of X dates` to anything higher than `1` causing it to switch to current month e.g when choosing 2 dates in month `Feb`, it would switch back to month `Jan`
+- **Fix:** Issue with dragging elements in Accordion element
+- **Fix:** Back-end settings CSS fix
+
+## Jan 12, 2021 - Version 4.9.580
+
+- **Added:** Option to map the so called `Formatted address (full address)` for Google address autocomplete
+- **Added:** Option for [Contact entry search](contact-entry-search.md) to return contact entry status, ID and Title by adding fields named `hidden_contact_entry_status`, `hidden_contact_entry_id` or `hidden_contact_entry_title`
+- **Added:** `WooCommerce Checkout Add-on` option to update Contact Entry status after WooCommerce order completed
+- **Added:** Option for google address autocomplete to return `The place's name`, `Formatted phone number`, `International phone number` and `Website of the business`
+- **Improved:** Google address autocomplete now also returns `City` if mapped as `postal_town` and or `sublocality_leve_1` see: [Maps JavaScript API documentation](https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform) for more info
+- **Improved:** When translating form make sure to only display settings that the main language field uses
+- **Improved:** When using google autocomplete the code will now determine what data is being used in your form, and strip out any unnecessary data from the API request which could considerably reduce costs
+- **Improved:** Focus/Filled status for currency field
+- **Fix:** JavaScript error on currency field when `Number format` contained space(s)
+- **Fix:** Builder UI scrolling bug in Firefox browser causing a continues scroll
+- **Fix:** When selecting default items for `Dropdown` element it would still display the placeholder instead of the actual selected item
+- **Fix:** US States element contained some incorrectly sorted items by alphabet
+- **Fix:** Issue with SMTP on older PHP versions due to WordPress moving the class to a different location
+- **Fix:** PHP Notice
+
+## Dec 22, 2020 - Version 4.9.570
+
+- **Added:** Option for [Address auto complete (google places)](address-auto-complete.md) to specify the types of results to return e.g:
+  - `geocode`: return only geocoding results, rather than business results. Generally, you use this request to disambiguate results where the location specified may be indeterminate.
+  - `address`: return only geocoding results with a precise address. Generally, you use this request when you know the user will be looking for a fully specified address.
+  - `establishment`: return only business results.
+  - `(regions)`: return any result matching the following types: locality, sublocality, postal_code, country, administrative_area_level_1, administrative_area_level_2
+  - `(cities)`: type collection instructs the Places service to return results that match locality or administrative_area_level_3
+- **Added:** Option for [Address auto complete (google places)](address-auto-complete.md) to restrict results by countrie(s) e.g: fr,nl,de (to restrict results by France, Netherlands and Germany)
+- **Improved:** `Keyword field` style improvements
+- **Improved:** [Auto suggest](auto-suggest.md) style improvements
+- **Improved:** Allow setting `The types of place results to return` to be empty for `Address auto complete` feature, so that all types can be returned when left blank
+- **Improved:** Clean up generated PDF datauri, no need to store it in contact entry data in database, it could also cause the database to throw error due to reaching maximum Text/Blob size
+- **Fix:** When filtering [Auto suggest](auto-suggest.md) make sure to preserve any spaces in the search results
+- **Fix:** Firefox adaptive placeholders focus automatically getting unfocussed
+- **Fix:** When using `Currency` field with a `Default value` make sure the masked is applied upon page load
+- **Fix:** When using connected datepickers in combination with a custom `Localization` e.g `Czech` and a min/max connected date, the connection would not function due to difference in date formats
+- **Fix:** Multi-part thinking there was still a field that required validation when in fact the field had become conditionally hidden while after the field had thrown a validation error. This caused the form being unable to submit.
+
+## Dec 08, 2020 - Version 4.9.556
+
+- **Fix:** When using double quotes in radio/checkbox/dropdown Labels (when using custom HTML for instance) make sure any backslashes are not saved
+- **Fix:** Calculator Add-on conditional logic wasn't working due to new CSS rule `display:fex!important;`
+
+## Dec 02, 2020 - Version 4.9.555
+
+- **Added:** `Default value` setting for `Timepicker` element, this way you can set a default time upon page load
+- **Improved:** PDF Generation will now be identical between mobile and desktop, no longer applies bigger font size, and or responsiveness
+- **Improved:** `{tag}` regular expression, so that values in a HTML element like `{something like this / and this}` are not being detected as valid `{tags}`
+- **Fix:** JS error when using signature element in combination with any top level conditional logic
+- **Fix:** WordPress moved PHPMailer class into different location from v5.5 and above. Causing issues for those that had SMTP enabled in super forms.
+
+## Nov 16, 2020 - Version 4.9.550
+
+- **Added:** [Secrets](secrets.md) to safely store sensitive data on server side, but still be able to retrieve it conditionally and use it in the form settings
+- **Fix:** When using Accordion or TAB element and using columns inside the column was not correctly closed in some scenario's
+- **Fix:** When using a `Global secret` inside a Hidden fields default value, it would be converted to the underlaying value upon page load
+- **Fix:** Problem with datepicker connected to a datepicker that allows a user to choose multiple dates automatically clearing the field value upon selecting dates
+- **Fix:** Issue when adaptive placeholders are being used, but are empty, would cause it to be prefixed with numbers "1" or "2"
+- **Fix:** JS error when not using adaptive placeholders
+
+## Oct 22, 2020 - Version 4.9.530
+
+- **New:** PDF Generator will now generate text to make PDF searchable
+- **Improved:** Use the build in WordPress PHP Mailer library instead of included one, and removed the library from plugin source code
+- **Fix:** Form not loading when using multiple forms on a single page
+- **Fix:** Internet Explorer javascript error (added polyfill for promises)
+- **Fix:** FireFox issue with adaptive placeholders causing to overlapping placeholder with text from the browsers remembered values (fields history)
+- **Fix:** Some PHP Notices/Warnings
+- **Fix:** {tags} for PDF filename not working
+- **Fix:** When using a field to search previous contact entry a JavaScript error is thrown causing the form to not load.
+- **Changed:** Default font family is now set to `"Helvetica", "Arial", sans-serif`
+
+## Sep 22, 2020 - Version 4.9.520
+
+- **Added:** When going to next multi-part super forms will remember the last step the user was on so when the user refreshes the page the last step will be opened.
+- **Added:** Option to link to a specific Multi-part via URL anchor e.g: `domain.com/order-form#step-12345-3` where `step` is the identifier, `12345` the form ID and `3` the step (multi-part) that needs to be openend/shown upon page load.
+- **Added:** Options for `Heading` element to use the WordPress theme styles by setting options to `none` or `-1`, for instance for Font weight, Line height etc.
+- **Added:** Options to control font styles (size, line height, font weight) globally (all elements) and for field labels/descriptions specifically, plus with the option to define the font styles on mobile devices (first/second responsiveness based on window/screen width).
+- **Fix:** Field placeholder font size not correctly set based on font settings.
+
+## Sep 03, 2020 - Version 4.9.514
+
+- **Fix:** JavaScript error when using conditional validation e.g: `Allow field to be empty > Yes, but not when the following conditions are met`
+
+## Aug 27, 2020 - Version 4.9.513
+
+- **Added:** Setting to turn of the new "Processing overlay/popup" and fall back to the legacy (old) thank you message `Form Settings > Form Settings > Display form processing overlay (popup)`
+- **Added:** Prefix `super` to `close` classname for zero conflict policy
+- **Improved:** When using the `Popup Add-on` and `Show thank you message` is disabled the popup should automatically close after form submission (this will prevent displaying an empty popup)
+- **Improved:** Added timestamp to Contact Entries export file name (solves problem with cached files)
+
+## Aug 13, 2020 - Version 4.9.512
+
+- **WP Requirements Compliant: Maintains items to Envato's current standards for WordPress**
+- **Improved:** Regex that looks for {tags} inside HTML element to exclude any tags that include double quote or single quote, because some third party plugin shortcodes might generate HTML with element attributes like `{"something":"here"}` which caused Super Forms to throw a JS error
+- **Fix:** HTML element with foreach loop without {tags} inside Multi-part not being updated
+- **Fix:** Make sure that third party plugins do not display notifications on the builder page that are not using the build in admin notice function within wordpress but a custom one
+- **Fix:** Responsiveness when using multiple form on a single page
+
+## Aug 04, 2020 - Version 4.9.508
+
+- **Fix:** Multi-part autostep function passed incorrect parameter causing problems with checkboxes and other selectable elements
+
+## Aug 03, 2020 - Version 4.9.507
+
+- **Fix:** Google Maps not loading due to JavaScript error
+- **Fix:** Several other JS errors fixed
+
+## Jul 31, 2020 - Version 4.9.506
+
+- **Fix:** JS error with Multi-part element when `Check for errors before going to next step` is enabled
+
+## Jul 30, 2020 - Version 4.9.504
+
+- **Improved:** Code refactoring
+- **Improved:** Responsiveness for Radio/Checkboxes with Grid layout enabled
+- **Fix:** When using radio/checkbox/dropdown with values like `0.2`, `0.20`, `0.200` and the option with `0.2` was set as the default value the other options should not be set as default value on the front-end. Fixed by enabling `strict` on `in_array()` function
+- **Fix:** When using address autocomplete with mapped fields and adaptive placeholder the "filled" status should be activated for the field
+
+## Jul 22, 2020 - Version 4.9.503
+
+- **Fix:** Allow user to trial Add-on even when on a non-secure connection (http)
+
+## Jul 21, 2020 - Version 4.9.502
+
+- **Improved:** Envato Quality Indicator Application
+  - Removed prefix from third-party assets handles
+  - Renamed asset handles to match filename, and without extension
+  - Missing translatable text strings
+  - Escape translatable strings
+  - Remove all unused code
+  - Escape all translatable strings
+  - Use `.on()` rather than `.click()`, `.bind()`, `.hover()`, `.submit()` etc.
+- **Fix:** Clear form after submission throwing javascript error
+
+## Jul 20, 2020 - Version 4.9.501
+
+- **Fix:** Compatibility with PayPal Add-on (not redirecting to PayPal checkout page after form submission)
+
+## Jul 17, 2020 - Version 4.9.500
+
+- **NEW:** PDF Generator Add-on, read the docs for more info here: [PDF Generator Add-on](https://renstillmann.github.io/super-forms/#/pdf-generator-add-on)
+- **Added:** Documentation for [Register & Login Add-on](https://renstillmann.github.io/super-forms/#/register-login-add-on)
+- **Added:** Documentation for [Zapier Add-on](https://renstillmann.github.io/super-forms/#/zapier-add-on)
+- **Added:** Documentation for [MailChimp Add-on](https://renstillmann.github.io/super-forms/#/mailchimp-add-on)
+- **Added:** Documentation for [Mailster Add-on](https://renstillmann.github.io/super-forms/#/mailster-add-on)
+- **Added:** Documentation for [Mailster Add-on](https://renstillmann.github.io/super-forms/#/mailster-add-on)
+
+## Jun 29, 2020 - Version 4.9.471
+
+- **Improved:** Tooltips are now also triggered by both `click` and `hover` events
+- **Improved:** Resonpsiveness for radio/checkbox items when using Large or Huge field size
+- **Fix:** Multipart autostep not working when having hidden fields at the bottom of a step
+- **Fix:** When using a predefined tag inside `Default value` setting in combination with a button with action set to `Clear/Reset form` it was replacing the field value to the raw {tag} instead of it's value
+- **Fix:** Bug with dynamic columns and field name incremental
 
 ## Jun 11, 2020 - Version 4.9.466
 
@@ -245,7 +484,7 @@ and Contact Entry
   - Passed all JavaScript files through `JShint` excluding third party libraries3
   - Escaping all Translatable strings
 - **Added:** Missing Font Awesome 5 brand icons & updated Font Awesome to v5.9
-- **Added:** Option to define a so called `specifier` to position the counter for `Email Labels` when using Dynamic Columns, example:
+- **Added:** Option to define a so called `specifier` to position the counter for `E-mail Labels` when using Dynamic Columns, example:
   - `Product %d quantity:` would be converted into `Product 3 quantity:`
   - `Product %d price:` would be converted into `Product 3 price:`
 - **Added:** Compatibility for TinyMCE Visual editor to count words with Calculator Add-on
@@ -283,7 +522,7 @@ and Contact Entry
 ## Apr 22, 2019 - Version 4.6.0
 
 - **Improved:** Update plugin checker system
-- **NEW:** Email Reminders Add-on
+- **NEW:** E-mail Reminders Add-on
 - **Added:** Option to retrieve timestamp with {tag;timestamp} for datepicker elements
 - **Added:** Option for dropdowns and checkboxes etc. to filter based on post status for retrieve method `post_type`
 - **Added:** reCAPTCHA v3 support
@@ -386,7 +625,7 @@ and Contact Entry
 - **Improved:** Decode email header function
 - **Fixed:** Multi-item element not remembering default selected options correctly
 - **Fixed:** IE bug fixes
-- **Fixed:** Emails where being stripped from + characters, which is a valid email address
+- **Fixed:** E-mails where being stripped from + characters, which is a valid email address
 - **Fixed:** Navigate through global settings and remove slashes from the values, to fix escaped quote issues in emails
 
 ## Jul 29, 2018 - Version 4.3.0
@@ -696,7 +935,7 @@ and Contact Entry
 
 ## Apr 17, 2017 - Version 2.9.0
 
-- **Added:** Form setup wizard (easy for selecting theme and setting other common options like: Email To: and Subject: settings)
+- **Added:** Form setup wizard (easy for selecting theme and setting other common options like: E-mail To: and Subject: settings)
 - **Added:** Toggle switch (on/off) field
 - **Added:** Tags/keyword option for text field
 - **Added:** Option to auto populate form with data based on last contact entry from a logged in user.
@@ -1218,7 +1457,7 @@ and Contact Entry
 - **Fixed:** When conditional logic used on an element inside a column that is placed inside a multipart it fails to display the multipart
 - **Fixed:** Submit button sometimes not correctly aligned
 - **Added:** New filter hook - super_form_styles_filter
-- **Added:** New predefined element (Email address)
+- **Added:** New predefined element (E-mail address)
 
 ## January 14, 2016 - Version 1.0.7
 

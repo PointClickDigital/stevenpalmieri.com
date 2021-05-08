@@ -1,5 +1,12 @@
 /* globals jQuery, SUPER, grecaptcha, super_common_i18n, ajaxurl, IBAN, tinyMCE, google, quicktags */
+
 "use strict";
+
+// polyfill remove() ie9 and above
+(function (arr) { arr.forEach(function (item) { if (item.hasOwnProperty('remove')) { return; } Object.defineProperty(item, 'remove', { configurable: true, enumerable: true, writable: true, value: function remove() { this.parentNode.removeChild(this); } }); }); })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+// polyfill es6 promises (auto)
+!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.ES6Promise=e()}(this,function(){"use strict";function t(t){var e=typeof t;return null!==t&&("object"===e||"function"===e)}function e(t){return"function"==typeof t}function n(t){W=t}function r(t){z=t}function o(){return function(){return process.nextTick(a)}}function i(){return"undefined"!=typeof U?function(){U(a)}:c()}function s(){var t=0,e=new H(a),n=document.createTextNode("");return e.observe(n,{characterData:!0}),function(){n.data=t=++t%2}}function u(){var t=new MessageChannel;return t.port1.onmessage=a,function(){return t.port2.postMessage(0)}}function c(){var t=setTimeout;return function(){return t(a,1)}}function a(){for(var t=0;t<N;t+=2){var e=Q[t],n=Q[t+1];e(n),Q[t]=void 0,Q[t+1]=void 0}N=0}function f(){try{var t=Function("return this")().require("vertx");return U=t.runOnLoop||t.runOnContext,i()}catch(e){return c()}}function l(t,e){var n=this,r=new this.constructor(p);void 0===r[V]&&x(r);var o=n._state;if(o){var i=arguments[o-1];z(function(){return T(o,r,i,n._result)})}else j(n,r,t,e);return r}function h(t){var e=this;if(t&&"object"==typeof t&&t.constructor===e)return t;var n=new e(p);return w(n,t),n}function p(){}function v(){return new TypeError("You cannot resolve a promise with itself")}function d(){return new TypeError("A promises callback cannot return that same promise.")}function _(t,e,n,r){try{t.call(e,n,r)}catch(o){return o}}function y(t,e,n){z(function(t){var r=!1,o=_(n,e,function(n){r||(r=!0,e!==n?w(t,n):A(t,n))},function(e){r||(r=!0,S(t,e))},"Settle: "+(t._label||" unknown promise"));!r&&o&&(r=!0,S(t,o))},t)}function m(t,e){e._state===Z?A(t,e._result):e._state===$?S(t,e._result):j(e,void 0,function(e){return w(t,e)},function(e){return S(t,e)})}function b(t,n,r){n.constructor===t.constructor&&r===l&&n.constructor.resolve===h?m(t,n):void 0===r?A(t,n):e(r)?y(t,n,r):A(t,n)}function w(e,n){if(e===n)S(e,v());else if(t(n)){var r=void 0;try{r=n.then}catch(o){return void S(e,o)}b(e,n,r)}else A(e,n)}function g(t){t._onerror&&t._onerror(t._result),E(t)}function A(t,e){t._state===X&&(t._result=e,t._state=Z,0!==t._subscribers.length&&z(E,t))}function S(t,e){t._state===X&&(t._state=$,t._result=e,z(g,t))}function j(t,e,n,r){var o=t._subscribers,i=o.length;t._onerror=null,o[i]=e,o[i+Z]=n,o[i+$]=r,0===i&&t._state&&z(E,t)}function E(t){var e=t._subscribers,n=t._state;if(0!==e.length){for(var r=void 0,o=void 0,i=t._result,s=0;s<e.length;s+=3)r=e[s],o=e[s+n],r?T(n,r,o,i):o(i);t._subscribers.length=0}}function T(t,n,r,o){var i=e(r),s=void 0,u=void 0,c=!0;if(i){try{s=r(o)}catch(a){c=!1,u=a}if(n===s)return void S(n,d())}else s=o;n._state!==X||(i&&c?w(n,s):c===!1?S(n,u):t===Z?A(n,s):t===$&&S(n,s))}function M(t,e){try{e(function(e){w(t,e)},function(e){S(t,e)})}catch(n){S(t,n)}}function P(){return tt++}function x(t){t[V]=tt++,t._state=void 0,t._result=void 0,t._subscribers=[]}function C(){return new Error("Array Methods must be provided an Array")}function O(t){return new et(this,t).promise}function k(t){var e=this;return new e(L(t)?function(n,r){for(var o=t.length,i=0;i<o;i++)e.resolve(t[i]).then(n,r)}:function(t,e){return e(new TypeError("You must pass an array to race."))})}function F(t){var e=this,n=new e(p);return S(n,t),n}function Y(){throw new TypeError("You must pass a resolver function as the first argument to the promise constructor")}function q(){throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.")}function D(){var t=void 0;if("undefined"!=typeof global)t=global;else if("undefined"!=typeof self)t=self;else try{t=Function("return this")()}catch(e){throw new Error("polyfill failed because global object is unavailable in this environment")}var n=t.Promise;if(n){var r=null;try{r=Object.prototype.toString.call(n.resolve())}catch(e){}if("[object Promise]"===r&&!n.cast)return}t.Promise=nt}var K=void 0;K=Array.isArray?Array.isArray:function(t){return"[object Array]"===Object.prototype.toString.call(t)};var L=K,N=0,U=void 0,W=void 0,z=function(t,e){Q[N]=t,Q[N+1]=e,N+=2,2===N&&(W?W(a):R())},B="undefined"!=typeof window?window:void 0,G=B||{},H=G.MutationObserver||G.WebKitMutationObserver,I="undefined"==typeof self&&"undefined"!=typeof process&&"[object process]"==={}.toString.call(process),J="undefined"!=typeof Uint8ClampedArray&&"undefined"!=typeof importScripts&&"undefined"!=typeof MessageChannel,Q=new Array(1e3),R=void 0;R=I?o():H?s():J?u():void 0===B&&"function"==typeof require?f():c();var V=Math.random().toString(36).substring(2),X=void 0,Z=1,$=2,tt=0,et=function(){function t(t,e){this._instanceConstructor=t,this.promise=new t(p),this.promise[V]||x(this.promise),L(e)?(this.length=e.length,this._remaining=e.length,this._result=new Array(this.length),0===this.length?A(this.promise,this._result):(this.length=this.length||0,this._enumerate(e),0===this._remaining&&A(this.promise,this._result))):S(this.promise,C())}return t.prototype._enumerate=function(t){for(var e=0;this._state===X&&e<t.length;e++)this._eachEntry(t[e],e)},t.prototype._eachEntry=function(t,e){var n=this._instanceConstructor,r=n.resolve;if(r===h){var o=void 0,i=void 0,s=!1;try{o=t.then}catch(u){s=!0,i=u}if(o===l&&t._state!==X)this._settledAt(t._state,e,t._result);else if("function"!=typeof o)this._remaining--,this._result[e]=t;else if(n===nt){var c=new n(p);s?S(c,i):b(c,t,o),this._willSettleAt(c,e)}else this._willSettleAt(new n(function(e){return e(t)}),e)}else this._willSettleAt(r(t),e)},t.prototype._settledAt=function(t,e,n){var r=this.promise;r._state===X&&(this._remaining--,t===$?S(r,n):this._result[e]=n),0===this._remaining&&A(r,this._result)},t.prototype._willSettleAt=function(t,e){var n=this;j(t,void 0,function(t){return n._settledAt(Z,e,t)},function(t){return n._settledAt($,e,t)})},t}(),nt=function(){function t(e){this[V]=P(),this._result=this._state=void 0,this._subscribers=[],p!==e&&("function"!=typeof e&&Y(),this instanceof t?M(this,e):q())}return t.prototype["catch"]=function(t){return this.then(null,t)},t.prototype["finally"]=function(t){var n=this,r=n.constructor;return e(t)?n.then(function(e){return r.resolve(t()).then(function(){return e})},function(e){return r.resolve(t()).then(function(){throw e})}):n.then(t,t)},t}();return nt.prototype.then=l,nt.all=O,nt.race=k,nt.resolve=h,nt.reject=F,nt._setScheduler=n,nt._setAsap=r,nt._asap=z,nt.polyfill=D,nt.Promise=nt,nt.polyfill(),nt});
+
 // polyfill for 'closest()' to support IE9+
 // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
 if (!Element.prototype.matches) {
@@ -25,6 +32,45 @@ SUPER.reCaptchaScriptLoaded = false;
 SUPER.reCaptchaverifyCallback = function($response, $version, $element){
     // Set data attribute on recaptcha containing response so we can verify this upon form submission
     $element.attr('data-response', $response);
+};
+SUPER.add_error_status_parent_layout_element = function($, el){
+    var index;
+    // Add error class to Multi-part
+    index = $(el).parents('.super-multipart:eq(0)').index('.super-form:eq(0) .super-multipart');
+    if(el.closest('.super-form') && el.closest('.super-form').querySelectorAll('.super-multipart-step')[index]){
+        el.closest('.super-form').querySelectorAll('.super-multipart-step')[index].classList.add('super-error');
+    }
+    // Add error class to TABS
+    if(el.closest('.super-tabs')){
+        index = $(el.closest('.super-tabs-content')).index();
+        if(el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index]){
+            el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index].classList.add('super-error');
+        }
+    }
+    // Add error class to Accordion
+    if(el.closest('.super-accordion-item')){
+        el.closest('.super-accordion-item').classList.add('super-error');
+    }
+};
+SUPER.remove_error_status_parent_layout_element = function($, el){
+    var index;
+    if( el.closest('.super-multipart') && !el.closest('.super-multipart').querySelector('.super-error-active')){
+        index = $(el).parents('.super-multipart:eq(0)').index('.super-form:eq(0) .super-multipart');
+        if(el.closest('.super-form') && el.closest('.super-form').querySelectorAll('.super-multipart-step')[index]){
+            el.closest('.super-form').querySelectorAll('.super-multipart-step')[index].classList.remove('super-error');
+        }
+    }
+    // Remove error class from TABS
+    if( el.closest('.super-tabs-content') && !el.closest('.super-tabs-content').querySelector('.super-error-active')){
+        index = $(el.closest('.super-tabs-content')).index();
+        if(el.closest('.super-tabs') && el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index]){
+            el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index].classList.remove('super-error');
+        }
+    }
+    // Remove error class from Accordion if no more errors where found
+    if( el.closest('.super-accordion-item') && !el.closest('.super-accordion-item').querySelector('.super-error-active')){
+        el.closest('.super-accordion-item').classList.remove('super-error');
+    }
 };
 function SUPERreCaptchaRender(){
     var $ = jQuery;
@@ -87,7 +133,6 @@ function SUPERreCaptcha(){
 (function($) {
 
     if(typeof super_common_i18n.ajaxurl === 'undefined'){
-        super_common_i18n.duration = 500;
         super_common_i18n.ajaxurl = ajaxurl;
     }
 
@@ -134,14 +179,13 @@ function SUPERreCaptcha(){
     SUPER.has_hidden_parent = function(changedField, includeMultiParts){
         if(changedField[0]) changedField = changedField[0];
 
-        var p,
-            parent = changedField.closest('.super-shortcode');
-
+        var p, parent;
         for (p = changedField && changedField.parentElement; p; p = p.parentElement) {
             if(p.classList.contains('super-form')) break;
             if( (p.classList.contains('super-column') || p.classList.contains('super-duplicate-column-fields')) && (p.style.display === 'none') ) return true;
         }
-        if( (parent.style.display=='none') && (!parent.classList.contains('super-hidden')) ) {
+        parent = changedField.closest('.super-shortcode');
+        if( parent && (parent.style.display=='none') && (!parent.classList.contains('super-hidden')) ) {
             return true;
         }
         
@@ -263,7 +307,7 @@ function SUPERreCaptcha(){
             $(this).prevAll('.super-rating-star').addClass('super-active');
             var $rating = $(this).index()+1;
             $(this).parent().find('input').val($rating);
-            SUPER.after_field_change_blur_hook($(this).parent().find('input')[0]);
+            SUPER.after_field_change_blur_hook({el: $(this).parent().find('input')[0]});
         });
         $('.super-rating-star').on('mouseover',function(){
             $(this).parent().find('.super-rating-star').removeClass('super-hover');
@@ -359,12 +403,8 @@ function SUPERreCaptcha(){
                     $(data.context.children()[index]).append(error);
                 });
                 alert(data.errorThrown.message);
-                var submitButton = form.querySelector('.super-form-button.super-loading');
-                submitButton.classList.remove('super-loading');
-                var buttonName = submitButton.querySelector('.super-button-name');
-                var normal = buttonName.dataset.normal;
-                buttonName.innerHTML = normal;
-                SUPER.handle_validations(el, undefined, '', undefined, form);
+                SUPER.reset_submit_button_loading_state(form);
+                SUPER.handle_validations({el: el, form: form});
                 SUPER.scrollToError(form);
             }).on('fileuploadsubmit', function (e, data) {
                 data.formData = {
@@ -378,10 +418,10 @@ function SUPERreCaptcha(){
 
     // @since 3.5.0 - calculate distance (google)
     var distance_calculator_timeout = null; 
-    SUPER.calculate_distance = function( changedField ) {
-        if(changedField.classList.contains('super-distance-calculator')){
-            var form = SUPER.get_frontend_or_backend_form(changedField),
-                $method = changedField.dataset.distanceMethod,
+    SUPER.calculate_distance = function(args){
+        if(args.el.classList.contains('super-distance-calculator')){
+            var form = SUPER.get_frontend_or_backend_form(args),
+                $method = args.el.dataset.distanceMethod,
                 $origin_field,
                 $origin,
                 $destination_field,
@@ -395,18 +435,18 @@ function SUPERreCaptcha(){
                 $html,
                 $alert_msg;
             if($method=='start'){
-                $origin_field = changedField;
-                $origin = changedField.value;
-                $destination = changedField.dataset.distanceDestination;
+                $origin_field = args.el;
+                $origin = args.el.value;
+                $destination = args.el.dataset.distanceDestination;
                 if(SUPER.field_exists(form, $destination)){
                     $destination_field = SUPER.field(form, $destination);
                     $destination = ($destination_field ? $destination_field.value : '');
                 }
             }else{
-                $origin_field = SUPER.field(form, changedField.dataset.distanceStart);
+                $origin_field = SUPER.field(form, args.el.dataset.distanceStart);
                 $origin = ($origin_field ? $origin_field.value : '');
-                $destination_field = changedField;
-                $destination = changedField.value;
+                $destination_field = args.el;
+                $destination = args.el.value;
             }
             $value = $origin_field.dataset.distanceValue;
             $units = $origin_field.dataset.distanceUnits;
@@ -420,7 +460,7 @@ function SUPERreCaptcha(){
                 clearTimeout(distance_calculator_timeout);
             }
             distance_calculator_timeout = setTimeout(function () {
-                changedField.closest('.super-field-wrapper').classList.add('super-calculating-distance');
+                args.el.closest('.super-field-wrapper').classList.add('super-calculating-distance');
                 $.ajax({
                     url: super_common_i18n.ajaxurl,
                     type: 'post',
@@ -453,8 +493,13 @@ function SUPERreCaptcha(){
                             }
                             $field = SUPER.field(form, $field);
                             $field.value = $calculation_value;
-                            SUPER.after_field_change_blur_hook($field);
-                            SUPER.init_replace_html_tags(undefined, form);
+                            if($calculation_value===''){
+                                $field.closest('.super-shortcode').classList.remove('super-filled');
+                            }else{
+                                $field.closest('.super-shortcode').classList.add('super-filled');
+                            }
+                            SUPER.after_field_change_blur_hook({el: $field});
+                            SUPER.init_replace_html_tags({el: $field, form: form}); //undefined, form);
                         }else{
                             if($result.status=='ZERO_RESULTS'){
                                 $alert_msg = super_common_i18n.errors.distance_calculator.zero_results;
@@ -475,7 +520,7 @@ function SUPERreCaptcha(){
                             $origin_field.blur();
                             if(typeof $destination_field !== 'undefined') $destination_field.blur();
                             $html += $alert_msg;
-                            $html += '<span class="close"></span>';
+                            $html += '<span class="super-close"></span>';
                             $html += '</div>';
                             $($html).prependTo($(form));
                             $('html, body').animate({
@@ -484,7 +529,7 @@ function SUPERreCaptcha(){
                         }
                     },
                     complete: function(){
-                        changedField.closest('.super-field-wrapper').classList.remove('super-calculating-distance');
+                        args.el.closest('.super-field-wrapper').classList.remove('super-calculating-distance');
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         // eslint-disable-next-line no-console
@@ -497,25 +542,25 @@ function SUPERreCaptcha(){
     };
 
     // Handle Conditional logic
-    SUPER.conditional_logic = function($changed_field, $form, $doing_submit){
-        var $conditional_logic,
-            $did_loop = false;
-
-        $form = SUPER.get_frontend_or_backend_form($changed_field, $form);
-        if(typeof $changed_field !== 'undefined'){
-            $conditional_logic = $form.querySelectorAll('.super-conditional-logic[data-fields*="{'+SUPER.get_field_name($changed_field)+'}"]');
+    SUPER.conditional_logic = function(args){
+        var logic,
+            didLoop = false,
+            form = SUPER.get_frontend_or_backend_form(args);
+        if(typeof args.el !== 'undefined'){
+            logic = form.querySelectorAll('.super-conditional-logic[data-fields*="{'+SUPER.get_field_name(args.el)+'}"]');
         }else{
-            $conditional_logic = $form.querySelectorAll('.super-conditional-logic');
+            logic = form.querySelectorAll('.super-conditional-logic');
         }
-        if(typeof $conditional_logic !== 'undefined'){
-            if($conditional_logic.length!==0){
-                $did_loop = true;
-                SUPER.conditional_logic.loop($changed_field, $form, $doing_submit, $conditional_logic);
+        if(typeof logic !== 'undefined'){
+            if(logic.length!==0){
+                didLoop = true;
+                args.conditionalLogic = logic;
+                SUPER.conditional_logic.loop(args);
             }
         }
         // Make sure that we still update variable fields based on changed field.
-        if( $did_loop===false ) {
-            SUPER.update_variable_fields($changed_field, $form, $doing_submit);
+        if( didLoop===false ) {
+            SUPER.update_variable_fields(args);
         }
     };
 
@@ -693,7 +738,7 @@ function SUPERreCaptcha(){
             text_field,
             string_value,
             bracket,
-            regular_expression,
+            regex,
             name,
             element,
             sum,
@@ -703,8 +748,8 @@ function SUPERreCaptcha(){
         string_value = value.toString();
         bracket = "{";
         if(string_value.indexOf(bracket) != -1){
-            regular_expression = /\{(.*?)\}/g;
-            name = regular_expression.exec(value);
+            regex = /{([^\\\/\s"'+]*?)}/g;
+            name = regex.exec(value);
             name = name[1];
             element = SUPER.field(form, name);
             if(element){
@@ -774,7 +819,8 @@ function SUPERreCaptcha(){
         }
         return $shortcode_field_value;
     };
-    SUPER.conditional_logic.loop = function($changed_field, $form, $doing_submit, $conditional_logic){
+    SUPER.conditional_logic.loop = function(args){
+        args.regex = /{([^\\\/\s"'+]*?)}/g;
         var v,
             $v,
             $this,
@@ -785,8 +831,7 @@ function SUPERreCaptcha(){
             $action,
             $conditions,
             $total,
-            $regular_expression = /\{(.*?)\}/g,
-            $regex = /{(.*?)}/g,
+            $regex = /{([^\\\/\s"'+]*?)}/g,
             $shortcode_field_value,
             $shortcode_field_and_value,
             $continue,
@@ -811,9 +856,9 @@ function SUPERreCaptcha(){
             $updated_variable_fields = {},
             $validation_error = false;
 
-        Object.keys($conditional_logic).forEach(function(key) {
+        Object.keys(args.conditionalLogic).forEach(function(key) {
             $prev_match_found = false;
-            $this = $conditional_logic[key];
+            $this = args.conditionalLogic[key];
             $wrapper = $this.closest('.super-shortcode');
             $field = $wrapper.querySelector('.super-shortcode-field');
             $is_variable = false;
@@ -834,7 +879,7 @@ function SUPERreCaptcha(){
 
             // Check if condition is a variable condition, also check if this is a text field, and if the form is being submitted.
             // If all are true, we must skip this condition to make sure any manual input data won't be reset/overwritten
-            if( ($is_variable===true) && ($wrapper.classList.contains('super-text')===true) && ($doing_submit===true) ) {
+            if( ($is_variable===true) && ($wrapper.classList.contains('super-text')===true) && (args.doingSubmit===true) ) {
                 return false;                
             }
 
@@ -849,10 +894,17 @@ function SUPERreCaptcha(){
                             $total++;
                             v = $conditions[key];
                             // @since 3.5.0 - make sure {tags} are replaced with the correct field value to check conditional logic
-                            v.value = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.value);
-                            v.value_and = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.value_and);
-                            $shortcode_field_value = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.field, undefined, true);
-                            $shortcode_field_and_value = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.field_and, undefined, true);
+                            args.value = v.value;
+                            v.value = SUPER.update_variable_fields.replace_tags(args);
+                            args.value = v.value_and;
+                            v.value_and = SUPER.update_variable_fields.replace_tags(args);
+                            args.value = v.field;
+                            args.bwc = true;
+                            $shortcode_field_value = SUPER.update_variable_fields.replace_tags(args);
+                            args.value = v.field_and;
+                            args.bwc = true;
+                            $shortcode_field_and_value = SUPER.update_variable_fields.replace_tags(args);
+                            delete args.bwc;
                             $continue = false;
                             $continue_and = false;
                             $skip = false;
@@ -867,7 +919,7 @@ function SUPERreCaptcha(){
                                     $regex.lastIndex++;
                                 }
                                 $field_name = $v[1].split(';')[0];
-                                $shortcode_field = SUPER.field($form, $field_name);
+                                $shortcode_field = SUPER.field(args.form, $field_name);
                                 if(!$shortcode_field) {
                                     $continue = true;
                                     continue;
@@ -883,7 +935,7 @@ function SUPERreCaptcha(){
                                         $regex.lastIndex++;
                                     }
                                     $field_name = $v[1].split(';')[0];
-                                    $shortcode_field_and = SUPER.field($form, $field_name);
+                                    $shortcode_field_and = SUPER.field(args.form, $field_name);
                                     if(!$shortcode_field_and){
                                         $continue_and = true;
                                         continue;
@@ -916,7 +968,8 @@ function SUPERreCaptcha(){
                                         if($match_found>=2) {
                                             $prev_match_found = true;
                                             if( v.new_value!=='' ) {
-                                                v.new_value = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.new_value);
+                                                args.value = v.new_value;
+                                                v.new_value = SUPER.update_variable_fields.replace_tags(args);
                                             }
                                             $field.value = v.new_value;
                                         }else{
@@ -927,7 +980,7 @@ function SUPERreCaptcha(){
                                             // because it would try to re-populate the variable field (could be text field) with it's data
                                             // but on page load this text field might already contain data which we rather not override :)
                                             // @important - or should we grab the data-default-value attribute?
-                                            if(typeof $changed_field !== 'undefined'){
+                                            if(typeof args.el !== 'undefined'){
                                                 $field.value = ''; // No match was found just set to an empty string
                                             }
                                         }
@@ -935,7 +988,8 @@ function SUPERreCaptcha(){
                                         if($match_found>=1) {
                                             $prev_match_found = true;
                                             if( v.new_value!=='' ) {
-                                                v.new_value = SUPER.update_variable_fields.replace_tags($form, $regular_expression, v.new_value);
+                                                args.value = v.new_value;
+                                                v.new_value = SUPER.update_variable_fields.replace_tags(args);
                                             }
                                             $field.value = v.new_value;
                                         }else{
@@ -946,7 +1000,7 @@ function SUPERreCaptcha(){
                                             // because it would try to re-populate the variable field (could be text field) with it's data
                                             // but on page load this text field might already contain data which we rather not override :)
                                             // @important - or should we grab the data-default-value attribute?
-                                            if(typeof $changed_field !== 'undefined'){
+                                            if(typeof args.el !== 'undefined'){
                                                 $field.value = ''; // No match was found just set to an empty string
                                             }
                                         }
@@ -1029,6 +1083,18 @@ function SUPERreCaptcha(){
                                 $validation_error = true;
                             });
                         }else{
+                            Object.keys($hide_wrappers).forEach(function(key) {
+                                if($hide_wrappers[key].classList.contains('super-error-active')){
+                                    $hide_wrappers[key].classList.remove('super-error-active');
+                                }
+                                var $innerNodes = $hide_wrappers[key].querySelectorAll('.super-error-active');
+                                Object.keys($innerNodes).forEach(function(ikey) {
+                                    $innerNodes[ikey].classList.remove('super-error-active');
+                                });
+                                // Check if parent is multi-part, tab, accordion, if so remove error class if no errors found
+                                // Remove error class from Multi-part if no more errors where found
+                                SUPER.remove_error_status_parent_layout_element($, $hide_wrappers[key]);
+                            });
                             if($action=='readonly'){
                                 // Hide wrappers
                                 Object.keys($hide_wrappers).forEach(function(key) {
@@ -1046,6 +1112,10 @@ function SUPERreCaptcha(){
                                 // Show wrappers
                                 Object.keys($show_wrappers).forEach(function(key) {
                                     $show_wrappers[key].style.display = 'block';
+                                    // Make sure signatures resizes/refreshes after becoming visible
+                                    if(typeof SUPER.refresh_signatures === 'function'){
+                                        SUPER.refresh_signatures('', $show_wrappers[key]);
+                                    }
                                     // Fix bug with slider element not having correct default position when initially conditionally hidden upon page load
                                     if($show_wrappers[key].classList.contains('super-slider')){
                                         var $element = $($show_wrappers[key]);
@@ -1082,15 +1152,15 @@ function SUPERreCaptcha(){
                                                     v = $data_fields[key];
                                                     if(v!==''){
                                                         v = v.replace('{','');
-                                                        $field = SUPER.field($form, v);
+                                                        $field = SUPER.field(args.form, v);
                                                         if($field){
-                                                            SUPER.after_field_change_blur_hook($field, $form, true);
+                                                            SUPER.after_field_change_blur_hook({el: $field, form: args.form, skip: true});
                                                         }
                                                     }
                                                 });
                                             }
                                         }
-                                        SUPER.after_field_change_blur_hook($inner[key], $form, true);
+                                        SUPER.after_field_change_blur_hook({el: $inner[key], form: args.form, skip: true});
                                     });
                                 });
                             }
@@ -1106,12 +1176,12 @@ function SUPERreCaptcha(){
 
         // @since 2.3.0 - update conditional logic and other variable fields based on the updated variable field
         $.each($updated_variable_fields, function( index, field ) {
-            SUPER.after_field_change_blur_hook(field);
+            SUPER.after_field_change_blur_hook({el: field});
         });
 
         // @since 1.4
         if(!$is_variable){
-            SUPER.update_variable_fields($changed_field, $form, $doing_submit);
+            SUPER.update_variable_fields(args);
         }
     };
 
@@ -1303,30 +1373,30 @@ function SUPERreCaptcha(){
     };
 
     // @since 1.4 - Update variable fields
-    SUPER.update_variable_fields = function($changed_field, $form, $doing_submit){
-        var $variable_fields;
-        if(typeof $changed_field !== 'undefined'){
-            $variable_fields = $form.querySelectorAll('.super-variable-conditions[data-fields*="{'+SUPER.get_field_name($changed_field)+'}"]');
+    SUPER.update_variable_fields = function(args){
+        if(typeof args.el !== 'undefined'){
+            args.conditionalLogic = args.form.querySelectorAll('.super-variable-conditions[data-fields*="{'+SUPER.get_field_name(args.el)+'}"]');
         }else{
-            $variable_fields = $form.querySelectorAll('.super-variable-conditions');
+            args.conditionalLogic = args.form.querySelectorAll('.super-variable-conditions');
         }
-        if(typeof $variable_fields !== 'undefined'){
-            if($variable_fields.length!==0){
-                SUPER.conditional_logic.loop($changed_field, $form, $doing_submit, $variable_fields);
+        if(typeof args.conditionalLogic !== 'undefined'){
+            if(args.conditionalLogic.length!==0){
+                SUPER.conditional_logic.loop(args);
             }
         }
     };
 
     // @since 3.0.0 - replace variable field {tags} with actual field values
-    SUPER.update_variable_fields.replace_tags = function($form, $regular_expression, $v_value, $target, $bwc){
-        if(typeof $bwc === 'undefined') $bwc = false;
-        if(typeof $target === 'undefined') $target = null;
-        if(typeof $v_value !== 'undefined' && $bwc){
+    SUPER.update_variable_fields.replace_tags = function(args){
+        if(typeof args.defaultValues === 'undefined') args.defaultValues = false;
+        if(typeof args.bwc === 'undefined') args.bwc = false;
+        if(typeof args.target === 'undefined') args.target = null;
+        if(typeof args.value !== 'undefined' && args.bwc){
             // If field name is empty do nothing
-            if($v_value==='') return '';
+            if(args.value==='') return '';
             // If field name doesn't contain any curly braces, then append and prepend them and continue;
-            if($v_value.indexOf('{')===-1) {
-                $v_value = '{'+$v_value+'}';   
+            if(args.value.indexOf('{')===-1) {
+                args.value = '{'+args.value+'}';   
             } 
         }
         var $array = [],
@@ -1346,22 +1416,30 @@ function SUPERreCaptcha(){
             $match,
             key,
             $values,
-            $element;
+            $element,
+            $regex = /{([^\\\/\s"'+]*?)}/g;
 
-        while (($match = $regular_expression.exec($v_value)) !== null) {
+        while (($match = $regex.exec(args.value)) !== null) {
+            if($match[0]==='{}') continue;
             $array[$i] = $match[1];
             $i++;
         }
         for ($i = 0; $i < $array.length; $i++) {
             $element = undefined; // @important!
             $name = $array[$i];
+            if($name=='pdf_page' && typeof SUPER.pdf_tags !== 'undefined' ){
+                return SUPER.pdf_tags.pdf_page;
+            }
+            if($name=='pdf_total_pages' && typeof SUPER.pdf_tags !== 'undefined' ){
+                return SUPER.pdf_tags.pdf_total_pages;
+            }
             if($name=='dynamic_column_counter'){
-                if($target){
-                    $v_value = $($target).parents('.super-duplicate-column-fields:eq(0)').index()+1;
-                    return $v_value;
+                if(args.target){
+                    args.value = $(args.target).parents('.super-duplicate-column-fields:eq(0)').index()+1;
+                    return args.value;
                 }
             }
-
+            
             // @since 3.2.0 - Compatibility with advanced tags {option;2;int}
             $old_name = $name;
             $options = $name.toString().split(';');
@@ -1395,35 +1473,35 @@ function SUPERreCaptcha(){
             // usage: $("input[id*='field_']")
             if($name.indexOf('*') >= 0){
                 $name = $name.replace('*','');
-                $element = SUPER.field($form, $name, '*');
+                $element = SUPER.field(args.form, $name, '*');
             }
             // Use ^ for starts with search
             // e.g: {field_1_^}
             // usage: $("input[id^='field_1_']")
             if($name.indexOf('^') >= 0){
                 $name = $name.replace('^','');
-                $element = SUPER.field($form, $name, '^');
+                $element = SUPER.field(args.form, $name, '^');
             }
             // Use $ for ends with search
             // e.g: {$_option}
             // usage: $("input[id$='_option']")
             if($name.indexOf('$') >= 0){
                 $name = $name.replace('$','');
-                $element = SUPER.field($form, $name, '$');
+                $element = SUPER.field(args.form, $name, '$');
             }
-            if(!$element) $element = SUPER.field($form, $name);
+            if(!$element) $element = SUPER.field(args.form, $name);
             if($element){
                 if($element[0]) $element = $element[0];
                 // Check if parent column or element is hidden (conditionally hidden)
                 if( SUPER.has_hidden_parent($element) ) {
                     // Exclude conditionally
                     // Lets just replace the field name with 0 as a value
-                    $v_value = $v_value.replace('{'+$old_name+'}', $default_value);
+                    args.value = args.value.replace('{'+$old_name+'}', $default_value);
                 }else{
                     $parent = $element.closest('.super-shortcode');
                     if( !$element ) {
                         // Lets just replace the field name with 0 as a value
-                        $v_value = $v_value.replace('{'+$old_name+'}', $default_value);
+                        args.value = args.value.replace('{'+$old_name+'}', $default_value);
                     }else{
                         $text_field = true;
                         $parent = $element.closest('.super-field');
@@ -1566,19 +1644,26 @@ function SUPERreCaptcha(){
                         if($parent.classList.contains('super-hidden')){
                             if($parent.dataset.conditionalVariableAction=='enabled'){
                                 $text_field = false;
-                                $new_value = $element.value.toString().split(';');
-                                if($value_n===0){
-                                    $new_value = $new_value[0];
+                                // Check contains semicolon as seperator, but also check if it doesn't contain a double quote,
+                                // because this would indicate that the user is trying to create a serialized array,
+                                // to update for instance meta data for a third party plugin
+                                if($element.value.indexOf('"')!==-1){
+                                    $value = $element.value;
                                 }else{
-                                    $new_value = $new_value[($value_n-1)];
-                                }
-                                if(typeof $new_value==='undefined'){
-                                    $new_value = '';
-                                }
-                                if($value_type=='int'){
-                                    $value = parseFloat($new_value);
-                                }else{
-                                    $value = $new_value;
+                                    $new_value = $element.value.toString().split(';');
+                                    if($value_n===0){
+                                        $new_value = $new_value[0];
+                                    }else{
+                                        $new_value = $new_value[($value_n-1)];
+                                    }
+                                    if(typeof $new_value==='undefined'){
+                                        $new_value = '';
+                                    }
+                                    if($value_type=='int'){
+                                        $value = parseFloat($new_value);
+                                    }else{
+                                        $value = $new_value;
+                                    }
                                 }
                             }
                         }
@@ -1602,8 +1687,8 @@ function SUPERreCaptcha(){
                             }else{
                                 $value = $element.value;
                             }
-                            if( $target ) {
-                                if( (typeof $element.dataset.value !== 'undefined') && ($target.classList.contains('super-html-content')) ) {
+                            if( args.target ) {
+                                if( (typeof $element.dataset.value !== 'undefined') && (args.target.classList.contains('super-html-content')) ) {
                                     $value = $element.dataset.value;
                                 }
                             }
@@ -1614,48 +1699,463 @@ function SUPERreCaptcha(){
                         if( ($value_type=='int') && (isNaN($value)) ) {
                             $value = $default_value;
                         }
-                        $v_value = $v_value.replace('{'+$old_name+'}', $value);
+                        args.value = args.value.replace('{'+$old_name+'}', $value);
                     }
                 }
             }
         }
-        return $v_value;
+        return args.value;
     };
 
     // Submit the form
-    SUPER.complete_submit = function( event, form, data, duration, old_html, status, status_update ){
+    SUPER.complete_submit = function(args){
         // If form has g-recaptcha element
-        if(($(form).find('.g-recaptcha').length!=0) && (typeof grecaptcha !== 'undefined')) {
+        if(($(args.form).find('.g-recaptcha').length!=0) && (typeof grecaptcha !== 'undefined')) {
             grecaptcha.ready(function(){
-                grecaptcha.execute($(form).find('.g-recaptcha .super-recaptcha').attr('data-sitekey'), {action: 'super_form_submit'}).then(function(token){
-                    SUPER.create_ajax_request(event, form, data, duration, old_html, status, status_update, token);
+                grecaptcha.execute($(args.form).find('.g-recaptcha .super-recaptcha').attr('data-sitekey'), {action: 'super_form_submit'}).then(function(token){
+                    args.token = token;
+                    SUPER.create_ajax_request(args);
                 });
             });
         }else{
-            SUPER.create_ajax_request(event, form, data, duration, old_html, status, status_update);
+            SUPER.create_ajax_request(args);
         }
     };
 
-    // Send form submission through ajax request
-    SUPER.create_ajax_request = function( event, form, data, duration, old_html, status, status_update, token ){
-        form = $(form);
+    // Send E-mail
+    SUPER.send_email = function(args) {
+        if(typeof args.pdfArgs === 'undefined') args.pdfArgs = false; 
+        var innerText = args.loadingOverlay.querySelector('.super-inner-text');
+        if(args.pdfArgs!==false){
+            // When debugging is enabled download file instantly without submitting the form
+            if(args.pdfArgs.pdfSettings.debug==="true"){
+                // Direct download of PDF
+                args.pdfArgs.pdf.save(args.pdfArgs.pdfSettings.filename).then(function() {
+                    // Close loading overlay
+                    SUPER.close_loading_overlay(args.loadingOverlay);
+                }, function() {
+                    // Show error message
+                    if(innerText) innerText.innerHTML = '<span>Something went wrong while downloading the PDF</span>';
+                });
+                return false;
+            }
+            // Update processing state
+            if(innerText) innerText.innerHTML = '<span>'+super_common_i18n.loadingOverlay.processing+'</span>';
+        }
+        $.ajax({
+            url: super_common_i18n.ajaxurl,
+            type: 'post',
+            data: {
+                action: 'super_send_email',
+                super_ajax_nonce: args.super_ajax_nonce,
+                data: args.data,
+                form_id: args.form_id,
+                entry_id: args.entry_id,
+                token: args.token,
+                version: args.version,
+                i18n: args.form.data('i18n') // @since 4.7.0 translation
+            },
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                if(args.showOverlay==="true"){
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            //Do something with upload progress here
+                            if(args.pdfArgs!==false){
+                                if(args.progressBar) args.progressBar.style.width = ((50*percentComplete)+50)+"%";  
+                            }else{
+                                if(args.progressBar) args.progressBar.style.width = (100*percentComplete)+"%";  
+                            }
+                        }
+                    }, false);
+                }
+                return xhr;
+            },
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.error===true){
+                    // Display error message
+                    SUPER.form_submission_finished(args, result);
+                }else{
+                    // Clear form progression (if enabled)
+                    if( args.form[0].classList.contains('super-save-progress') ) {
+                        $.ajax({
+                            url: super_common_i18n.ajaxurl,
+                            type: 'post',
+                            data: {
+                                action: 'super_save_form_progress',
+                                data: '',
+                                form_id: args.form_id
+                            }
+                        });
+                    }
+                    // Trigger js hook and continue
+                    SUPER.after_email_send_hook(args);
+                    // If a hook is redirecting we should avoid doing other things
+                    if(args.form.data('is-redirecting')){
+                        // However if a hook is doing things in the back-end, we must check until finished
+                        if(args.form.data('is-doing-things')){
+                            clearInterval(SUPER.submit_form_interval);
+                            SUPER.submit_form_interval = setInterval(function(){
+                                if(args.form.data('is-doing-things')){
+                                    // Still doing things...
+                                }else{
+                                    clearInterval(SUPER.submit_form_interval);
+                                    // Form submission is finished
+                                    SUPER.form_submission_finished(args, result);
+                                }
+                            }, 100);
+                        }
+                        return false; // Stop here, we are redirecting the form (used by Stripe)
+                    }
 
-        var html,
+                    // @since 2.2.0 - custom form POST method
+                    if( (args.form.find('form').attr('method')=='post') && (args.form.find('form').attr('action')!=='') ){
+                        args.form.find('form').submit(); // When doing custom POST, the form will redirect itself
+                        return false;
+                    }
+                    // Form submission is finished
+                    SUPER.form_submission_finished(args, result);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // eslint-disable-next-line no-console
+                console.log(xhr, ajaxOptions, thrownError);
+                alert('Failed to process data, please try again');
+            }
+        });
+    };
+
+
+    SUPER.close_loading_overlay = function(loadingOverlay){
+        if(loadingOverlay) loadingOverlay.remove();
+    };
+    SUPER.reset_pdf_generation = function(form){
+        // Only if not already canceled/reset
+        if(form && !form.classList.contains('super-generating-pdf')){
+            return false;
+        }
+        // Show scrollbar again
+        document.documentElement.classList.remove('super-hide-scrollbar');
+        var inlineStyle = document.querySelector('#super-generating-pdf');
+        if(inlineStyle) inlineStyle.remove();
+        // Make all mutli-parts invisible again (except for the last active multi-part)
+        // Make all TABs invisible
+        // Make all accordions invisible
+        var nodes = form.querySelectorAll('.super-multipart,.super-tabs-content,.super-accordion-item');
+        for(var i=0; i < nodes.length; i++){
+            if(!nodes[i].classList.contains('super-active-origin')){
+                nodes[i].classList.remove('super-active');
+            }else{
+                nodes[i].classList.remove('super-active-origin');
+            }
+        }
+        // @@@@@@@@@@@@@@
+        // // Re-enable the UI for Maps and resize to original width
+        // for(i=0; i < SUPER.google_maps_api.allMaps[$form_id].length; i++){
+        //     SUPER.google_maps_api.allMaps[$form_id][i].setOptions({
+        //         disableDefaultUI: false
+        //     });
+        //     var children = SUPER.google_maps_api.allMaps[$form_id][i]['super_el'].querySelectorAll(':scope > div');
+        //     for(var x=0; x < children.length; x++){
+        //         children[x].style.width = '';
+        //         if(children[x].classList.contains('super-google-map-directions')){
+        //             children[x].style.overflowY = 'scroll';
+        //             children[x].style.height = SUPER.google_maps_api.allMaps[$form_id][i]['super_el'].querySelector('super-google-map-'+$form_id).offsetHeight+'px';
+        //         }
+        //     }
+        // }
+        // @@@@@@@@@@@@@@
+
+        // Restore form position and remove the cloned form
+        // Before removing cloned form, insert original form before cloned form
+        form.querySelector('form').style.marginTop = '';
+        SUPER.reset_submit_button_loading_state(form);
+        var placeholder = document.querySelector('.super-pdf-placeholder');
+        placeholder.parentNode.insertBefore(form, placeholder.nextSibling);
+        form.classList.remove('super-generating-pdf');
+        placeholder.remove();
+        var pdfPageContainer = document.querySelector('.super-pdf-page-container');
+        if(pdfPageContainer) pdfPageContainer.remove();
+        SUPER.init_super_responsive_form_fields({form: form});
+    };
+    SUPER.reset_submit_button_loading_state = function(form){
+        var submitButton = form.querySelector('.super-form-button.super-loading');
+        if(submitButton){
+            submitButton.classList.remove('super-loading');
+            var buttonName = submitButton.querySelector('.super-button-name');
+            var normal = buttonName.dataset.normal;
+            buttonName.innerHTML = normal;
+        }
+    };
+
+    SUPER.before_generate_pdf = function(args, callback){
+        var form = args.form0;
+
+        // Define PDF tags
+        SUPER.pdf_tags = {
+            pdf_page: '{pdf_page}',
+            pdf_total_pages: '{pdf_total_pages}'
+        };
+
+        // Must hide scrollbar
+        document.documentElement.classList.add('super-hide-scrollbar');
+        form.classList.add('super-generating-pdf');
+        
+        // Normalize font styles
+        var normalizeFontStylesNodesClasses = 'h1, h2, h3, h4, h5, h6, .super-label, .super-description, .super-heading-title, .super-heading-description, .super-text .super-shortcode-field, .super-textarea .super-shortcode-field, .super-filled .super-adaptive-placeholder > span, .super-dropdown.super-filled .super-item.super-placeholder, .super-checkbox .super-item > div, .super-radio .super-item > div, .super-quantity .super-shortcode-field, .super-toggle-switch, .super-currency .super-shortcode-field, .super-slider .amount, .super-calculator-currency-wrapper, .super-calculator-label, .super-fileupload-name, .super-fileupload-button-text, .super-toggle-prefix-label > span, .super-toggle-suffix-label > span, .super-html-title, .super-html-subtitle, .super-html-content',
+        normalizeFontStylesNodesClassesExploded = normalizeFontStylesNodesClasses.split(','),
+        newNormalizeFontStylesNodesClasses = '';
+        for(i=0; i<normalizeFontStylesNodesClassesExploded.length; i++){
+            if(i>0) newNormalizeFontStylesNodesClasses += ', ';
+            newNormalizeFontStylesNodesClasses += '.super-pdf-page-container '+normalizeFontStylesNodesClassesExploded[i];
+        }
+
+        // Must hide elements
+        var css = '.super-hide-scrollbar {overflow: -moz-hidden-unscrollable!important; overflow: hidden!important;}';
+        // Required to render pseudo elements (html2canvas code was altered for this)
+        css += '.super-pdf-page-container.super-pdf-clone .super-form *:before,';
+        css += '.super-pdf-page-container.super-pdf-clone .super-form *:after {display:none!important;}';
+        // Set font weight, line height and letter spacing to normal sizes to avoid inconsistencies between PDF and rendered text in PDF
+        css += newNormalizeFontStylesNodesClasses + '{font-family:"Helvetica", "Arial", sans-serif!important;font-weight:normal!important;line-height:1.2!important;letter-spacing:0!important;}';
+        // Remove any form padding
+        css += '.super-pdf-page-container .super-form.super-adaptive { padding-top: 0px!important; }';
+        // Hide none essential elements/styles from the PDF output
+        css += '.super-generating-pdf *,';
+        css += '.super-generating-pdf *:after,';
+        css += '.super-generating-pdf .super-accordion-header:after,';
+        css += '.super-generating-pdf .super-accordion-header:before { transition: initial!important; }';
+        css += '.super-generating-pdf .super-accordion-header:before,';
+        css += '.super-generating-pdf .super-accordion-header:after,';
+        css += '.super-generating-pdf .super-form-button,';
+        css += '.super-generating-pdf .super-multipart-progress,';
+        css += '.super-generating-pdf .super-multipart-steps,';
+        css += '.super-generating-pdf .super-prev-multipart,';
+        css += '.super-generating-pdf .super-next-multipart,';
+        css += '.super-generating-pdf .super-tabs-menu,';
+        css += '.super-generating-pdf .super-signature-clear { display: none!important; }';
+        css += '.super-generating-pdf .super-accordion-header { border: 1px solid #d2d2d2; }';
+        css += '.super-generating-pdf .super-accordion-header { border: 1px solid #d2d2d2; }';
+        css += '.super-pdf-header, .super-pdf-body, .super-pdf-footer { display: block; float: left; width: 100%; overflow: hidden; }';
+        // Header margins
+        var headerMarginBottom = parseFloat(args.pdfSettings.margins.header.bottom)+parseFloat(args.pdfSettings.margins.body.top);
+        css += '.super-pdf-header {padding: '+args.pdfSettings.margins.header.top+args.pdfSettings.unit+' '+args.pdfSettings.margins.header.right+args.pdfSettings.unit+' '+headerMarginBottom+args.pdfSettings.unit+' '+args.pdfSettings.margins.header.left+args.pdfSettings.unit+' }';
+        css += '.super-pdf-header .super-form, .super-pdf-header .super-form form {padding:0!important;margin:0!important;float:left!important;width:100%!important;}';
+        // Body margins
+        css += '.super-pdf-body {padding: 0'+args.pdfSettings.unit+' '+args.pdfSettings.margins.body.right+args.pdfSettings.unit+' 0'+args.pdfSettings.unit+' '+args.pdfSettings.margins.body.left+args.pdfSettings.unit+';}';
+        // Footer margins
+        var footerMarginTop = parseFloat(args.pdfSettings.margins.footer.top)+parseFloat(args.pdfSettings.margins.body.bottom);
+        css += '.super-pdf-footer {padding: '+footerMarginTop+args.pdfSettings.unit+' '+args.pdfSettings.margins.footer.right+args.pdfSettings.unit+' '+args.pdfSettings.margins.footer.bottom+args.pdfSettings.unit+' '+args.pdfSettings.margins.footer.left+args.pdfSettings.unit+'; }';
+        css += '.super-pdf-footer .super-form, .super-pdf-footer .super-form form {padding:0!important;margin:0!important;float:left!important;width:100%!important;}';
+
+        var head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+        style.id = 'super-generating-pdf';
+        head.appendChild(style);
+        style.type = 'text/css';
+        if (style.styleSheet){
+            // This is required for IE8 and below.
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }
+
+        var formId = form.querySelector('input[name="hidden_form_id"]').value;
+
+
+        // Add form placeholder (fake form)
+        var placeholder = form.cloneNode(true);
+        placeholder.id = placeholder.id+'-placeholder';
+        placeholder.classList.add('super-pdf-placeholder');
+        args.placeholder = placeholder;
+        form.parentNode.insertBefore(placeholder, form.nextSibling);
+
+        // Remove responsiveness classes, so that mobile and desktop PDF look identical
+        var clonedForm = form.cloneNode(true);
+        var newClassName = '';
+        //var oldClassName = clonedForm.className;
+        for(var i=0; i<clonedForm.classList.length; i++){
+            // e.g: super-first-responsiveness, super-window-first-responsiveness
+            if(clonedForm.classList[i].indexOf('responsiveness')===-1){
+                newClassName += clonedForm.classList[i]+' ';
+            }
+        }
+        // Update classname
+        clonedForm.className = newClassName;
+        args.form0.className = newClassName;
+        var headerClone = clonedForm.cloneNode(true);
+        var footerClone = clonedForm.cloneNode(true);
+        
+        // PDF page container
+        var pdfPageContainer = document.createElement('div');
+        var html = '<div class="super-pdf-header">';
+            // Put any header(s) here
+        html += '</div>';
+        html += '<div class="super-pdf-body">';
+            // Put form here
+        html += '</div>';
+        html += '<div class="super-pdf-footer">';
+            // Put any footer(s) here
+        html += '</div>';
+        pdfPageContainer.innerHTML = html;
+        pdfPageContainer.classList.add('super-pdf-page-container');
+        document.body.appendChild(pdfPageContainer);
+        pdfPageContainer.style.width = (args.pageWidthInPixels*2)+'px';
+        pdfPageContainer.style.zIndex = "-999999999";
+        pdfPageContainer.style.left = "9999px";
+        pdfPageContainer.style.top = "-9999px";
+        // ------- for debugging only: ----
+        //debugger;
+        //pdfPageContainer.style.zIndex = "9999999999";
+        //pdfPageContainer.style.left = "0px";
+        //pdfPageContainer.style.top = "0px";
+        // ------- for debugging only: ----
+        pdfPageContainer.style.position = "fixed";
+        pdfPageContainer.style.backgroundColor = "#ffffff";
+        pdfPageContainer.style.height = (args.pageHeightInPixels*2)+'px';
+        pdfPageContainer.style.maxHeight = (args.pageHeightInPixels*2)+'px';
+        pdfPageContainer.style.overflow = "hidden";
+        pdfPageContainer.querySelector('.super-pdf-header').appendChild(headerClone);
+        pdfPageContainer.querySelector('.super-pdf-body').appendChild(args.form0);
+        pdfPageContainer.querySelector('.super-pdf-footer').appendChild(footerClone);
+
+        // Put header before form
+        headerClone.querySelector('form').innerHTML = '';
+        var header = form.querySelector('.super-shortcode[data-pdfoption="header"]');
+        if(header){
+            if(header.classList.contains('super-column')){
+                header = header.closest('.super-grid').cloneNode(true);
+            }else{
+                header = header.cloneNode(true);
+            }
+            header.classList.add('pdf-generated-header');
+            headerClone.querySelector('form').appendChild(header);
+        }
+
+        // Put footer after form
+        footerClone.querySelector('form').innerHTML = '';
+        var footer = form.querySelector('.super-shortcode[data-pdfoption="footer"]');
+        if(footer){
+            if(footer.classList.contains('super-column')){
+                footer = footer.closest('.super-grid').cloneNode(true);
+            }else{
+                footer = footer.cloneNode(true);
+            }
+            footer.classList.add('pdf-generated-footer');
+            footerClone.querySelector('form').appendChild(footer);
+        }
+
+        // Resize PDF body height based on header/footer heights
+        var headerFooterHeight = 0;
+        headerFooterHeight += pdfPageContainer.querySelector('.super-pdf-header').clientHeight;
+        headerFooterHeight += pdfPageContainer.querySelector('.super-pdf-footer').clientHeight;
+        args.scrollAmount = (args.pageHeightInPixels*2)-headerFooterHeight;
+        pdfPageContainer.querySelector('.super-pdf-body').style.height = args.scrollAmount+'px';
+        pdfPageContainer.querySelector('.super-pdf-body').style.maxHeight = args.scrollAmount+'px';
+
+        // Make all mutli-parts visible
+        // Make all TABs visible
+        // Make all accordions visible
+        var nodes = form.querySelectorAll('.super-multipart,.super-tabs-content,.super-accordion-item');
+        for( i=0; i < nodes.length; i++){
+            if(nodes[i].classList.contains('super-active')){
+                nodes[i].classList.add('super-active-origin');         
+            }else{
+                nodes[i].classList.add('super-active');
+            }
+        }
+
+        // Normalize all font sizes
+        // Example of allowed font sizes are: 10px, 12.5px, 15px, 17.5px, 20px etc. (increment with 2.5px)
+        // Other font sizes creates issues within the PDF
+        // We only have to loop over fields that we are going to print out
+        nodes = pdfPageContainer.querySelectorAll(normalizeFontStylesNodesClasses);
+        for( i=0; i < nodes.length; i++ ) {
+            var el = nodes[i];
+            if(el.classList.contains('super-heading-title')){
+                el = el.children[0];
+            }
+            var fontSize = parseFloat(window.getComputedStyle(el, null).getPropertyValue('font-size'));
+            var newFontSize = 2.5 * Math.ceil(fontSize/2.5);
+            el.style.fontSize = newFontSize+'px';
+        }
+
+        SUPER.init_super_responsive_form_fields({form: form, callback: function(){
+            // First disable the UI on the map for nicer print of the map
+            // And make map fullwidth and directions fullwidth
+            for(i=0; i < SUPER.google_maps_api.allMaps[formId].length; i++){
+                SUPER.google_maps_api.allMaps[formId][i].setOptions({
+                    disableDefaultUI: true
+                });
+                nodes = SUPER.google_maps_api.allMaps[formId][i]['super_el'].querySelectorAll(':scope > div');
+                for(var x=0; x < nodes.length; x++){
+                    nodes[x].style.width = '100%';
+                    if(nodes[x].classList.contains('super-google-map-directions')){
+                        nodes[x].style.overflowY = 'initial';
+                        nodes[x].style.height = 'auto';
+                    }
+                }
+            }
+            
+            // Convert height of textarea to fit content (otherwie it would be cut of during printing)
+            function adjustHeight(el, minHeight) {
+                // compute the height difference which is caused by border and outline
+                var outerHeight = parseInt(window.getComputedStyle(el).height, 10);
+                var diff = outerHeight - el.clientHeight;
+                // set the height to 0 in case of it has to be shrinked
+                el.style.height = 0;
+                // set the correct height
+                // el.scrollHeight is the full height of the content, not just the visible part
+                el.style.height = Math.max(minHeight, el.scrollHeight + diff) + 'px';
+            }
+            // we use the "data-adaptheight" attribute as a marker
+            // iterate through all the textareas on the page
+            var i, el, minHeight, nodes = form.querySelectorAll('.super-textarea .super-shortcode-field');
+            for(i=0; i<nodes.length; i++){
+                el = nodes[i];
+                // we need box-sizing: border-box, if the textarea has padding
+                el.style.boxSizing = el.style.mozBoxSizing = 'border-box';
+                // we don't need any scrollbars, do we? :)
+                el.style.overflowY = 'hidden';
+                // the minimum height initiated through the "rows" attribute
+                minHeight = el.scrollHeight * 1.03;
+                el.addEventListener('input', function() {
+                    adjustHeight(el, minHeight);
+                });
+                // we have to readjust when window size changes (e.g. orientation change)
+                window.addEventListener('resize', function() {
+                    adjustHeight(el, minHeight);
+                });
+                // we adjust height to the initial content
+                adjustHeight(el, minHeight);
+            }
+
+            // Grab the total form height, this is required to know how many pages will be generated for the PDF file
+            // This way we can also show the progression to the end user
+            //scrollAmount = (pageHeightInPixels*2);
+            args.totalPages = Math.ceil(form.clientHeight/args.scrollAmount);
+            if(args.progressBar) args.progressBar.style.width = 5+'%';
+            callback(args);
+        }});
+    };
+
+    // Send form submission through ajax request
+    SUPER.create_ajax_request = function(args){
+        var form = $(args.form),
+            data,
             form_id,
             entry_id,
             json_data,
             version,
             super_ajax_nonce;
 
-        // @since 3.4.0 - entry status
-        if(typeof status === 'undefined') status = '';
-        if(typeof status_update === 'undefined') status_update = '';
-
-        form_id = data.form_id;
-        entry_id = data.entry_id;
+        form_id = args.data.form_id;
+        entry_id = args.data.entry_id;
+        args.showOverlay = args.form.dataset.overlay;
 
         // @since 1.3
-        data = SUPER.after_form_data_collected_hook(data.data);
+        data = SUPER.after_form_data_collected_hook(args.data.data);
 
         // @since 3.2.0 - honeypot captcha check, if value is not empty cancel form submission
         data.super_hp = form.find('input[name="super_hp"]').val();
@@ -1670,133 +2170,367 @@ function SUPERreCaptcha(){
         json_data = JSON.stringify(data);
         form.find('textarea[name="json_data"]').val(json_data);
 
-        if(typeof token === 'undefined'){
+        if(typeof args.token === 'undefined'){
             if(form.find('.super-recaptcha:not(.g-recaptcha)').length!==0){
                 version = 'v2';
-                token = form.find('.super-recaptcha:not(.g-recaptcha) .super-recaptcha').attr('data-response');
+                args.token = form.find('.super-recaptcha:not(.g-recaptcha) .super-recaptcha').attr('data-response');
             }
         }else{
             version = 'v3';
         }
-        SUPER.before_email_send_hook(event, form, data, old_html, function(){
-            $.ajax({
-                url: super_common_i18n.ajaxurl,
-                type: 'post',
-                data: {
-                    action: 'super_send_email',
-                    super_ajax_nonce: super_ajax_nonce,
-                    data: data,
-                    form_id: form_id,
-                    entry_id: entry_id,
-                    entry_status: status,
-                    entry_status_update: status_update,
-                    token: token,
-                    version: version,
-                    i18n: form.data('i18n') // @since 4.7.0 translation
-                },
-                success: function (result) {
-                    result = JSON.parse(result);
-
-                    // Check for errors, if there are any display them to the user 
-                    if(result.error===true){
-                        html = '<div class="super-msg super-error">';
-                        if(typeof result.fields !== 'undefined'){
-                            $.each(result.fields, function( index, value ) {
-                                $(value+'[name="'+index+'"]').parent().addClass('error');
-                            });
-                        }                               
-                    }else{
-                        html = '<div class="super-msg super-success"';
-                        // @since 3.4.0 - option to not display the message
-                        if(result.display===false){
-                            html += 'style="display:none;">';
-                        }
-                        html += '>';
-                    }
-                    if(result.error===true){
-                        // Display error message
-                        SUPER.form_submission_finished(form[0], result, html, old_html, duration);
-                    }else{
-                        // Trigger js hook and continue
-                        SUPER.after_email_send_hook(form, data, old_html, result);
-                        // If a hook is redirecting we should avoid doing other things
-                        if(form.data('is-redirecting')){
-                            // However if a hook is doing things in the back-end, we must check until finished
-                            if(form.data('is-doing-things')){
-                                clearInterval(SUPER.submit_form_interval);
-                                SUPER.submit_form_interval = setInterval(function(){
-                                    if(form.data('is-doing-things')){
-                                        // eslint-disable-next-line no-console
-                                        console.log('still doing things...', form.data('is-doing-things'));
-                                    }else{
-                                        // eslint-disable-next-line no-console
-                                        console.log('done with things...', form.data('is-doing-things'));
-                                        clearInterval(SUPER.submit_form_interval);
-                                        // Form submission is finished
-                                        SUPER.form_submission_finished(form[0], result, html, old_html, duration);
-                                    }
-                                }, 100);
-                            }
-                            return false; // Stop here, we are redirecting the form (used by Stripe)
-                        }
-
-                        // @since 2.2.0 - custom form POST method
-                        if( (form.find('form').attr('method')=='post') && (form.find('form').attr('action')!=='') ){
-                            form.find('form').submit(); // When doing custom POST, the form will redirect itself
-                            return false;
-                        }
-
-                        // Form submission is finished
-                        SUPER.form_submission_finished(form[0], result, html, old_html, duration);
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    // eslint-disable-next-line no-console
-                    console.log(xhr, ajaxOptions, thrownError);
-                    alert('Failed to process data, please try again');
+        args.callback = function(args){
+            // Create loader overlay
+            var loadingOverlay = document.createElement('div');
+            var html = '';
+            html += '<div class="super-loading-wrapper">';
+                html += '<div class="super-close"></div>';
+                html += '<div class="super-loading-text">';
+                    html += '<div class="super-custom-el1"></div>';
+                    html += '<div class="super-inner-text"></div>';
+                    html += '<div class="super-progress">';
+                        html += '<div class="super-progress-bar"></div>';
+                    html += '</div>';
+                    html += '<div class="super-custom-el2"></div>';
+                html += '</div>';
+            html += '</div>';
+            loadingOverlay.innerHTML = html;
+            loadingOverlay.classList.add('super-loading-overlay');
+            loadingOverlay.querySelector('.super-inner-text').innerHTML = '<span>'+super_common_i18n.loadingOverlay.processing+'</span>';
+            loadingOverlay.querySelector('.super-close').innerHTML = '<span>'+super_common_i18n.loadingOverlay.close+'</span>';
+            var generatePdf = false, pdfSettings;
+            if( typeof SUPER.form_js !== 'undefined' && 
+                typeof SUPER.form_js[form_id] !== 'undefined' && 
+                typeof SUPER.form_js[form_id]._pdf !== 'undefined' && 
+                SUPER.form_js[form_id]._pdf.generate === "true" ) {
+                    generatePdf = true;
+                    pdfSettings = SUPER.form_js[form_id]._pdf;
+                    loadingOverlay.querySelector('.super-inner-text').innerHTML = '<span>'+pdfSettings.generatingText+'</span>';
+            }else{
+                // In case we are in back-end preview mode
+                if( typeof SUPER.get_form_settings === 'function' && 
+                    typeof SUPER.get_form_settings()._pdf !== 'undefined' && 
+                    SUPER.get_form_settings()._pdf.generate === "true" ) {
+                        generatePdf = true;
+                        pdfSettings = SUPER.get_form_settings()._pdf;
+                        loadingOverlay.querySelector('.super-inner-text').innerHTML = '<span>'+pdfSettings.generatingText+'</span>';
                 }
-            });
+            }
+
+            if(args.showOverlay==="true"){
+                document.body.appendChild(loadingOverlay);
+            }
+
+            // Close modal (should also reset pdf generation)
+            var closeBtn = loadingOverlay.querySelector('.super-close');
+            if(closeBtn){
+                closeBtn.addEventListener('click', function(){
+                    // Close overlay
+                    SUPER.close_loading_overlay(loadingOverlay);
+                });
+            }
+
+            var progressBar = document.querySelector('.super-loading-overlay .super-progress-bar');
+            args = {
+                form: form,
+                form0: form[0],
+                super_ajax_nonce: super_ajax_nonce,
+                oldHtml: args.oldHtml,
+                showOverlay: args.showOverlay,
+                data: data,
+                form_id: form_id,
+                entry_id: entry_id,
+                token: args.token,
+                version: version,
+                loadingOverlay: loadingOverlay,
+                progressBar: progressBar
+            }
+
+            // Generate PDF
+            if( generatePdf ){
+                // Page margins and print area
+                // Media                Page size           Print area              Margins
+                //                                                                  Top         Bottom      Sides
+                // A/Letter (U.S.)      8.5 x 11 in.        8.2 x 10.6 in.          .22 in.     .18 in      .15 in
+                // A4 (Metric)          210 x 297 mm        200 x 287 mm            5 mm        5 mm        5 mm
+                // Legal Short (U.S.)   8.5 x 14 in.        8.2 x 11.7 in           1.15 in.    1.15 in.    .15 in.
+                // Legal (U.S.)         8.5 x 14 in.        8.2 x 11.7 in. (Color)  1.15 in     2.25 in.    .15 in.
+                //                                          8.2 x 13.5 in. (Black)  .23 in      .23 in.     .15 in.
+
+                // Page formats
+                // Format       Size in Millimeters     Size in Inches          Point (pt)
+                // A0           841 x 1189              33.1 x 46.8
+                // A1           594 x 841               23.4 x 33.1
+                // A2           420 x 594               16.5 x 23.4
+                // A3           297 x 420               11.7 x 16.5
+                // A4           210 x 297               8.3 x 11.7              595.28, 841.89
+                // A5           148 x 210               5.8 x 8.3
+                // A6           105 x 148               4.1 x 5.8
+                // A7           74 x 105                2.9 x 4.1
+                // A8           52 x 74                 2.0 x 2.9
+                // A9           37 x 52	                1.5 x 2.0
+                // A10          26 x 37                 1.0 x 1.5
+
+
+                var orientation = pdfSettings.orientation;
+                var format = pdfSettings.format;
+                // Check if custom format is defined
+                var customFormat = pdfSettings.customformat;
+                if(typeof customFormat !== 'undefined' && customFormat!==''){
+                    customFormat = customFormat.split(',');
+                    if(typeof customFormat[1] !== 'undefined'){
+                        customFormat[0] = customFormat[0].trim();
+                        customFormat[1] = customFormat[1].trim();
+                        if(customFormat[0]!=='' && customFormat[1]!==''){
+                            format = customFormat;
+                        }
+                    }
+                }
+
+                // For quick debugging purposes only:
+                // eslint-disable-next-line no-undef
+                var pdf = new jsPDF({
+                    orientation: orientation,   // Orientation of the first page. Possible values are "portrait" or "landscape" (or shortcuts "p" or "l").
+                    format: format,             // The format of the first page.  Default is "a4"
+                    putOnlyUsedFonts: false,    // Only put fonts into the PDF, which were used.
+                    compress: false,            // Compress the generated PDF.
+                    precision: 16,              // Precision of the element-positions.
+                    userUnit: 1.0,              // Not to be confused with the base unit. Please inform yourself before you use it.
+                    floatPrecision: 16,         // or "smart", default is 16
+                    unit: pdfSettings.unit                  // Measurement unit (base unit) to be used when coordinates are specified.
+                });                             // Possible values are "pt" (points), "mm", "cm", "m", "in" or "px".
+                                                    // Can be:
+                                                    // a0 - a10
+                                                    // b0 - b10
+                                                    // c0 - c10
+                                                    // dl
+                                                    // letter
+                                                    // government-letter
+                                                    // legal
+                                                    // junior-legal
+                                                    // ledger
+                                                    // tabloid
+                                                    // credit-card
+
+                var pageWidth = pdf.internal.pageSize.getWidth();
+                var pageHeight = pdf.internal.pageSize.getHeight();
+
+                // PDF width: 595.28 pt
+                // PDF height: 841.89 pt
+                
+                // PDF width: 210.0015555555555 mm
+                // PDF height: 297.0000833333333 mm
+
+                // PDF width: 21.000155555555555 cm
+                // PDF height: 29.700008333333333 cm
+
+                // PDF width: 8.267777777777777 in
+                // PDF height: 11.692916666666667 in
+
+                // PDF width: 446.46 px
+                // PDF height: 631.4175 px
+
+                // pt to px  = X / 1.333333333333333
+                // mm to px  = X / 0.4703703703703702
+                // cm to px  = X / 0.04703703703703702
+                // in to px  = X / 0.0185185185010975
+
+                var k = 1;
+                if(pdfSettings.unit=='pt') k = 1.333333333333333;
+                if(pdfSettings.unit=='mm') k = 0.4703703703703702;
+                if(pdfSettings.unit=='cm') k = 0.04703703703703702;
+                if(pdfSettings.unit=='in') k = 0.0185185185010975;
+
+                var pageWidthInPixels = pageWidth / k;
+                var pageHeightInPixels = pageHeight / k;
+                // Make form scrollable based on a4 height
+                var scrollAmount = 0;
+
+                args.pageWidth = pageWidth;
+                args.pageHeight = pageHeight;
+                args.pageWidthInPixels = pageWidthInPixels;
+                args.pageHeightInPixels = pageHeightInPixels;
+                args.pdfSettings = pdfSettings;
+                args.scrollAmount = scrollAmount;
+                args.pdf = pdf;
+                args.pdfSettings.filename = SUPER.update_variable_fields.replace_tags({form: args.form0, value: args.pdfSettings.filename});
+
+                // Blur/unfocus any focussed field
+                // bug in google chrome on mobile devices
+                // .....
+                //
+                // Add a timeout (just to be sure)
+                setTimeout(function(){
+                    SUPER.before_generate_pdf(args, function(args){
+                        // Start generating pages (starting at page 1)
+                        args.currentPage = 1;
+                        pdf = SUPER.generate_pdf(args, function(pdf, form){
+                            // Reset everything to how it was
+                            SUPER.reset_pdf_generation(form);
+                            // Attach as file to form data
+                            var datauristring = pdf.output('datauristring', {
+                                filename: pdfSettings.filename
+                            });
+                            var exclude = 0;
+                            if(pdfSettings.adminEmail!=='true' && pdfSettings.confirmationEmail!=='true'){
+                                exclude = 2; // Exclude from both emails
+                            }else{
+                                if(pdfSettings.adminEmail==='true' && pdfSettings.confirmationEmail==='true'){
+                                    exclude = 0; // Do not exclude
+                                }else{
+                                    if(pdfSettings.adminEmail==='true'){
+                                        exclude = 1; // Exclude from confirmation email only
+                                    }
+                                    if(pdfSettings.confirmationEmail==='true'){
+                                        exclude = 3; // Exclude from admin email only
+                                    }
+                                }
+                            }
+                            data._generated_pdf_file = {
+                                files: [{
+                                    label: pdfSettings.emailLabel,
+                                    name: pdfSettings.filename,
+                                    datauristring: datauristring,
+                                    value: pdfSettings.filename
+                                }],
+                                label: pdfSettings.emailLabel,
+                                type: 'files',
+                                exclude: exclude
+                            };
+                            args.pdfArgs = {
+                                pdfSettings: pdfSettings,
+                                pdf: pdf
+                            }
+                            SUPER.send_email(args);
+                        }); 
+                    });
+                }, 500);
+                return false;
+            }
+            // We do not need to generate a PDF
+            SUPER.send_email(args);
+        };
+        SUPER.before_email_send_hook(args);
+    };
+    // Show PDF download button
+    SUPER.show_pdf_download_btn = function(args){
+        var btn = document.createElement('div');
+        btn.classList.add('super-pdf-download-btn');
+        btn.innerHTML = args.pdfArgs.pdfSettings.downloadBtnText;
+        args.loadingOverlay.querySelector('.super-loading-text').appendChild(btn);
+        btn.addEventListener('click', function(){
+            args.pdfArgs.pdf.save(args.pdfArgs.pdfSettings.filename);
         });
     };
     // Form submission is finished
-    SUPER.form_submission_finished = function(form, $result, $html, $old_html, $duration){
-        if($result.redirect){
-            window.location.href = $result.redirect;
-        }else{
-            if($result.msg!==''){
-                $html += $result.msg;
-                $html += '<span class="close"></span>';
-                $html += '</div>';
-                // Remove any existing messages
-                $('.super-msg').remove();
-                $($html).prependTo($(form));
+    SUPER.form_submission_finished = function(args, result){ 
+        if(args.showOverlay==="true"){
+            // Display message inside overlay
+            if(args.progressBar) args.progressBar.style.width = 100+"%";  
+            var innerText = args.loadingOverlay.querySelector('.super-inner-text');
+            if(innerText) {
+                innerText.innerHTML = '<span>'+super_common_i18n.loadingOverlay.completed+'</span>';
             }
-
-            // @since 3.4.0 - keep loading state active
-            if($result.loading!==true){
-                // @since 2.1.0
-                var $proceed = SUPER.before_scrolling_to_message_hook(form, $(form).offset().top - 30);
-                if($proceed===true){
-                    $('html, body').animate({
-                        scrollTop: $(form).offset().top-200
-                    }, 1000);
+            // Check if there is a message
+            if(result.msg!==''){
+                // Check if this is an error message
+                if(result.error===true){
+                    args.loadingOverlay.classList.add('super-error');
+                }else{
+                    args.loadingOverlay.classList.add('super-success');
+                    if(args.pdfArgs && args.pdfArgs.pdfSettings.downloadBtn==='true'){
+                        SUPER.show_pdf_download_btn(args);
+                    }
+                    // Close Popup (if any)
+                    if(typeof SUPER.init_popups === 'function' && typeof SUPER.init_popups.close === 'function' ){
+                        SUPER.init_popups.close(true);
+                    }
                 }
-                
-                $(form).find('.super-form-button.super-loading .super-button-name').html($old_html);
-                $(form).find('.super-form-button.super-loading').removeClass('super-loading');
-                if($result.error===false){
-
-                    // @since 2.0.0 - hide form or not
-                    if($(form).data('hide')===true){
-                        $(form).find('.super-field, .super-multipart-progress, .super-field, .super-multipart-steps').fadeOut($duration);
-                        setTimeout(function () {
-                            $(form).find('.super-field, .super-shortcode').remove();
-                        }, $duration);
-                    }else{
-                        // @since 2.0.0 - clear form after submitting
-                        if($(form).data('clear')===true){
-                            SUPER.init_clear_form(form);
-                        }
+                // Display the error/success message
+                if(innerText) innerText.innerHTML = result.msg;
+                // Convert any JS to executable JS
+                var node = innerText.querySelector('script');
+                if(node && node.tagName === 'SCRIPT'){
+                    var script  = document.createElement("script");
+                    script.text = node.innerHTML;
+                    for( var i = node.attributes.length-1; i >= 0; i-- ) {
+                        script.setAttribute( node.attributes[i].name, node.attributes[i].value );
+                    }
+                    node.parentNode.replaceChild(script, node);
+                }
+            }else{
+                // We do not want to display a thank you message, but might want to display a Download PDF button
+                if(args.pdfArgs && args.pdfArgs.pdfSettings.downloadBtn==='true'){
+                    args.loadingOverlay.classList.add('super-success');
+                    SUPER.show_pdf_download_btn(args);
+                }else{
+                    // Just close the overlay, no need to show download button and we do not have a message to display
+                    SUPER.close_loading_overlay(args.loadingOverlay);
+                }
+                // Close Popup (if any)
+                if(typeof SUPER.init_popups === 'function' && typeof SUPER.init_popups.close === 'function' ){
+                    SUPER.init_popups.close(true);
+                }
+            }
+        }else{
+            // Display message in legacy mode
+            // But only display if not empty
+            if(result.msg!==''){
+                // Remove existing messages
+                var ii,
+                    html,
+                    nodes = document.querySelectorAll('.super-msg');
+                for (ii = 0; ii < nodes.length; ii++) { 
+                    nodes[ii].remove();
+                }
+                // Check for errors, if there are any display them to the user 
+                if(result.error===true){
+                    html = '<div class="super-msg super-error">';
+                    if(typeof result.fields !== 'undefined'){
+                        $.each(result.fields, function( index, value ) {
+                            $(value+'[name="'+index+'"]').parent().addClass('error');
+                        });
+                    }                               
+                }else{
+                    html = '<div class="super-msg super-success"';
+                    // @since 3.4.0 - option to not display the message
+                    if(result.display===false){
+                        html += 'style="display:none;">';
+                    }
+                    html += '>';
+                }
+                html += result.msg;
+                html += '<span class="super-close"></span>';
+                html += '</div>';
+                $(html).prependTo($(args.form));
+                $('html, body').animate({
+                    scrollTop: $(args.form).offset().top-200
+                }, 1000);
+            }
+        }
+        // Redirect user to specified url
+        if(result.redirect){
+            window.location.href = result.redirect;
+        }
+        // @since 3.4.0 - keep loading state active
+        if(result.loading!==true){
+            SUPER.reset_submit_button_loading_state(args.form[0]);
+            if(result.error===false){
+                // @since 2.0.0 - hide form or not
+                if($(args.form).data('hide')===true){
+                    $(args.form).find('.super-field, .super-multipart-progress, .super-field, .super-multipart-steps').fadeOut(500);
+                    setTimeout(function () {
+                        $(args.form).find('.super-field, .super-shortcode').remove();
+                    }, 500);
+                }else{
+                    // @since 2.0.0 - clear form after submitting
+                    if($(args.form).data('clear')===true){
+                        SUPER.init_clear_form(args.form0);
+                    }
+                }
+                if(result.msg===''){
+                    // Close Popup (if any)
+                    if(typeof SUPER.init_popups === 'function' && typeof SUPER.init_popups.close === 'function' ){
+                        SUPER.init_popups.close(true);
                     }
                 }
             }
@@ -1804,10 +2538,10 @@ function SUPERreCaptcha(){
     };
 
     // File upload handler
-    SUPER.upload_files = function( e, form, data, duration, old_html, status, status_update ){
+    SUPER.upload_files = function(args){
         var i,nodes,minfiles,$this,wrapper,field,interval,total_file_uploads,shortcode_field;
         
-        nodes = form.querySelectorAll('.super-fileupload-files');
+        nodes = args.form.querySelectorAll('.super-fileupload-files');
         for( i = 0; i < nodes.length; i++) {
             minfiles = nodes[i].parentNode.querySelector('.super-active-files').dataset.minfiles;
             if( typeof minfiles === 'undefined' ) {
@@ -1817,12 +2551,12 @@ function SUPERreCaptcha(){
                 nodes[i].parentNode.querySelector('.super-fileupload').classList.add('finished');
             }
         }
-        nodes = form.querySelectorAll('.super-fileupload-files > div:not(.super-uploaded)');
+        nodes = args.form.querySelectorAll('.super-fileupload-files > div:not(.super-uploaded)');
         for( i = 0; i < nodes.length; i++) {
-            data = $(nodes[i]).data();
-            data.submit();
+            args.data = $(nodes[i]).data();
+            args.data.submit();
         }
-        $(form).find('.super-fileupload').on('fileuploaddone', function (e, data) {
+        $(args.form).find('.super-fileupload').on('fileuploaddone', function (e, data) {
             $this = $(this);
             wrapper = $this.parents('.super-field-wrapper:eq(0)');
             field = $(this).parents('.super-field-wrapper:eq(0)').children('input[type="hidden"]');
@@ -1837,8 +2571,8 @@ function SUPERreCaptcha(){
             });
             data[field.attr('name')] = field.val();
             if(wrapper.find('.super-fileupload-files > div.error').length){
-                $(form).find('.super-form-button.super-loading .super-button-name').html(old_html);
-                $(form).find('.super-form-button.super-loading').removeClass('super-loading');
+                $(args.form).find('.super-form-button.super-loading .super-button-name').html(args.oldHtml);
+                $(args.form).find('.super-form-button.super-loading').removeClass('super-loading');
                 clearInterval(interval);
             }else{
                 // Let's check if there are any errors with one of the files
@@ -1853,7 +2587,7 @@ function SUPERreCaptcha(){
         });
         interval = setInterval(function() {
             total_file_uploads = 0;
-            $(form).find('.super-fileupload').each(function(){
+            $(args.form).find('.super-fileupload').each(function(){
                 shortcode_field = $(this);
                 if( SUPER.has_hidden_parent(shortcode_field[0])===false ) {
                     total_file_uploads++;
@@ -1861,16 +2595,17 @@ function SUPERreCaptcha(){
                     shortcode_field.removeClass('finished');
                 }
             });
-            if($(form).find('.super-fileupload.finished').length == total_file_uploads){
+            if($(args.form).find('.super-fileupload.finished').length == total_file_uploads){
                 clearInterval(interval);
                 SUPER.init_fileupload_fields();
-                $(form).find('.super-fileupload').removeClass('super-rendered').fileupload('destroy');
-                data = SUPER.prepare_form_data($(form));
-                SUPER.before_submit_hook(e, form, data, old_html, function(){
+                $(args.form).find('.super-fileupload').removeClass('super-rendered').fileupload('destroy');
+                args.data = SUPER.prepare_form_data($(args.form));
+                args.callback = function(){
                     setTimeout(function() {
-                        SUPER.complete_submit( e, form, data, duration, old_html, status, status_update );
-                    }, 1000);    
-                });
+                        SUPER.complete_submit(args);
+                    }, 1000);
+                };
+                SUPER.before_submit_hook(args);
             }
         }, 1000);
     };
@@ -1883,9 +2618,9 @@ function SUPERreCaptcha(){
     };
 
     // Check for errors, validate fields
-    SUPER.handle_validations = function(el, validation, conditionalValidation, duration, form) {
-        if(el.closest('.super-shortcode').classList.contains('super-hidden')) return false;
-        var parent = el.closest('.super-field'),
+    SUPER.handle_validations = function(args){
+        if(args.el.closest('.super-shortcode').classList.contains('super-hidden')) return false;
+        var parent = args.el.closest('.super-field'),
             result,
             error = false,
             regex,
@@ -1895,21 +2630,18 @@ function SUPERreCaptcha(){
             attr,
             text_field,
             total,
-            logic,
-            conditions,
             field_value,
             value2,
             counter,
-            index,
             checked,
-            custom_regex = (el.parentNode.querySelector('.super-custom-regex') ? el.parentNode.querySelector('.super-custom-regex').value : undefined), // @since 1.2.5 - custom regex
-            mayBeEmpty = (typeof el.dataset.mayBeEmpty !== 'undefined' ? el.dataset.mayBeEmpty : 'false'),
+            custom_regex = (args.el.parentNode.querySelector('.super-custom-regex') ? args.el.parentNode.querySelector('.super-custom-regex').value : undefined), // @since 1.2.5 - custom regex
+            mayBeEmpty = (typeof args.el.dataset.mayBeEmpty !== 'undefined' ? args.el.dataset.mayBeEmpty : 'false'),
             allowEmpty = false,
             urlRegex = /^(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9]+([-.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
         
         // @since   4.9.0 -  Conditional required fields
         // Before we proceed, check if field is empty
-        if (el.value === '') {
+        if (args.el.value === '') {
             // If it is empty, check if it allowed to be empty
             if (typeof mayBeEmpty !== 'undefined') {
                 if (mayBeEmpty == 'false') {
@@ -1921,40 +2653,42 @@ function SUPERreCaptcha(){
                 if (mayBeEmpty == 'conditions') {
                     // Allow field to be empty only when following conditions are met
                     allowEmpty = true; 
-                    conditions = parent.querySelectorAll('.super-validate-conditions');
-                    if (conditions) {
-                        result = SUPER.conditional_logic.loop(el, form, false, conditions); // returns (bool) true when condition is not met
-                        if (!result) {
-                            allowEmpty = false; // when condition is met, we do not allow field to be empty
+                    args.conditionalLogic = args.form.querySelectorAll('.super-validate-conditions');
+                    if(typeof args.conditionalLogic !== 'undefined'){
+                        if(args.conditionalLogic.length!==0){
+                            result = SUPER.conditional_logic.loop(args);
+                            if (!result) {
+                                allowEmpty = false; // when condition is met, we do not allow field to be empty
+                            }
                         }
                     }
                 }
             }
         }
         regex = new RegExp(custom_regex);
-        if( custom_regex && validation=='custom' ) {
-            if(!regex.test(el.value)) error = true;
+        if( custom_regex && args.validation=='custom' ) {
+            if(!regex.test(args.el.value)) error = true;
         }
-        if (validation == 'captcha') {
+        if (args.validation == 'captcha') {
             error = true;
         }
-        if (validation == 'numeric') {
+        if (args.validation == 'numeric') {
             regex = /^\d+$/;
-            if (!regex.test(el.value)) error = true;
+            if (!regex.test(args.el.value)) error = true;
         }
-        if (validation == 'float') {
+        if (args.validation == 'float') {
             regex = /^[+-]?\d+(\.\d+)?$/;
-            if (!regex.test(el.value)) error = true;
+            if (!regex.test(args.el.value)) error = true;
         }
-        if (validation == 'email') {
+        if (args.validation == 'email') {
             regex = /^([\w-.+]+@([\w-]+\.)+[\w-]{2,63})?$/;
-            if ((el.value.length < 4) || (!regex.test(el.value))) {
+            if ((args.el.value.length < 4) || (!regex.test(args.el.value))) {
                 error = true;
             }
         }
-        if (validation == 'phone') {
+        if (args.validation == 'phone') {
             regex = /^((\+)?[1-9]{1,2})?([-\s.])?((\(\d{1,4}\))|\d{1,4})(([-\s.])?[0-9]{1,12}){1,2}$/;
-            value = el.value;
+            value = args.el.value;
             numbers = value.split("").length;
             if (10 <= numbers && numbers <= 20 && regex.test(value)) {
                 // is valid, continue
@@ -1962,15 +2696,15 @@ function SUPERreCaptcha(){
                 error = true;
             }
         }
-        if (validation == 'website') {
+        if (args.validation == 'website') {
             pattern = new RegExp(urlRegex);
-            if(!pattern.test(el.value)) error = true;
+            if(!pattern.test(args.el.value)) error = true;
         }
         // @since 2.6.0 - IBAN validation
-        if (validation == 'iban') {
-            if( (IBAN.isValid(el.value)===false) && (el.value!=='') ) error = true;
+        if (args.validation == 'iban') {
+            if( (IBAN.isValid(args.el.value)===false) && (args.el.value!=='') ) error = true;
         }
-        attr = el.dataset.minlength;
+        attr = args.el.dataset.minlength;
         if (typeof attr !== 'undefined' && attr !== false) {
             text_field = true;
             total = 0;
@@ -1993,11 +2727,11 @@ function SUPERreCaptcha(){
             }
             if(text_field===true){
                 if(!parent.classList.contains('super-date')){
-                    if(el.value.length < attr) error = true;
+                    if(args.el.value.length < attr) error = true;
                 }
             }       
         }
-        attr = el.dataset.maxlength;
+        attr = args.el.dataset.maxlength;
         if (typeof attr !== 'undefined' && attr !== false) {
             text_field = true;
             total = 0;
@@ -2018,156 +2752,115 @@ function SUPERreCaptcha(){
             }
             if(text_field===true){
                 if(!parent.classList.contains('super-date')){
-                    if(el.value.length > attr) error = true;
+                    if(args.el.value.length > attr) error = true;
                 }
             }
         }
-        attr = el.dataset.minnumber;
+        attr = args.el.dataset.minnumber;
         if (typeof attr !== 'undefined' && attr !== false) {
             // Check if currency field
             if(parent.classList.contains('super-currency')){
-                value = $(el).maskMoney('unmasked')[0];
+                value = $(args.el).maskMoney('unmasked')[0];
                 value = (value) ? parseFloat(value) : 0;
                 if( value < parseFloat(attr) ) error = true;
             }else{
-                if( parseFloat(el.value) < parseFloat(attr) ) error = true;
+                if( parseFloat(args.el.value) < parseFloat(attr) ) error = true;
             }
         }
-        attr = el.dataset.maxnumber;
+        attr = args.el.dataset.maxnumber;
         if (typeof attr !== 'undefined' && attr !== false) {
             // Check if currency field
             if(parent.classList.contains('super-currency')){
-                value = $(el).maskMoney('unmasked')[0];
+                value = $(args.el).maskMoney('unmasked')[0];
                 value = (value) ? parseFloat(value) : 0;
                 if( value > parseFloat(attr) ) error = true;
             }else{
-                if( parseFloat(el.value) > parseFloat(attr) ) error = true;
+                if( parseFloat(args.el.value) > parseFloat(attr) ) error = true;
             }
         }
 
         // Datepicker min dates
         if(parent && parent.classList.contains('super-date')){
-            attr = el.dataset.minpicks;
+            attr = args.el.dataset.minpicks;
             if (typeof attr !== 'undefined' && attr !== false) {
                 if( parseInt(attr,10)>0 ) {
-                    if(el.value==='') error = true;
-                    total = el.value.split(',').length;
+                    if(args.el.value==='') error = true;
+                    total = args.el.value.split(',').length;
                     if( total < parseFloat(attr) ) error = true;
                 }
             }
         }
 
         // @since   1.0.6
-        logic = conditionalValidation;
-        if( typeof logic!=='undefined' && logic!='none' && logic!=='' ) {
-            field_value = el.value;
+        if( typeof args.conditionalValidation!=='undefined' && args.conditionalValidation!='none' && args.conditionalValidation!=='' ) {
+            field_value = args.el.value;
             // Check if currency field
             if(parent.classList.contains('super-currency')){
-                value = $(el).maskMoney('unmasked')[0];
+                value = $(args.el).maskMoney('unmasked')[0];
                 field_value = (value) ? parseFloat(value) : 0;
             }
-            value = el.dataset.conditionalValidationValue;
-            value2 = el.dataset.conditionalValidationValue2;
-            if(typeof value !== 'undefined') value = SUPER.get_conditional_validation_value(value, form);
-            if(typeof value2 !== 'undefined') value2 = SUPER.get_conditional_validation_value(value2, form);
+            value = args.el.dataset.conditionalValidationValue;
+            value2 = args.el.dataset.conditionalValidationValue2;
+            if(typeof value !== 'undefined') value = SUPER.get_conditional_validation_value(value, args.form);
+            if(typeof value2 !== 'undefined') value2 = SUPER.get_conditional_validation_value(value2, args.form);
             counter = 0;
-            if(logic=='equal' && field_value==value) counter++;
-            if(logic=='not_equal' && field_value!=value) counter++;
-            if(logic=='contains' && field_value.indexOf(value) >= 0) counter++;
-            if(logic=='not_contains' && field_value.indexOf(value) == -1) counter++;
+            if(args.conditionalValidation=='equal' && field_value==value) counter++;
+            if(args.conditionalValidation=='not_equal' && field_value!=value) counter++;
+            if(args.conditionalValidation=='contains' && field_value.indexOf(value) >= 0) counter++;
+            if(args.conditionalValidation=='not_contains' && field_value.indexOf(value) == -1) counter++;
             field_value = parseFloat(field_value);
             value = parseFloat(value);
             value2 = parseFloat(value2);
-            if(logic=='greater_than' && field_value>value) counter++;
-            if(logic=='less_than' && field_value<value) counter++;
-            if(logic=='greater_than_or_equal' && field_value>=value) counter++;
-            if(logic=='less_than_or_equal' && field_value<=value) counter++;
+            if(args.conditionalValidation=='greater_than' && field_value>value) counter++;
+            if(args.conditionalValidation=='less_than' && field_value<value) counter++;
+            if(args.conditionalValidation=='greater_than_or_equal' && field_value>=value) counter++;
+            if(args.conditionalValidation=='less_than_or_equal' && field_value<=value) counter++;
             // @since 3.6.0 - more specific conditional validation options
             // > && <
             // > || <
-            if( (logic=='greater_than_and_less_than') && ((field_value>value) && (field_value<value2)) ) counter++;
-            if( (logic=='greater_than_or_less_than') && ((field_value>value) || (field_value<value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_and_less_than') && ((field_value>value) && (field_value<value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_less_than') && ((field_value>value) || (field_value<value2)) ) counter++;
             // >= && <
             // >= || <
-            if( (logic=='greater_than_or_equal_and_less_than') && ((field_value>=value) && (field_value<value2)) ) counter++;
-            if( (logic=='greater_than_or_equal_or_less_than') && ((field_value>=value) || (field_value<value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_equal_and_less_than') && ((field_value>=value) && (field_value<value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_equal_or_less_than') && ((field_value>=value) || (field_value<value2)) ) counter++;
             // > && <=
             // > || <=
-            if( (logic=='greater_than_and_less_than_or_equal') && ((field_value>value) && (field_value<=value2)) ) counter++;
-            if( (logic=='greater_than_or_less_than_or_equal') && ((field_value>value) || (field_value<=value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_and_less_than_or_equal') && ((field_value>value) && (field_value<=value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_less_than_or_equal') && ((field_value>value) || (field_value<=value2)) ) counter++;
             // >= && <=
             // >= || <=
-            if( (logic=='greater_than_or_equal_and_less_than_or_equal') && ((field_value>=value) && (field_value<=value2)) ) counter++;
-            if( (logic=='greater_than_or_equal_or_less_than_or_equal') && ((field_value>=value) || (field_value<=value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_equal_and_less_than_or_equal') && ((field_value>=value) && (field_value<=value2)) ) counter++;
+            if( (args.conditionalValidation=='greater_than_or_equal_or_less_than_or_equal') && ((field_value>=value) || (field_value<=value2)) ) counter++;
             if(counter===0) error = true;
         }
         // @since 4.3.0 - extra validation check for files
-        if(el.classList.contains('super-fileupload')){
-            attr = el.parentNode.querySelector('.super-active-files').dataset.minfiles;
+        if(args.el.classList.contains('super-fileupload')){
+            attr = args.el.parentNode.querySelector('.super-active-files').dataset.minfiles;
             if (typeof attr !== 'undefined' && attr !== false) {
-                total = el.parentNode.querySelectorAll('.super-fileupload-files > div').length;
+                total = args.el.parentNode.querySelectorAll('.super-fileupload-files > div').length;
                 if(total < attr) error = true;
             }
-            attr = el.parentNode.querySelector('.super-active-files').dataset.maxfiles;
+            attr = args.el.parentNode.querySelector('.super-active-files').dataset.maxfiles;
             if (typeof attr !== 'undefined' && attr !== false) {
-                total = el.parentNode.querySelectorAll('.super-fileupload-files > div').length;
+                total = args.el.parentNode.querySelectorAll('.super-fileupload-files > div').length;
                 if(total > attr) error = true;
             }
-            if(el.closest('.super-shortcode').classList.contains('super-error-active')){
+            if(args.el.closest('.super-shortcode').classList.contains('super-error-active')){
                 error = true;
             }
         }
         // Display error messages
-        if(allowEmpty && el.value==='') error = false;
-        if(typeof validation !== 'undefined' && !allowEmpty && el.value==='') error = true;
+        if(allowEmpty && args.el.value==='') error = false;
+        if(typeof args.validation !== 'undefined' && !allowEmpty && args.el.value==='') error = true;
         if(error){
-            SUPER.handle_errors(el);
-            // Add error class to Multi-part
-            index = $(el).parents('.super-multipart:eq(0)').index('.super-form:eq(0) .super-multipart');
-            if(el.closest('.super-form') && el.closest('.super-form').querySelectorAll('.super-multipart-step')[index]){
-                el.closest('.super-form').querySelectorAll('.super-multipart-step')[index].classList.add('super-error');
-            }
-            // Add error class to TABS
-            if(el.closest('.super-tabs')){
-                index = $(el.closest('.super-tabs-content')).index();
-                if(el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index]){
-                    el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index].classList.add('super-error');
-                }
-            }
-            // Add error class to Accordion
-            if(el.closest('.super-accordion-item')){
-                el.closest('.super-accordion-item').classList.add('super-error');
-            }
+            SUPER.handle_errors(args.el);
+            SUPER.add_error_status_parent_layout_element($, args.el);
         }else{
-            if(el.closest('.super-field')) el.closest('.super-field').classList.remove('super-error-active');
+            if(args.el.closest('.super-field')) args.el.closest('.super-field').classList.remove('super-error-active');
         }
-        // Remove error class from Multi-part if no more errors where found
-        if( el.closest('.super-multipart') && 
-            !el.closest('.super-multipart').querySelector('.super-error-active')){
-                index = $(el).parents('.super-multipart:eq(0)').index('.super-form:eq(0) .super-multipart');
-                if(el.closest('.super-form') && el.closest('.super-form').querySelectorAll('.super-multipart-step')[index]){
-                    el.closest('.super-form').querySelectorAll('.super-multipart-step')[index].classList.remove('super-error');
-                }
-        }
-        // Remove error class from TABS
-        if( el.closest('.super-tabs-content') && 
-            !el.closest('.super-tabs-content').querySelector('.super-error-active')){
-                index = $(el.closest('.super-tabs-content')).index();
-                if(el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index]){
-                    el.closest('.super-tabs').querySelectorAll('.super-tabs-tab')[index].classList.remove('super-error');
-                }
-        }
-        // Remove error class from Accordion if no more errors where found
-        if( el.closest('.super-accordion-item') && 
-            !el.closest('.super-accordion-item').querySelector('.super-error-active')){
-                el.closest('.super-accordion-item').classList.remove('super-error');
-        }
+        SUPER.remove_error_status_parent_layout_element($, args.el);
         return error;
-    };
-
-    // Get the error duration (for fades)
-    SUPER.get_duration = function(){
-        return parseFloat(super_common_i18n.duration);
     };
 
     // Output errors for each field
@@ -2176,7 +2869,8 @@ function SUPERreCaptcha(){
     };
 
     // Validate the form
-    SUPER.validate_form = function( form, submitButton, validateMultipart, e, doingSubmit ) {
+    SUPER.validate_form = function(args){ // form, submitButton, validateMultipart, e, doingSubmit
+        SUPER.conditional_logic(args);
 
         // // Check if any of the stripe elements are filled out correctly
         // // Pass this to the form data so we can do a check (if Stripe is enabled)
@@ -2184,17 +2878,15 @@ function SUPERreCaptcha(){
         // super-stripe-cc-element
         // super-stripe-iban-element
 
-        SUPER.before_validating_form_hook(undefined, form, doingSubmit);
+        SUPER.before_validating_form_hook(args);
 
         var i = 0, nodes,
-            action = (submitButton.querySelector('.super-button-name') ? submitButton.querySelector('.super-button-name').dataset.action : ''),
-            url = (typeof submitButton.dataset.href !== 'undefined' ? decodeURIComponent(submitButton.dataset.href) : undefined) ,
-            proceed = SUPER.before_submit_button_click_hook(e, submitButton),
-            regex = /\{(.*?)\}/g,
+            action = (args.submitButton.querySelector('.super-button-name') ? args.submitButton.querySelector('.super-button-name').dataset.action : ''),
+            url = (typeof args.submitButton.dataset.href !== 'undefined' ? decodeURIComponent(args.submitButton.dataset.href) : undefined) ,
+            proceed = SUPER.before_submit_button_click_hook(args.event, args.submitButton),
+            regex = /{([^\\\/\s"'+]*?)}/g,
             array = [],
-            data = [],
             error = false,
-            duration = SUPER.get_duration(),
             name,
             field,
             element,
@@ -2202,8 +2894,6 @@ function SUPERreCaptcha(){
             submitButtonName,
             oldHtml,
             loading,
-            status,
-            statusUpdate,
             index,
             total,
             match,
@@ -2215,16 +2905,16 @@ function SUPERreCaptcha(){
             textField;
 
         // Set action to empty string when the button is a multi-part button
-        if(submitButton.classList.contains('super-next-multipart') || submitButton.classList.contains('super-prev-multipart')){
+        if(args.submitButton.classList.contains('super-next-multipart') || args.submitButton.classList.contains('super-prev-multipart')){
             action = '';
         }
 
         if(action=='clear'){
-            SUPER.init_clear_form(form);
+            SUPER.init_clear_form(args.form);
             return false;
         }
         if(action=='print'){
-            SUPER.init_print_form(form, submitButton);
+            SUPER.init_print_form(args);
             return false;
         }
         if(proceed===true){
@@ -2235,7 +2925,7 @@ function SUPERreCaptcha(){
                 }
                 for (i = 0; i < array.length; i++) {
                     name = array[i];
-                    element = SUPER.field(form, name);
+                    element = SUPER.field(args.form, name);
                     if(element){
                         value = element.value;
                         url = url.replace('{'+name+'}', value);
@@ -2246,7 +2936,7 @@ function SUPERreCaptcha(){
                 if( url=='#' ) {
                     return false;
                 }else{
-                    target = submitButton.dataset.target;
+                    target = args.submitButton.dataset.target;
                     if( (target!=='undefined') && (target=='_blank') ) {
                         window.open( url, '_blank' );
                     }else{
@@ -2255,13 +2945,13 @@ function SUPERreCaptcha(){
                     return false;
                 }
             }else{
-                if(submitButton.closest('.super-form-button') && submitButton.closest('.super-form-button').classList.contains('super-loading')){
+                if(args.submitButton.closest('.super-form-button') && args.submitButton.closest('.super-form-button').classList.contains('super-loading')){
                     return false;
                 }
             }
         }
         // @since 2.0 - multipart validation
-        if(typeof validateMultipart === 'undefined') validateMultipart = '';
+        if(typeof args.validateMultipart === 'undefined') args.validateMultipart = '';
 
         // @since 1.2.4     make sure the text editor saves content to it's textarea
         if( typeof tinyMCE !== 'undefined' ) {
@@ -2271,7 +2961,7 @@ function SUPERreCaptcha(){
         }
 
         //nodes = form.querySelectorAll('.super-field .super-shortcode-field, .super-field .super-recaptcha, .super-field .super-active-files');
-        nodes = SUPER.field(form, '', 'all');
+        nodes = SUPER.field(args.form, '', 'all');
         for ( i = 0; i < nodes.length; i++) {
             field = nodes[i];
             textField = true;
@@ -2312,7 +3002,7 @@ function SUPERreCaptcha(){
                 if(textField===true){
                     validation = field.dataset.validation;
                     conditionalValidation = field.dataset.conditionalValidation;
-                    if (SUPER.handle_validations(field, validation, conditionalValidation, duration, form)) {
+                    if (SUPER.handle_validations({el: field, form: args.form, validation: validation, conditionalValidation: conditionalValidation})) {
                         error = true;
                     }
                 }
@@ -2320,51 +3010,54 @@ function SUPERreCaptcha(){
         }
 
         // Activate possible TABS and Accordions to display errors
-        var tabs = form.querySelectorAll('.super-tabs-tab.super-error');
+        var tabs = args.form.querySelectorAll('.super-tabs-tab.super-error');
         if(tabs && tabs[0]) tabs[0].click();
-        var accordions = form.querySelectorAll('.super-accordion-item.super-error');
+        var accordions = args.form.querySelectorAll('.super-accordion-item.super-error');
         if(accordions && accordions[0]) accordions[0].querySelector('.super-accordion-header').click();
 
         if(error===false){
 
             // Check if there are other none standard elements that have an active error
             // Currently used by Stripe Add-on to check for invalid card numbers for instance
-            if(form.querySelectorAll('.super-error-active').length){
-                SUPER.scrollToError(form);
+            if(args.form.querySelectorAll('.super-error-active').length){
+                SUPER.scrollToError(args.form);
                 return true;
             }
 
             // @since 2.0.0 - multipart validation
-            if(validateMultipart===true) return true;
+            if(args.validateMultipart===true) return true;
 
-            submitButtonName = submitButton.querySelector('.super-button-name');
+            submitButtonName = args.submitButton.querySelector('.super-button-name');
 
-            submitButton.closest('.super-form-button').classList.add('super-loading');
+            args.submitButton.closest('.super-form-button').classList.add('super-loading');
             oldHtml = submitButtonName.innerHTML;
 
             // @since 2.0.0 - submit button loading state name
-            loading = submitButton.querySelector('.super-button-name').dataset.loading;
+            loading = args.submitButton.querySelector('.super-button-name').dataset.loading;
             if(super_common_i18n.loading!='Loading...') {
                 loading = super_common_i18n.loading;
             }
-            
-            // @since 3.4.0 - entry statuses
-            status = submitButtonName.dataset.status;
-            statusUpdate = submitButtonName.dataset.statusUpdate;
 
             submitButtonName.innerHTML = '<i class="fas fa-refresh fa-spin"></i>'+loading;
-            if (form.querySelectorAll('.super-fileupload-files > div').length !== 0) {
-                SUPER.upload_files( e, form, data, duration, oldHtml, status, statusUpdate );
+            // Prepare arguments
+            args = {
+                event: args.event,
+                form: args.form,
+                data: SUPER.prepare_form_data($(args.form)),
+                oldHtml: oldHtml,
+            };
+            if (args.form.querySelectorAll('.super-fileupload-files > div').length !== 0) {
+                SUPER.upload_files(args);
             }else{
-                data = SUPER.prepare_form_data($(form));
-                SUPER.before_submit_hook(e, form, data, oldHtml, function(){
-                    SUPER.complete_submit( e, form, data, duration, oldHtml, status, statusUpdate );
-                });
+                args.callback = function(){
+                    SUPER.complete_submit(args);
+                };
+                SUPER.before_submit_hook(args);
             }
         }else{
-            SUPER.scrollToError(form, validateMultipart);
+            SUPER.scrollToError(args.form, args.validateMultipart);
         }
-        SUPER.after_validating_form_hook(undefined, form);
+        SUPER.after_validating_form_hook(undefined, args.form);
 
     };
 
@@ -2424,30 +3117,36 @@ function SUPERreCaptcha(){
     };
 
     // @since 1.2.3
-    SUPER.auto_step_multipart = function(field, form){
-        var i,
-            nodes, 
-            auto_step, 
-            total_fields, 
-            counter, 
-            active_part = form.querySelector('.super-multipart.super-active');
-        if(active_part){
-            auto_step = active_part.dataset.stepAuto;
-            if( auto_step=='yes') {
-                total_fields = 0;
-                nodes = active_part.querySelectorAll('.super-shortcode-field');
-                for (i = 0; i < nodes.length; ++i) {
-                    if(!SUPER.has_hidden_parent(nodes[i])) total_fields++;
-                }
-                counter = 1;
-                nodes = active_part.querySelectorAll('.super-shortcode-field');
+    SUPER.auto_step_multipart = function(args){
+        // If triggered field change is not inside active multi-part we skip it
+        var activeMultipart = args.el.closest('.super-multipart.super-active');
+        if(!activeMultipart) return false;
+        var i, nodes, totalFields, counter;
+        if(activeMultipart){
+            if( activeMultipart.dataset.stepAuto=='yes') {
+                totalFields = 0;
+                nodes = activeMultipart.querySelectorAll('.super-shortcode-field');
                 for (i = 0; i < nodes.length; ++i) {
                     if(!SUPER.has_hidden_parent(nodes[i])){
-                        if(total_fields==counter){
-                            if(nodes[i].name==field.name){
+                        // Also exclude any hidden fields, because `has_hidden_parent()` doesn't check for this
+                        if(nodes[i].type=='hidden'){
+                            if(nodes[i].closest('.super-shortcode').classList.contains('super-hidden')){
+                                continue;
+                            }
+                        }
+                        totalFields++;
+                    }
+                }
+                counter = 1;
+                nodes = activeMultipart.querySelectorAll('.super-shortcode-field');
+                for (i = 0; i < nodes.length; ++i) {
+                    if(!SUPER.has_hidden_parent(nodes[i])){
+                        if(totalFields==counter){
+                            if(nodes[i].name==args.el.name){
                                 setTimeout(function (){
-                                    active_part.querySelector('.super-next-multipart').click();
+                                    activeMultipart.querySelector('.super-next-multipart').click();
                                 }, 200);
+                                break;
                             }
                         }
                         counter++;
@@ -2469,51 +3168,67 @@ function SUPERreCaptcha(){
         }
         return params;
     };
-    SUPER.before_submit_hook = function(event, form, data, oldHtml, callback){
-        var proceed=true, i, name, duration = SUPER.get_duration(), functions = super_common_i18n.dynamic_functions.before_submit_hook;
+    SUPER.before_submit_hook = function(args){
+        var proceed=true, i, name, functions = super_common_i18n.dynamic_functions.before_submit_hook;
         if(typeof functions !== 'undefined'){
             for( i = 0; i < functions.length; i++){
                 name = functions[i].name;
                 if(typeof SUPER[name] === 'undefined') continue;
-                var result = SUPER[name](event, form, data, oldHtml, callback);
+                var result = SUPER[name](args);
                 result = JSON.parse(result);
                 // Check for errors, if there are any display them to the user 
                 if(result.error===true){
                     proceed = false;
-                    var html = '<div class="super-msg super-error">';
+                    var ii,
+                        nodes = document.querySelectorAll('.super-msg'),
+                        html = '<div class="super-msg super-error">';
+                    for (ii = 0; ii < nodes.length; ii++) { 
+                        nodes[ii].remove();
+                    }
                     if(typeof result.fields !== 'undefined'){
                         $.each(result.fields, function( index, value ) {
                             $(value+'[name="'+index+'"]').parent().addClass('error');
                         });
                     }                               
-                    // Display error message
-                    SUPER.form_submission_finished(form, result, html, oldHtml, duration);
+                    html += result.msg;
+                    html += '<span class="super-close"></span>';
+                    html += '</div>';
+                    $(html).prependTo($(args.form));
+                    var btn = args.form.querySelector('.super-form-button.super-loading');
+                    if(btn) {
+                        var btnName = btn.querySelector('.super-button-name');
+                        btnName.innerHTML = args.oldHtml;
+                        btn.classList.remove('super-loading');
+                    }
+                    $('html, body').animate({
+                        scrollTop: $(args.form).offset().top-200
+                    }, 1000);
                 }
             }
         }
         // Submit form if we may proceed
-        if(proceed) callback();
+        if(proceed) args.callback();
     };
-    SUPER.before_email_send_hook = function(event, form, data, oldHtml, callback){
+    SUPER.before_email_send_hook = function(args){
         var i, name, found = 0, functions = super_common_i18n.dynamic_functions.before_email_send_hook;
         if(typeof functions !== 'undefined'){
             for( i = 0; i < functions.length; i++){
                 name = functions[i].name;
                 if(typeof SUPER[name] === 'undefined') continue;
                 found++;
-                SUPER[name](event, form, data, oldHtml, callback);
+                SUPER[name](args);
             }
         }
         // Call callback function when no functions were defined by third party add-ons
-        if(found==0) callback();
+        if(found==0) args.callback(args);
     };
-    SUPER.before_validating_form_hook = function(changedField, form, doingSubmit){
+    SUPER.before_validating_form_hook = function(args){
         var i, name, functions = super_common_i18n.dynamic_functions.before_validating_form_hook;
         if(typeof functions !== 'undefined'){
             for( i = 0; i < functions.length; i++){
                 name = functions[i].name;
                 if(typeof SUPER[name] === 'undefined') continue;
-                SUPER[name](changedField, form, doingSubmit);
+                SUPER[name](args);
             }
         }
     };
@@ -2527,32 +3242,48 @@ function SUPERreCaptcha(){
             }
         }
     };
-    SUPER.after_initializing_forms_hook = function(changedField, form, callback){
+    SUPER.after_initializing_forms_hook = function(args){
         var i, name, functions = super_common_i18n.dynamic_functions.after_initializing_forms_hook;
         if(typeof functions !== 'undefined'){
             for( i = 0; i < functions.length; i++){
                 name = functions[i].name;
                 if(typeof SUPER[name] === 'undefined') continue;
-                SUPER[name](changedField, form);
+                SUPER[name](args);
             }
         }
-        callback(form);
+        // Replace {tags} for any fields with default value that contains tags
+        var form = SUPER.get_frontend_or_backend_form(args);
+        var defaultValues = form.querySelectorAll('.super-replace-tags .super-shortcode-field');
+        if(typeof defaultValues !== 'undefined'){
+            for(var i = 0; i<defaultValues.length; i++){
+                var oldValue = defaultValues[i].value;
+                defaultValues[i].value = SUPER.update_variable_fields.replace_tags({form: form, value: defaultValues[i].value, defaultValues: true});
+                var newValue = defaultValues[i].value;
+                // If values changed
+                if(oldValue!=newValue){
+                    SUPER.after_field_change_blur_hook({el: defaultValues[i]});
+                }
+                defaultValues[i].closest('.super-replace-tags').classList.remove('super-replace-tags');
+            }
+        }
+
+        args.callback(args);
     };
 
     // @since 3.6.0 - function to retrieve either the form element in back-end preview mode or on front-end
-    SUPER.get_frontend_or_backend_form = function(element, form){
-        var final_form = form;
-        if(element){
+    SUPER.get_frontend_or_backend_form = function(args){
+        var final_form = (typeof args.form === 'undefined' ? undefined : args.form);
+        if(args.el){
             // If field exists, try to find parent
-            if(element.closest('.super-form')) final_form = element.closest('.super-form');
-            if(element.closest('.super-preview-elements')) final_form = element.closest('.super-preview-elements');
+            if(args.el.closest('.super-form')) final_form = args.el.closest('.super-form');
+            if(args.el.closest('.super-preview-elements')) final_form = args.el.closest('.super-preview-elements');
         }else{
             // If field doesn't exist
-            if(!form){
+            if(!args.form){
                 if(document.querySelector('.super-preview-elements')) final_form = document.querySelector('.super-preview-elements');
                 if(document.querySelector('.super-live-preview')) final_form = document.querySelector('.super-live-preview');
             }else{
-                final_form = form;
+                final_form = args.form;
             }
         }
         // If we couldn't find anything return document body
@@ -2564,64 +3295,70 @@ function SUPERreCaptcha(){
         return final_form;
     };
 
-    SUPER.after_dropdown_change_hook = function($field, $form, $skip){
-        $form = SUPER.get_frontend_or_backend_form($field, $form);
-        var $functions = super_common_i18n.dynamic_functions.after_dropdown_change_hook;
-        jQuery.each($functions, function(key, value){
-            if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($field, $form);
-            }
-        });
-        if( typeof $field !== 'undefined'  && ($skip!==true) ) {
-            SUPER.auto_step_multipart($field, $form);
-        }
-        SUPER.save_form_progress($form); // @since 3.2.0
-    };
-    SUPER.after_field_change_blur_hook = function($field, $form, $skip){
-        if( typeof $field !== 'undefined' ) {
-            if($field.value===''){
-                if($field.closest('.super-shortcode')) $field.closest('.super-shortcode').classList.remove('super-filled');
-            }else{
-                if($field.closest('.super-shortcode')) $field.closest('.super-shortcode').classList.add('super-filled');
+    SUPER.update_focus_filled_after_change = function(args){
+        args.form = SUPER.get_frontend_or_backend_form(args);
+        if( typeof args.el !== 'undefined' ) {
+            if(args.el.closest('.super-shortcode')){
+                if(args.el.value===''){
+                    args.el.closest('.super-shortcode').classList.remove('super-filled');
+                }else{
+                    args.el.closest('.super-shortcode').classList.add('super-filled');
+                }
             }
         }
-        $form = SUPER.get_frontend_or_backend_form($field, $form);
+        return args;
+    }
+    SUPER.after_field_change_blur_hook = function(args){
+        args = SUPER.update_focus_filled_after_change(args);
         var $functions = super_common_i18n.dynamic_functions.after_field_change_blur_hook;
         jQuery.each($functions, function(key, value){
             if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($field, $form, $skip);
+                SUPER[value.name](args);
             }
         });
-        if( typeof $field !== 'undefined'  && ($skip!==true) ) {
-            SUPER.auto_step_multipart($field, $form);
+        if( typeof args.el !== 'undefined'  && (args.skip!==true) ) {
+            SUPER.auto_step_multipart(args);
         }
-        SUPER.save_form_progress($form);
+        SUPER.save_form_progress(args);
     };
-    SUPER.after_radio_change_hook = function($field, $form, $skip){
-        $form = SUPER.get_frontend_or_backend_form($field, $form);
+    SUPER.after_dropdown_change_hook = function(args){
+        args = SUPER.update_focus_filled_after_change(args);
+        var $functions = super_common_i18n.dynamic_functions.after_dropdown_change_hook;
+        jQuery.each($functions, function(key, value){
+            if(typeof SUPER[value.name] !== 'undefined') {
+                SUPER[value.name](args);
+            }
+        });
+        if( typeof args.el !== 'undefined'  && (args.skip!==true) ) {
+            SUPER.auto_step_multipart(args);
+        }
+        SUPER.save_form_progress(args);
+    };
+    SUPER.after_radio_change_hook = function(args){
+        args = SUPER.update_focus_filled_after_change(args);
         var $functions = super_common_i18n.dynamic_functions.after_radio_change_hook;
         jQuery.each($functions, function(key, value){
             if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($field, $form);
+                SUPER[value.name](args);
             }
         });
-        if( typeof $field !== 'undefined'  && ($skip!==true) ) {
-            SUPER.auto_step_multipart($field, $form);
+        if( typeof args.el !== 'undefined'  && (args.skip!==true) ) {
+            SUPER.auto_step_multipart(args);
         }
-        SUPER.save_form_progress($form); // @since 3.2.0
+        SUPER.save_form_progress(args);
     };
-    SUPER.after_checkbox_change_hook = function($field, $form, $skip){
-        $form = SUPER.get_frontend_or_backend_form($field, $form);
+    SUPER.after_checkbox_change_hook = function(args){
+        args = SUPER.update_focus_filled_after_change(args);
         var $functions = super_common_i18n.dynamic_functions.after_checkbox_change_hook;
         jQuery.each($functions, function(key, value){
             if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($field, $form);
+                SUPER[value.name](args);
             }
         });
-        if( typeof $field !== 'undefined'  && ($skip!==true) ) {
-            SUPER.auto_step_multipart($field, $form);
+        if( typeof args.el !== 'undefined'  && (args.skip!==true) ) {
+            SUPER.auto_step_multipart(args);
         }
-        SUPER.save_form_progress($form); // @since 3.2.0
+        SUPER.save_form_progress(args);
     };
 
     // @since 4.9.0 - hook so that add-ons can initialize their elements more easily
@@ -2636,15 +3373,15 @@ function SUPERreCaptcha(){
 
     // @since 3.2.0 - save form progress
     SUPER.save_form_progress_timeout = null; 
-    SUPER.save_form_progress = function($form){
-        if( !$form.classList.contains('super-save-progress') ) {
+    SUPER.save_form_progress = function(args){
+        if( !args.form.classList.contains('super-save-progress') ) {
             return false;
         }
         if(SUPER.save_form_progress_timeout !== null){
             clearTimeout(SUPER.save_form_progress_timeout);
         }
         SUPER.save_form_progress_timeout = setTimeout(function () {
-            var $data = SUPER.prepare_form_data($($form));
+            var $data = SUPER.prepare_form_data($(args.form));
             var $form_id = $data.form_id;
             $data = SUPER.after_form_data_collected_hook($data.data);
             $.ajax({
@@ -2661,7 +3398,7 @@ function SUPERreCaptcha(){
     };
 
     // @since 1.2.8 
-    SUPER.after_email_send_hook = function($form, $data, $old_html, $result){
+    SUPER.after_email_send_hook = function(args){
         var $event,
             ga = window[window.GoogleAnalyticsObject || 'ga'],
             $ga_tracking,
@@ -2678,7 +3415,7 @@ function SUPERreCaptcha(){
                 $values = value.split(":");
                 if($values.length>1){
                     $event = $values[1].split("|");
-                    if(!$form.hasClass('super-form-'+$values[0])){
+                    if(!args.form.hasClass('super-form-'+$values[0])){
                         $proceed = false;
                     }
                 }else{
@@ -2720,17 +3457,17 @@ function SUPERreCaptcha(){
         var $functions = super_common_i18n.dynamic_functions.after_email_send_hook;
         jQuery.each($functions, function(key, value){
             if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($form, $data, $old_html, $result);
+                SUPER[value.name](args);
             }
         });
     };
 
     // @since 1.3
-    SUPER.after_responsive_form_hook = function($classes, $new_class, $window_classes, $new_window_class){
+    SUPER.after_responsive_form_hook = function($classes, $form, $new_class, $window_classes, $new_window_class){
         var $functions = super_common_i18n.dynamic_functions.after_responsive_form_hook;
         jQuery.each($functions, function(key, value){
             if(typeof SUPER[value.name] !== 'undefined') {
-                SUPER[value.name]($classes, $new_class, $window_classes, $new_window_class);
+                SUPER[value.name]($classes, $form, $new_class, $window_classes, $new_window_class);
             }
         });    
     };
@@ -2806,6 +3543,11 @@ function SUPERreCaptcha(){
                     }
                     var $super_field = $this.parents('.super-field:eq(0)');
 
+                    if($super_field.hasClass('super-signature')){
+                        $data[$this.attr('name')].signatureLines = $super_field.find('.super-signature-lines').val();
+                        //$data[$this.attr('name')].value = $super_field.find('.super-signature-canvas').signature('toJSON');
+                    }
+                    
                     if($super_field.hasClass('super-date')){
                         $data[$this.attr('name')].timestamp = $this[0].dataset.mathDiff;
                     }
@@ -3191,28 +3933,317 @@ function SUPERreCaptcha(){
     // visualization provides heatmaps for visual representation of data.
     // Consult the Visualization library documentation for more information.
 
-
     SUPER.google_maps_api = function(){};
-    SUPER.google_maps_init = function(field, form){
-        form = SUPER.get_frontend_or_backend_form(field, form);
-        if(!form) return true;
+    SUPER.google_maps_init = function(args){
+        if(typeof args === 'undefined') args = {};
+        if(!args.form) return true;
         // @since 3.0.0
-        SUPER.google_maps_api.initAutocomplete(field, form);
+        SUPER.google_maps_api.initAutocomplete(args);
         // @since 3.5.0
-        SUPER.google_maps_api.initMaps(field, form);
+        SUPER.google_maps_api.initMaps(args);
     };
 
     SUPER.get_field_name = function($field){
         if($field.name) return $field.name;
     };
 
+    SUPER.strip_tags = function(input,allowed){
+        allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+        return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) { return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''; });
+    }
+    // PDF Draw text
+    SUPER.draw_pdf_text = function(i, el, nodes, args, renderingMode, charSpaceMultiplier, convertFromPixel, scale, pdfPageContainer, lineHeight, topLineHeightDivider, drawRectangle){
+        args.pdf.setFontType('normal');
+        var tmpPosTop, paddingRight, paddingLeft, paddingTop, pos, value = '';
+        if(el.classList.contains('super-heading-title')){
+            el = nodes[i].children[0];
+        }
+        if(el.classList.contains('super-toggle-switch')){
+            if(el.classList.contains('super-active')){
+                el = el.querySelector('.super-toggle-on');
+                value = el.querySelector('.super-toggle-on > span').innerText;
+                paddingRight = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-right'))/scale)*convertFromPixel;
+            }else{
+                el = el.querySelector('.super-toggle-off');
+                value = el.querySelector('.super-toggle-off > span').innerText;
+                paddingLeft = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left'))/scale)*convertFromPixel;
+            }
+        }else{
+            if(el.closest('.super-text, .super-textarea, .super-quantity, .super-currency')){
+                if(el.value) {
+                    value = el.value;
+                }else if(el.innerText) {
+                    value = el.innerText;
+                }
+            }else{
+                value = el.innerText;
+            }
+        }
+        if(value==='') return true; //continue;
+        pos = el.getBoundingClientRect();
+        // Before we print the text, we must check if it's visible for this specific PDF page
+        tmpPosTop = pos.top+9999;
+        // Only if not header and not footer, because these are printed on every single page
+        if((!el.closest('.super-pdf-header')) && !el.closest('.super-pdf-footer')){
+            var headerHeight = pdfPageContainer.querySelector('.super-pdf-header').clientHeight;
+            if((tmpPosTop-(headerHeight-1)) < 0 || tmpPosTop > (args.scrollAmount+(headerHeight-1))){
+                return true; //continue;
+            }
+        }
+        var posWidth = (pos.width/scale)*convertFromPixel;
+        var posHeight = (pos.height/scale)*convertFromPixel;
+        var posLeft = ((pos.left-9999)/scale)*convertFromPixel;
+        var posTop = ((tmpPosTop)/scale)*convertFromPixel;
+        if(el.classList.contains('super-pdf-text')){
+            if(el.parentNode.tagName==='STRONG' || el.parentNode.tagName==='TH'){
+                args.pdf.setFontType('bold');
+            }
+            posWidth = ((pos.width+1)/scale)*convertFromPixel;
+        }
+        if(el.closest('.super-toggle-prefix-label') || el.closest('.super-toggle-suffix-label')){
+            posTop = ((tmpPosTop+1)/scale)*convertFromPixel;
+            posWidth = ((pos.width+1)/scale)*convertFromPixel;
+        }
+        if(el.closest('.super-radio') || el.closest('.super-checkbox') || el.classList.contains('super-fileupload-button-text')){
+            posWidth = ((pos.width+1)/scale)*convertFromPixel;
+        }
+        var fontSize = parseFloat(window.getComputedStyle(el, null).getPropertyValue('font-size'));
+        var fontSizePoint = fontSize * 0.67;
+        value = args.pdf.setFontSize(fontSizePoint).splitTextToSize(value, posWidth);
+        var charSpace = -(fontSize*charSpaceMultiplier)*convertFromPixel;
+        var topLineHeight = (((fontSize*lineHeight)-fontSize)/topLineHeightDivider)*convertFromPixel;
+        if(el.closest('.super-adaptive-placeholder')){
+            posLeft = posLeft+(posWidth/2);
+            if(drawRectangle) args.pdf.rect(posLeft, posTop+topLineHeight, posWidth, posHeight);
+            args.pdf.text(value, posLeft, posTop+topLineHeight, {align: 'center', charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'hanging', renderingMode: renderingMode});
+            return true; //continue;
+        }
+        if(el.closest('.super-dropdown')){
+            paddingLeft = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left'))/scale)*convertFromPixel;
+            args.pdf.text(value, posLeft+paddingLeft, posTop+(posHeight/2), {charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'middle', renderingMode: renderingMode}); 
+            return true; //continue;
+        }
+        if(el.closest('.super-radio') || el.closest('.super-checkbox')){
+            if(drawRectangle) args.pdf.rect(posLeft, posTop+topLineHeight, posWidth, posHeight);
+            args.pdf.text(value, posLeft, posTop+topLineHeight, {charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'hanging', renderingMode: renderingMode}); 
+            return true; //continue;
+        }
+        if(el.closest('.super-toggle-switch')){
+            if(el.closest('.super-toggle-switch').classList.contains('super-active')){
+                if(drawRectangle) args.pdf.rect(posLeft+((posWidth-paddingRight)/2), posTop, posWidth-paddingRight, posHeight);
+                args.pdf.text(value, posLeft+((posWidth-paddingRight)/2), posTop+(posHeight/2), {align: 'center', charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'middle', renderingMode: renderingMode}); 
+            }else{
+                if(drawRectangle) args.pdf.rect(posLeft+paddingLeft+((posWidth-paddingLeft)/2), posTop, posWidth-paddingLeft, posHeight);
+                args.pdf.text(value, posLeft+paddingLeft+((posWidth-paddingLeft)/2), posTop+(posHeight/2), {align: 'center', charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'middle', renderingMode: renderingMode}); 
+            }
+            return true; //continue;
+        }
+        if(el.closest('.super-quantity')){
+            if(drawRectangle) args.pdf.rect(posLeft, posTop+(posHeight/2), posWidth, posHeight);
+            posLeft = posLeft+(posWidth/2);
+            args.pdf.text(value, posLeft, posTop+(posHeight/2), {align: 'center', charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'middle', renderingMode: renderingMode}); 
+            return true; //continue;
+        }
+        if(el.closest('.super-textarea')){
+            paddingLeft = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left'))/scale)*convertFromPixel;
+            paddingTop = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-top'))/scale)*convertFromPixel;
+            if(drawRectangle) args.pdf.rect(posLeft, posTop, posWidth, posHeight);
+            args.pdf.text(value, posLeft+paddingLeft, posTop+paddingTop+topLineHeight, {charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'hanging', renderingMode: renderingMode}); 
+            return true; //continue;
+        }
+        if(el.closest('.super-text') || el.closest('.super-currency')){
+            paddingLeft = (parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left'))/scale)*convertFromPixel;
+            if(drawRectangle) args.pdf.rect(posLeft, posTop, posWidth, posHeight);
+            args.pdf.text(value, posLeft+paddingLeft, posTop+(posHeight/2), {charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'middle', renderingMode: renderingMode}); 
+            return true; //continue;
+        }
+        if(drawRectangle) args.pdf.rect(posLeft, posTop+topLineHeight, posWidth, posHeight);
+        args.pdf.text(value, posLeft, posTop+topLineHeight, {charSpace: charSpace, lineHeightFactor: lineHeight, baseline: 'hanging', renderingMode: renderingMode}); 
+        return true; //continue;
+    };
+
+    // PDF render text
+    SUPER.render_pdf_text = function(args){
+        // If so add a text node on the exact position
+        var i, nodes, formWidth, pdfPageWidth, scale,
+            lineHeight = 1.194,
+            drawRectangle = false, // true,
+            renderingMode = 'invisible', // fill,
+            resume, el,
+            // Loop over all elements and see if the element is included in the PDF
+            pdfPageContainer = document.querySelector('.super-pdf-page-container'),
+            //pdfHeader = pdfPageContainer.querySelector('.super-pdf-header'),
+            //pdfBody = pdfPageContainer.querySelector('.super-pdf-body'),
+            //pdfFooter = pdfPageContainer.querySelector('.super-pdf-footer'),
+            convertToPixel = 1,
+            convertFromPixel = 1,
+            charSpaceMultiplier = 0.00135;
+
+        // Convert unit to pixel
+        if(args.pdfSettings.unit=='pt') convertToPixel = 1.333333333333333;
+        if(args.pdfSettings.unit=='mm') convertToPixel = 3.7795275591;
+        if(args.pdfSettings.unit=='cm') convertToPixel = 37.7952755906
+        if(args.pdfSettings.unit=='in') convertToPixel = 96;
+        // Convert pixel to unit
+        if(args.pdfSettings.unit=='pt') convertFromPixel = 0.75;
+        if(args.pdfSettings.unit=='mm') convertFromPixel = 0.2645833333;
+        if(args.pdfSettings.unit=='cm') convertFromPixel = 0.0264583333;
+        if(args.pdfSettings.unit=='in') convertFromPixel = 0.0104166667;
+        // Convert pixel to unit
+        if(args.pdfSettings.unit=='pt') charSpaceMultiplier = 0.00200;
+        if(args.pdfSettings.unit=='mm') charSpaceMultiplier = 0.00200;
+        if(args.pdfSettings.unit=='cm') charSpaceMultiplier = 0.00200;
+        if(args.pdfSettings.unit=='in') charSpaceMultiplier = 0.00200;
+        var topLineHeightDivider = 1;
+        if(args.pdfSettings.unit=='px') topLineHeightDivider = 2;
+        var m = args.pdfSettings.margins;
+        var bodyMargins = {
+            top: parseFloat(m.body.top)*convertToPixel,
+            right: parseFloat(m.body.right)*convertToPixel,
+            bottom: parseFloat(m.body.bottom)*convertToPixel,
+            left: parseFloat(m.body.left)*convertToPixel,
+        };
+        
+        // Determine scale
+        formWidth = args.form0.clientWidth;
+        formWidth = formWidth + bodyMargins.left + bodyMargins.right;
+        pdfPageWidth = args.pdf.internal.pageSize.getWidth()*convertToPixel;
+        scale = formWidth / pdfPageWidth;
+
+        args.pdf.setFont('Helvetica');
+        args.pdf.setTextColor('red');
+        args.pdf.setLineWidth(1*convertFromPixel);
+
+        nodes = pdfPageContainer.querySelectorAll('.super-label, .super-description, .super-heading-title, .super-heading-description, .super-filled .super-adaptive-placeholder > span, .super-dropdown.super-filled .super-item.super-placeholder, .super-checkbox .super-item > div, .super-radio .super-item > div, .super-toggle-switch, .super-slider .amount, .super-calculator-currency-wrapper, .super-calculator-label, .super-fileupload-name, .super-fileupload-button-text, .super-toggle-prefix-label > span, .super-toggle-suffix-label > span, .super-html-title, .super-html-subtitle, .super-html-content, .super-text .super-shortcode-field, .super-textarea .super-shortcode-field, .super-quantity .super-shortcode-field, .super-currency .super-shortcode-field');
+        for( i=0; i < nodes.length; i++ ) {
+            el = nodes[i];
+            // For HTML content we will need to do some special things because a HTML element will contain unkown nodes with unkown styles
+            // We will first have to wrap any stand alone text inside a <div> tag. This way we can more accurately position the overlapping text
+            // After that we can loop over nodes and check for child nodes and do the same thing
+            // Once done we can then do a final loop
+            if(el.classList.contains('super-html-content')){
+                // Wrap individual text inside "span" tags
+                //var regex = /(?<=(>))((?![<])(.{1,}?))(?=<)/gm;
+                //var str = el.innerHTML;
+                //var subst = '<span class="super-pdf-text">$2</span>';
+                //// The substituted value will be contained in the result variable
+                //var result = str.replace(regex, subst);
+                //regex = /(?<=<.+?>)([\s]+(?!<).{1,}[\s]+)(?=<.+?>)/gm;
+                //str = result;
+                //subst = '<span class="super-pdf-text">$1</span>';
+                //// The substituted value will be contained in the result variable
+                //el.innerHTML = str.replace(regex, subst);
+                //var childNodes = el.querySelectorAll('.super-pdf-text');
+                //for(var x=0; x < childNodes.length; x++){
+                //    resume = SUPER.draw_pdf_text(i, childNodes[x], childNodes, args, renderingMode, charSpaceMultiplier, convertFromPixel, scale, pdfPageContainer, lineHeight, topLineHeightDivider, drawRectangle);
+                //    if(resume) continue;
+                //}
+                continue;
+            }
+            resume = SUPER.draw_pdf_text(i, el, nodes, args, renderingMode, charSpaceMultiplier, convertFromPixel, scale, pdfPageContainer, lineHeight, topLineHeightDivider, drawRectangle);
+            if(resume) continue;
+        }
+    };
+
+    // PDF Generation
+    SUPER.generate_pdf = function(args, callback){
+        
+        var form = args.form0.closest('.super-form');
+        // When canceled the following class will no longer exist, and we should not proceed
+        if(form && !form.classList.contains('super-generating-pdf')){
+            return false;
+        }
+
+        // Set form width and height according to a4 paper size minus the margins
+        // 210 == 793px
+        // 297 == 1122px
+        // Media                Page size           Print area              Margins
+        // A4 (Metric)          210 x 297 mm        200 x 287 mm            5 mm        5 mm        5 mm
+
+        // Update PDF tags
+        SUPER.pdf_tags = {
+            pdf_page: args.currentPage,
+            pdf_total_pages: args.totalPages
+        };
+
+        // Update pdf {tags}
+        SUPER.after_field_change_blur_hook({el: undefined, form: form});
+        var pdfHeaderForm = document.querySelector('.super-pdf-header .super-form');
+        SUPER.after_field_change_blur_hook({el: undefined, form: pdfHeaderForm});
+        var pdfFooterForm = document.querySelector('.super-pdf-footer .super-form');
+        SUPER.after_field_change_blur_hook({el: undefined, form: pdfFooterForm});
+
+        // Scroll to the "fake" page
+        form.querySelector('form').style.marginTop = "-"+(args.scrollAmount * (args.currentPage-1))+'px';
+
+        // Because disabling the UI takes some time, add a timeout
+        var timeout = (args.currentPage===1 ? 200 : 0);
+        setTimeout(function(){
+            // Now allow printing
+            try {
+                // Only if not already canceled/reset
+                if(form && !form.classList.contains('super-generating-pdf')){
+                    return false;
+                }
+                // eslint-disable-next-line no-undef
+                html2canvas(document.querySelector('.super-pdf-page-container'), {
+                    scrollX: 0, // Important, do not remove
+                    scrollY: 0,  // -window.scrollY, // Important, do not remove
+                    scale: args.pdfSettings.renderScale, // The scale to use for rendering (higher means better quality, but larger file size)
+                    currentPage: args.currentPage,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: '#ffffff'
+                }).then(function(canvas) {
+                    // Only if not already canceled/reset
+                    if(form && !form.classList.contains('super-generating-pdf')){
+                        return false;
+                    }
+
+                    var percentage = ((50/(args.totalPages+1))*args.currentPage)+5;
+                    if(percentage<5) percentage = 5;
+                    if(percentage>=50) percentage = 50;
+                    if(args.progressBar) args.progressBar.style.width = percentage+"%";  
+                    var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                    // Add this image as 1 single page
+                    args.pdf.addImage(
+                        imgData,    // imageData as base64 encoded DataUrl or Image-HTMLElement or Canvas-HTMLElement
+                        'JPEG',     // format of file if filetype-recognition fails or in case of a Canvas-Element needs to be specified (default for Canvas is JPEG),
+                                    // e.g. 'JPEG', 'PNG', 'WEBP'
+                        0,          // x Coordinate (in units declared at inception of PDF document) against left edge of the page
+                        0,          // y Coordinate (in units declared at inception of PDF document) against upper edge of the page
+                        args.pageWidth,
+                        args.pageHeight
+                    );
+                    // Make PDF searchable when text rendering is enabled
+                    if(!args.pdfSettings.textRendering) args.pdfSettings.textRendering = 'true';
+                    if(args.pdfSettings.textRendering==='true'){
+                        SUPER.render_pdf_text(args);
+                    }
+                    // If there are more pages to be processed, go ahead
+                    if(form.querySelector('form').clientHeight > (args.scrollAmount * args.currentPage)){
+                        args.currentPage++;
+                        args.pdf.addPage();
+                        SUPER.generate_pdf(args, callback);
+                    }else{                   
+                        // No more pages to generate (submit form / send email)
+                        callback(args.pdf, form);
+                    }
+                });
+            }
+            catch(error) {
+                console.log("Error: ", error);
+            }
+        }, timeout );
+    }
+    SUPER.google_maps_api.allMaps = [];
     // @since 3.5.0 - function for intializing google maps elements
     SUPER.google_maps_api.allMaps = [];
-    SUPER.google_maps_api.initMaps = function($field, $form){
-        $form = SUPER.get_frontend_or_backend_form($field, $form);
+    SUPER.google_maps_api.initMaps = function(args){
         var $form_id = 0;
-        if($form.querySelector('input[name="hidden_form_id"]')){
-            $form_id = $form.querySelector('input[name="hidden_form_id"]').value;
+        if(args.form.querySelector('input[name="hidden_form_id"]')){
+            $form_id = args.form.querySelector('input[name="hidden_form_id"]').value;
         }
 
         if(typeof SUPER.google_maps_api.allMaps[$form_id] === 'undefined'){
@@ -3220,48 +4251,59 @@ function SUPERreCaptcha(){
         }
 
         var $maps;
-        if(!$field){
-            $maps = $form.querySelectorAll('.super-google-map');
+        if(!args.el){
+            $maps = args.form.querySelectorAll('.super-google-map:not(.super-map-rendered)');
         }else{
-            var field_name = SUPER.get_field_name($field);
-            $maps = $form.querySelectorAll('.super-google-map[data-fields*="{'+field_name+'}"]');
+            var field_name = SUPER.get_field_name(args.el);
+            $maps = args.form.querySelectorAll('.super-google-map[data-fields*="{'+field_name+'}"]');
         }
 
         // Loop through maps
         Object.keys($maps).forEach(function(key) {
             $maps[key].classList.add('super-map-rendered');
-            var html,
-                $data = JSON.parse($maps[key].querySelector('textarea').value),
-                $regular_expression = /\{(.*?)\}/g;
-
+            var $data = JSON.parse($maps[key].querySelector('textarea').value);
                 // Address Marker location
-                var $address = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.address),
+                args.value = $data.address;
+                var $address = SUPER.update_variable_fields.replace_tags(args);
                 // Directions API (route)
-                $origin = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.origin),
-                $destination = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.destination),
-                $directionsPanel = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.directionsPanel),
-                $populateDistance = $data.populateDistance,
-                $populateDuration = $data.populateDuration,
-                $travelMode = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.travelMode),
-                $unitSystem = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.unitSystem),
+                args.value = $data.origin;
+                var $origin = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.destination;
+                var $destination = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.directionsPanel;
+                var $directionsPanel = SUPER.update_variable_fields.replace_tags(args);
+                var $populateDistance = $data.populateDistance;
+                var $populateDuration = $data.populateDuration;
+                args.value = $data.travelMode;
+                var $travelMode = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.unitSystem;
+                var $unitSystem = SUPER.update_variable_fields.replace_tags(args);
                 // Waypoints
-                $optimizeWaypoints = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.optimizeWaypoints),
-                $provideRouteAlternatives = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.provideRouteAlternatives),
-                $avoidFerries = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.avoidFerries),
-                $avoidHighways = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.avoidHighways),
-                $avoidTolls = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.avoidTolls),
-                $region = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.region),
+                args.value = $data.optimizeWaypoints;
+                var $optimizeWaypoints = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.provideRouteAlternatives;
+                var $provideRouteAlternatives = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.avoidFerries;
+                var $avoidFerries = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.avoidHighways;
+                var $avoidHighways = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.avoidTolls;
+                var $avoidTolls = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.region;
+                var $region = SUPER.update_variable_fields.replace_tags(args);
                 // we will implement this in a later version  DRIVING mode (only when travelMode is DRIVING)
-                // we will implement this in a later version  $departureTime = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.departureTime),
-                // we will implement this in a later version  $trafficModel = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.trafficModel),
+                // we will implement this in a later version  $departureTime = SUPER.update_variable_fields.replace_tags(args),
+                // we will implement this in a later version  $trafficModel = SUPER.update_variable_fields.replace_tags(args),
                 // we will implement this in a later version  TRANSIT mode (only when travelMode is TRANSIT)
-                // we will implement this in a later version  $transitArrivalTime = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.arrivalTime),
-                // we will implement this in a later version  $transitDepartureTime = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.transitDepartureTime),
-                // we will implement this in a later version  $transitModes = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.transitModes),
-                // we will implement this in a later version  $routingPreference = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.routingPreference),
+                // we will implement this in a later version  $transitArrivalTime = SUPER.update_variable_fields.replace_tags(args),
+                // we will implement this in a later version  $transitDepartureTime = SUPER.update_variable_fields.replace_tags(args),
+                // we will implement this in a later version  $transitModes = SUPER.update_variable_fields.replace_tags(args),
+                // we will implement this in a later version  $routingPreference = SUPER.update_variable_fields.replace_tags(args),
                 // UI Settings
-                $disableDefaultUI = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.disableDefaultUI),
-                $zoom = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $data.zoom);
+                args.value = $data.disableDefaultUI;
+                var $disableDefaultUI = SUPER.update_variable_fields.replace_tags(args);
+                args.value = $data.zoom;
+                var $zoom = SUPER.update_variable_fields.replace_tags(args);
                 if($zoom==='') $zoom = 5; // Default to 5
                 $zoom = parseInt($zoom, 10);
                 var $address_marker = $data.address_marker,
@@ -3289,6 +4331,7 @@ function SUPERreCaptcha(){
                     disableDefaultUI: ('true' === $disableDefaultUI),
                     //mapTypeId: \'terrain\'
                 });
+                SUPER.google_maps_api.allMaps[$form_id][key]['super_el'] = $maps[key];
                 //SUPER.google_maps_api.allMaps[formId][i].setOptions({
                 //});
 
@@ -3300,14 +4343,15 @@ function SUPERreCaptcha(){
                     $lat = $coordinates[0];
                     $lng = $coordinates[1];
                     // If {tag} was found
-                    if($regular_expression.exec($lat)!==null){
+                    var regex = /{([^\\\/\s"'+]*?)}/g;
+                    if(regex.exec($lat)!==null){
                         $field_name = $lat.replace('{','').replace('}','');                       
-                        $lat = SUPER.field($form, $field_name).dataset.lat;
+                        $lat = SUPER.field(args.form, $field_name).dataset.lat;
                         if(!$lat) $lat = 0;
                     }
-                    if($regular_expression.exec($lng)!==null){
+                    if(regex.exec($lng)!==null){
                         $field_name = $lng.replace('{','').replace('}','');
-                        $lng = SUPER.field($form, $field_name).dataset.lng;
+                        $lng = SUPER.field(args.form, $field_name).dataset.lng;
                         if(!$lng) $lng = 0;
                     }
                     $lat = parseFloat($lat);
@@ -3358,7 +4402,7 @@ function SUPERreCaptcha(){
 
             // If directions panel is enabled
             var target, panel=null;
-            target = $form.querySelector('.super-google-map-'+$form_id);
+            target = args.form.querySelector('.super-google-map-'+$form_id);
             if($directionsPanel=='true'){
                 if(target.parentNode.querySelector('.super-google-map-directions')){
                     target.parentNode.querySelector('.super-google-map-directions').remove();
@@ -3400,7 +4444,7 @@ function SUPERreCaptcha(){
                 var directionsRenderer = new google.maps.DirectionsRenderer({
                     draggable: true,
                     map: SUPER.google_maps_api.allMaps[$form_id][key],
-                    panel: ($directionsPanel=='true' ? document.querySelector('.super-google-map-'+$form_id).parentNode.querySelector('.super-google-map-directions') : null)
+                    panel: ($directionsPanel=='true' ? SUPER.google_maps_api.allMaps[formId][i]['super_el'].querySelector('.super-google-map-directions') : null)
                     // panel: document.getElementById('right-panel')
                 });
                 //directionsRenderer.setMap($map);
@@ -3442,8 +4486,8 @@ function SUPERreCaptcha(){
                             var x=2;
                             var dynamicFieldName = originFieldName+'_'+x;
                             var stopoverDynamicFieldName = originStopoverFieldName+'_'+x;
-                            var found = SUPER.field_exists($form, dynamicFieldName);
-                            var stopoverFound = SUPER.field_exists($form, stopoverDynamicFieldName);
+                            var found = SUPER.field_exists(args.form, dynamicFieldName);
+                            var stopoverFound = SUPER.field_exists(args.form, stopoverDynamicFieldName);
                             var rows = '';
                             while(found || stopoverFound){
                                 // Location
@@ -3468,7 +4512,7 @@ function SUPERreCaptcha(){
                                 // Find for next field and if it exists we add it
                                 x++;
                                 dynamicFieldName = fieldName+'_'+x;
-                                found = SUPER.field_exists($form, dynamicFieldName)
+                                found = SUPER.field_exists(args.form, dynamicFieldName)
                             }
                         }
                         var waypoints = w[i]+"\n"+rows;
@@ -3477,10 +4521,12 @@ function SUPERreCaptcha(){
                         for(i=0; i < xw.length; i++){
                             if(xw[i]==='') continue;
                             var values = xw[i].split('|');
-                            location = SUPER.update_variable_fields.replace_tags($form, $regular_expression, values[0]);
+                            args.value = values[0];
+                            location = SUPER.update_variable_fields.replace_tags(args);
                             // Waypoint may not be empty!
                             if(location==='') continue;
-                            stopover = SUPER.update_variable_fields.replace_tags($form, $regular_expression, values[1]);
+                            args.value = values[1];
+                            stopover = SUPER.update_variable_fields.replace_tags(args);
                             stopover = ('true'===stopover); // convert to boolean
                             $xw.push({ location: location, stopover: stopover });
                         }
@@ -3560,18 +4606,18 @@ function SUPERreCaptcha(){
                             var field; 
                             if($populateDistance!==''){
                                 // Check if field exists in this form
-                                if(SUPER.field_exists($form, $populateDistance)){
-                                    field = SUPER.field($form, $populateDistance);
+                                if(SUPER.field_exists(args.form, $populateDistance)){
+                                    field = SUPER.field(args.form, $populateDistance);
                                     field.value = totalDist; // indicates the distance in meters
-                                    SUPER.after_field_change_blur_hook(field);
+                                    SUPER.after_field_change_blur_hook({el: field});
                                 }
                             }
                             if($populateDuration!==''){
                                 // Check if field exists in this form
-                                if(SUPER.field_exists($form, $populateDuration)){
-                                    field = SUPER.field($form, $populateDuration);
+                                if(SUPER.field_exists(args.form, $populateDuration)){
+                                    field = SUPER.field(args.form, $populateDuration);
                                     field.value = totalTime; // indicates the duration in seconds
-                                    SUPER.after_field_change_blur_hook(field);
+                                    SUPER.after_field_change_blur_hook({el: field});
                                 }
                             }
                         }
@@ -3579,10 +4625,10 @@ function SUPERreCaptcha(){
                         // Display error message
                         result = {
                             msg: 'Route was not successful for the following reason: ' + status,
-                            loading: true
+                            loading: true,
+                            error: true
                         }
-                        html = '<div class="super-msg super-error">';
-                        SUPER.form_submission_finished($form[0], result, html);
+                        SUPER.form_submission_finished(args, result);
                     }
                 });
                 return true;
@@ -3606,118 +4652,152 @@ function SUPERreCaptcha(){
                         // Display error message
                         result = {
                             msg: 'Geocode was not successful for the following reason: ' + status,
-                            loading: true
+                            loading: true,
+                            error: true
                         }
-                        var html = '<div class="super-msg super-error">';
-                        SUPER.form_submission_finished($form[0], result, html);
+                        SUPER.form_submission_finished(args, result);
                     }
                 });
                 return true;
             }
-
-            // // Center map if needed
-            // if( ($origin!=='') && ($center_based_on_address===true) ) {
-            //     geocoder = new google.maps.Geocoder();
-            //     // Replace with tag if needed
-            //     $origin = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $origin);
-
-
-            //     // Check if address is not empty
-            //     if($origin!==''){
-            //         geocoder.geocode( { 'address': $origin}, function(results, status) {
-            //             if (status == 'OK') {
-            //                 // Center map based on given address
-            //                 $map.setCenter(results[0].geometry.location);
-            //                 // Add marker on address location
-            //                 if( $address_marker=='true' ) {
-            //                     new google.maps.Marker({
-            //                         map: $map,
-            //                         position: results[0].geometry.location
-            //                     });
-            //                 }
-            //             } else {
-            //                 console.log('Geocode was not successful for the following reason: ' + status);
-            //             }
-            //         });
-
-            //         if($destination!=='') {
-            //             $destination = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $destination);
-            //             $travelMode = SUPER.update_variable_fields.replace_tags($form, $regular_expression, $travelMode);
-            //             var directionsService = new google.maps.DirectionsService();
-            //             var directionsRenderer = new google.maps.DirectionsRenderer();
-            //             directionsRenderer.setMap($map);
-            //             var request = {
-            //                 origin: $origin,
-            //                 destination: $destination,
-            //                 travelMode: $travelMode
-            //             };
-            //             directionsService.route(request, function (result, status) {
-            //                 if (status == 'OK') {
-            //                     directionsRenderer.setDirections(result);
-            //                 }else{
-            //                     // Display error message
-            //                     result = {
-            //                         msg: 'Route was not successful for the following reason: ' + status,
-            //                         loading: true
-            //                     }
-            //                     var html = '<div class="super-msg super-error">';
-            //                     SUPER.form_submission_finished($form[0], result, html);
-            //                 }
-            //             });
-            //         }
-            //     }
-            // }
-
         });
     };
 
-    SUPER.google_maps_api.initAutocomplete = function(changedField, form){
-        var inputField,
-            items = form.querySelectorAll('.super-address-autopopulate:not(.super-autopopulate-init)');
-        
+    SUPER.google_maps_api.initAutocomplete = function(args){
+        var url, field, items = args.form.querySelectorAll('.super-address-autopopulate:not(.super-autopopulate-init)');
         Object.keys(items).forEach(function(key) {
-            var field = items[key];
+            field = items[key];
             field.classList.add('super-autopopulate-init');
-            var autocomplete = new google.maps.places.Autocomplete( field, {types: ['geocode']} );
-            autocomplete.addListener( 'place_changed', function () {
-                // Set text field to the formatted address
-                var place = autocomplete.getPlace();
-                field.value = place.formatted_address;
-                SUPER.calculate_distance(field);
+            args.el = field;
+            if(typeof google === 'undefined'){
+                url = '//maps.googleapis.com/maps/api/js?';
+                if(field.dataset.apiRegion!=='') url += 'region='+field.dataset.apiRegion+'&';
+                if(field.dataset.apiLanguage!=='') url += 'language='+field.dataset.apiLanguage+'&';
+                url += 'key='+field.dataset.apiKey+'&libraries=drawing,geometry,places,visualization&callback=SUPER.google_maps_init'
+                $.getScript( url, function() {
+                    SUPER.google_maps_api.initAutocompleteCallback(args);
+                });
+            }else{
+                SUPER.google_maps_api.initAutocompleteCallback(args);
+            }
+        });
+    };
+    SUPER.google_maps_api.initAutocompleteCallback = function(args){
+        var i, x, s, obj = {}, inputField, autocomplete = [];
+            autocomplete[args.el.name] = new google.maps.places.Autocomplete(args.el);
+        var mapping = {
+            street_number: 'street_number',
+            route: 'street_name',
+            locality: 'city', // see: https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
+            postal_town: 'city', // see: https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
+            sublocality_level_1: 'city', // see: https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
+            administrative_area_level_2: 'municipality',
+            administrative_area_level_1: 'state',
+            country: 'country',
+            postal_code: 'postal_code',
+            lat: 'lat',
+            lng: 'lng'
+        };
+        
+        // Check if any of the address components is mapped
+        var $returnAddressComponent = false;
+        for (var key in mapping) {
+            if($(args.el).data('map-'+mapping[key])){
+                $returnAddressComponent = true;
+            }
+        }
+        
+        var $returnName = false;
+        if($(args.el).data('map-name')) $returnName = true;
 
-                var mapping = {
-                    street_number: 'street_number',
-                    route: 'street_name',
-                    locality: 'city',
-                    administrative_area_level_2: 'municipality',
-                    administrative_area_level_1: 'state',
-                    country: 'country',
-                    postal_code: 'postal_code'
-                };
-                var street_data = {
-                    number: {
-                        long: '',
-                        short: ''
-                    },
-                    name: {
-                        long: '',
-                        short: ''
-                    }
-                };
+        mapping.formatted_phone_number = 'formatted_phone_number';
+        var $returnFormattedPhoneNumber = false;
+        if($(args.el).data('map-formatted_phone_number')) $returnFormattedPhoneNumber = true;
 
-                // @since 3.2.0 - add address latitude and longitude for ACF google map compatibility
-                var lat = place.geometry.location.lat();
-                var lng = place.geometry.location.lng();
-                field.dataset.lat = lat;
-                field.dataset.lng = lng;
+        mapping.international_phone_number = 'international_phone_number';
+        var $returnInternationalPhoneNumber = false;
+        if($(args.el).data('map-international_phone_number')) $returnInternationalPhoneNumber = true;
 
-                // @since 3.5.0 - trigger / update google maps in case {tags} have been used
-                SUPER.google_maps_init(field, form);
+        mapping.website = 'website';
+        var $returnWebsite = false;
+        if($(args.el).data('map-website')) $returnWebsite = true;
 
-                $(field).trigger('keyup');
-                var $attribute;
-                var $val;
-                var $address;
+        var fields = ['formatted_address', 'geometry.location']; // This data is always used
+        if($returnAddressComponent) fields.push('address_components');
+        if($returnName) fields.push('name');
+        if($returnFormattedPhoneNumber) fields.push('formatted_phone_number');
+        if($returnInternationalPhoneNumber) fields.push('international_phone_number');
+        if($returnWebsite) fields.push('website');
+
+        var thisAutocomplete = autocomplete[args.el.name];
+        thisAutocomplete.setFields(fields);
+        thisAutocomplete.el = args.el;
+        thisAutocomplete.form = args.form;
+
+        s = $(args.el).data('countries'); // Could be empty or a comma seperated string e.g: fr,nl,de
+        if(s){
+            x = s.split(',');
+            obj.countries = [];
+            for(i=0; i<x.length; i++){
+                obj.countries.push(x[i].trim());
+            }
+            thisAutocomplete.setComponentRestrictions({
+                country: obj.countries, // e.g: ["us", "pr", "vi", "gu", "mp"],
+            });
+        }
+        s = $(args.el).data('types'); // Could be empty or a comma seperated string e.g: fr,nl,de
+        if(s){
+            x = s.split(',');
+            obj.types = [];
+            for(i=0; i<x.length; i++){
+                obj.types.push(x[i].trim());
+            }
+            thisAutocomplete.setTypes(obj.types);
+        }
+        thisAutocomplete.addListener( 'place_changed', function () {
+            // Set text field to the formatted address
+            var place = thisAutocomplete.getPlace();
+            thisAutocomplete.el.value = place.formatted_address;
+            SUPER.calculate_distance({el: thisAutocomplete.el});
+
+            var street_data = {
+                number: {
+                    long: '',
+                    short: ''
+                },
+                name: {
+                    long: '',
+                    short: ''
+                }
+            };
+
+            // @since 3.2.0 - add address latitude and longitude for ACF google map compatibility
+            var lat = place.geometry.location.lat();
+            var lng = place.geometry.location.lng();
+            thisAutocomplete.el.dataset.lat = lat;
+            thisAutocomplete.el.dataset.lng = lng;
+
+            // @since 3.5.0 - trigger / update google maps in case {tags} have been used
+            args.el = thisAutocomplete.el;
+            args.form = thisAutocomplete.form;
+            SUPER.google_maps_init(args);
+
+            $(thisAutocomplete.el).trigger('keyup');
+            var $attribute;
+            var $val;
+            var $address;
+            
+            if($returnAddressComponent){
+                place.address_components.push({
+                    long_name: lat,
+                    short_name: lat,
+                    types: ["lat"]
+                });
+                place.address_components.push({
+                    long_name: lng,
+                    short_name: lng,
+                    types: ["lng"]
+                });
                 for (var i = 0; i < place.address_components.length; i++) {
                     var item = place.address_components[i];
                     var long = item.long_name;
@@ -3733,21 +4813,121 @@ function SUPERreCaptcha(){
                         street_data.name.long = long;
                         street_data.name.short = short;
                     }
-                    $attribute = $(field).data('map-'+mapping[types[0]]);
+                    $attribute = $(thisAutocomplete.el).data('map-'+mapping[types[0]]);
                     if(typeof $attribute !=='undefined'){
                         $attribute = $attribute.split('|');
-                        if($attribute[1]==='') $attribute[1] = 'long';
-                        $val = place.address_components[i][$attribute[1]+'_name'];
-                        inputField = SUPER.field(form, $attribute[0]);
-                        inputField.value = $val;
-                        SUPER.after_dropdown_change_hook(inputField); // @since 3.1.0 - trigger hooks after changing the value
+                        inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                        if(inputField){
+                            if($attribute[1]==='') $attribute[1] = 'long';
+                            $val = place.address_components[i][$attribute[1]+'_name'];
+                            inputField.value = $val;
+                            if($val===''){
+                                inputField.closest('.super-shortcode').classList.remove('super-filled');
+                            }else{
+                                inputField.closest('.super-shortcode').classList.add('super-filled');
+                            }
+                            SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                        }
                     }
                 }
+            }
 
-                // @since 3.5.0 - combine street name and number
-                $attribute = $(field).data('map-street_name_number');
-                if( typeof $attribute !=='undefined' ) {
-                    $attribute = $attribute.split('|');
+            // Name of the place
+            $attribute = $(thisAutocomplete.el).data('map-name');
+            if(typeof $attribute !=='undefined'){
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
+                    if($attribute[1]==='') $attribute[1] = 'long';
+                    $val = place.name;
+                    inputField.value = $val;
+                    if($val===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                }
+            }
+
+            // Formatted address of the place
+            $attribute = $(thisAutocomplete.el).data('map-formatted_address');
+            if(typeof $attribute !=='undefined'){
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
+                    if($attribute[1]==='') $attribute[1] = 'long';
+                    $val = place.formatted_address;
+                    inputField.value = $val;
+                    if($val===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                }
+            }
+
+            // Formatted phone number
+            $attribute = $(thisAutocomplete.el).data('map-formatted_phone_number');
+            if(typeof $attribute !=='undefined'){
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
+                    if($attribute[1]==='') $attribute[1] = 'long';
+                    $val = place.formatted_phone_number;
+                    inputField.value = $val;
+                    if($val===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                }
+            }
+
+            // International phone number
+            $attribute = $(thisAutocomplete.el).data('map-international_phone_number');
+            if(typeof $attribute !=='undefined'){
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
+                    if($attribute[1]==='') $attribute[1] = 'long';
+                    $val = place.international_phone_number;
+                    inputField.value = $val;
+                    if($val===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                }
+            }
+
+            // Busniness website
+            $attribute = $(thisAutocomplete.el).data('map-website');
+            if(typeof $attribute !=='undefined'){
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
+                    if($attribute[1]==='') $attribute[1] = 'long';
+                    $val = place.website;
+                    inputField.value = $val;
+                    if($val===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
+                }
+            }
+
+            // @since 3.5.0 - combine street name and number
+            $attribute = $(thisAutocomplete.el).data('map-street_name_number');
+            if( typeof $attribute !=='undefined' ) {
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
                     $address = '';
                     if( street_data.name[$attribute[1]]!=='' ) $address += street_data.name[$attribute[1]];
                     if( $address!=='' ) {
@@ -3755,15 +4935,22 @@ function SUPERreCaptcha(){
                     }else{
                         $address += street_data.number[$attribute[1]];
                     }
-                    inputField = SUPER.field(form, $attribute[0]);
                     inputField.value = $address;
-                    SUPER.after_dropdown_change_hook(inputField); // @since 3.1.0 - trigger hooks after changing the value
+                    if($address===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
                 }
+            }
 
-                // @since 3.5.1 - combine street number and name
-                $attribute = $(field).data('map-street_number_name');
-                if( typeof $attribute !=='undefined' ) {
-                    $attribute = $attribute.split('|');
+            // @since 3.5.1 - combine street number and name
+            $attribute = $(thisAutocomplete.el).data('map-street_number_name');
+            if( typeof $attribute !=='undefined' ) {
+                $attribute = $attribute.split('|');
+                inputField = SUPER.field(thisAutocomplete.form, $attribute[0]);
+                if(inputField){
                     $address = '';
                     if( street_data.number[$attribute[1]]!=='' ) $address += street_data.number[$attribute[1]];
                     if( $address!=='' ) {
@@ -3771,11 +4958,15 @@ function SUPERreCaptcha(){
                     }else{
                         $address += street_data.name[$attribute[1]];
                     }
-                    inputField = SUPER.field(form, $attribute[0]);
                     inputField.value = $address;
-                    SUPER.after_dropdown_change_hook(inputField); // @since 3.1.0 - trigger hooks after changing the value
+                    if($address===''){
+                        inputField.closest('.super-shortcode').classList.remove('super-filled');
+                    }else{
+                        inputField.closest('.super-shortcode').classList.add('super-filled');
+                    }
+                    SUPER.after_dropdown_change_hook({el: inputField}); // @since 3.1.0 - trigger hooks after changing the value
                 }
-            });
+            }
         });
     };
 
@@ -3852,8 +5043,8 @@ function SUPERreCaptcha(){
             $this = forms[key];
 
             // @since 3.2.0 
-            // - Add tab indexes to all fields
-            // - Check if RTL support is enabled, if so we must reverse columns order before we add TAB indexes to fields
+            // Add tab indexes to all fields
+            // Check if RTL support is enabled, if so we must reverse columns order before we add TAB indexes to fields
             if( $this.classList.contains('super-rtl') ) {
                 // Reverse column order before adding TAB indexes
                 SUPER.reverse_columns($this);
@@ -3864,25 +5055,97 @@ function SUPERreCaptcha(){
             $fields.each(function(key, value){
                 $(value).attr('data-super-tab-index', key);
             });
-            // - Now we have added the TAB indexes, make sure to reverse the order back to normal in case of RTL support
+            // Now we have added the TAB indexes, make sure to reverse the order back to normal in case of RTL support
             if( $this.classList.contains('super-rtl') ) {
                 SUPER.reverse_columns($this);
             }
-            SUPER.after_initializing_forms_hook(undefined, $this, function($this){
-                $this.classList.add('super-rendered');
-                if (!$this.classList.contains('preload-disabled')) {
-                    if (!$this.classList.contains('super-initialized')) {
-                        setTimeout(function (){
-                            $($this).fadeOut(100, function () {
-                                $this.classList.add('super-initialized');
-                                $($this).fadeIn(500);
-                            });
-                        }, 500);
+            // Because of the FireFox bug with adaptive placeholders we must loop over all fields to check if they are not empty.
+            // if the field is not empty we will add the super-filled class to it's parent node
+            var i=0, el, value, nodes = $this.querySelectorAll('.super-text .super-shortcode-field, .super-textarea .super-shortcode-field, .super-currency .super-shortcode-field, .super-dropdown .super-shortcode-field');
+            for(i=0; i<nodes.length; i++){
+                if(nodes[i].value!==''){
+                    el = nodes[i].closest('.super-shortcode');
+                    if(el.querySelector('.super-adaptive-placeholder')){
+                        el.querySelector('.super-adaptive-placeholder').children[0].innerHTML = el.querySelector('.super-adaptive-placeholder').dataset.placeholderfilled;
+                        el.classList.add('super-filled');
                     }
-                } else {
-                    $this.classList.add('super-initialized');
                 }
-            });
+            }
+            // ... but for signatures (if add-on is active)
+            nodes = $this.querySelectorAll('.super-signature');
+            for(i=0; i<nodes.length; i++){
+                value = nodes[i].querySelector('.super-signature-lines').value;
+                if(value!==''){
+                    value = value.replace('\\"lines\\"', '"lines"');
+                    $(nodes[i]).find('.super-signature-canvas').signature('enable').signature('draw', value);
+                }
+            }
+            // .. but for toggle field
+            nodes = $this.querySelectorAll('.super-toggle .super-shortcode-field');
+            for(i=0; i<nodes.length; i++){
+                if(nodes[i].value!==''){
+                    el = nodes[i].closest('.super-shortcode');
+                    if(nodes[i].value===el.querySelector('.super-toggle-on').dataset.value){
+                        el.querySelector('.super-toggle-switch').classList.add('super-active');
+                    }
+                }
+            }
+            // .. but for radio buttons
+            nodes = $this.querySelectorAll('.super-radio .super-shortcode-field');
+            for(i=0; i<nodes.length; i++){
+                if(nodes[i].value!==''){
+                    el = nodes[i].closest('.super-shortcode');
+                    var items = el.querySelectorAll('.super-item');
+                    for(var ii = 0; ii < items.length; ii++){
+                        var input = items[ii].querySelector('input');
+                        if(input.value == nodes[i].value){
+                            input.checked = true;
+                            items[ii].classList.add('super-active');
+                            break; // Radio button can only have 1 active item
+                        }
+                    }
+                }
+            }
+            // .. but for checkboxes
+            nodes = $this.querySelectorAll('.super-checkbox .super-shortcode-field');
+            for(i=0; i<nodes.length; i++){
+                if(nodes[i].value!==''){
+                    el = nodes[i].closest('.super-shortcode');
+                    items = el.querySelectorAll('.super-item');
+                    for(ii = 0; ii < items.length; ii++){
+                        input = items[ii].querySelector('input');
+                        items[ii].classList.remove('super-active');
+                        input.checked = false;
+                        var options = nodes[i].value.split(',');
+                        if(options.indexOf(input.value)!==-1){
+                            input.checked = true;
+                            items[ii].classList.add('super-active');
+                        }
+                    }
+                }
+            }
+
+            // Collect arguments to be parsed to the after initialization hook
+            var args = {
+                el: undefined,
+                form: $this,
+                callback: function(args){
+                    args.form.classList.add('super-rendered');
+                    if (!args.form.classList.contains('preload-disabled')) {
+                        if (!args.form.classList.contains('super-initialized')) {
+                            setTimeout(function (){
+                                $(args.form).fadeOut(100, function () {
+                                    args.form.classList.add('super-initialized');
+                                    $(args.form).fadeIn(500);
+                                });
+                            }, 500);
+                        }
+                    } else {
+                        args.form.classList.add('super-initialized');
+                    }
+                }
+            };
+            SUPER.after_initializing_forms_hook(args);
         });
 
     };
@@ -3896,10 +5159,9 @@ function SUPERreCaptcha(){
 
     // Replace HTML element {tags} with field values
     // @since 1.2.7
-    SUPER.init_replace_html_tags = function($changed_field, form){
+    SUPER.init_replace_html_tags = function(args){
         var $i,
             $v,
-            $regex,
             $row_regex,
             $html_fields,
             $target,
@@ -3915,18 +5177,24 @@ function SUPERreCaptcha(){
             $tag_items,
             $old_name,
             $new_name,
-            $regular_expression,
+            $regex,
             $array,
             $values,
             $new_value,
             $match;
 
-        if(typeof $changed_field === 'undefined') {
-            $html_fields = form.querySelectorAll('.super-html-content, .super-accordion-title, super-accordion-desc');
-        }else{
-            $html_fields = form.querySelectorAll('.super-html-content[data-fields*="{'+SUPER.get_field_name($changed_field)+'}"], .super-accordion-title[data-fields*="{'+SUPER.get_field_name($changed_field)+'}"], .super-accordion-desc[data-fields*="{'+SUPER.get_field_name($changed_field)+'}"]');
+        // Only when not on canvas in builder mode
+        if(args.form.classList.contains('super-preview-elements')){
+            return false;
         }
-        $regular_expression = /\{(.*?)\}/g;
+
+        // Continue otherwise
+        if(typeof args.el === 'undefined') {
+            $html_fields = args.form.querySelectorAll('.super-html-content, .super-accordion-title, super-accordion-desc');
+        }else{
+            $html_fields = args.form.querySelectorAll('.super-html-content[data-fields*="{'+SUPER.get_field_name(args.el)+'}"], .super-accordion-title[data-fields*="{'+SUPER.get_field_name(args.el)+'}"], .super-accordion-desc[data-fields*="{'+SUPER.get_field_name(args.el)+'}"]');
+        }
+        $regex = /{([^\\\/\s"'+]*?)}/g;
         Object.keys($html_fields).forEach(function(key) {
             var $counter = 0;
             $target = $html_fields[key];
@@ -3934,15 +5202,33 @@ function SUPERreCaptcha(){
             if( $target.classList.contains('super-accordion-title') || $target.classList.contains('super-accordion-desc') ) {
                 $html = $target.dataset.original;
             }else{
+                if(!$target.parentNode.querySelector('textarea')){
+                    return true;
+                }
                 $html = $target.parentNode.querySelector('textarea').value;
+            }
+            // If empty skip
+            if($html===''){
+                return true;
             }
             // Check if html contains {tags}, if not we don't have to do anything.
             // This also solves bugs with for instance third party plugins
             // That use shortcodes to initialize elements, which initialization would be lost
             // upon updating the HTML content based on {tags}.
             // This can be solved by NOT using either of the {} curly braces inside the HTML content
-            $regular_expression = /\{(.*?)\}/g;
-            if(!$regular_expression.exec($html)) return true;
+            var $skipUpdate = true;
+            $regex = /{([^\\\/\s"'+]*?)}/g;
+            if($regex.exec($html)){
+                $skipUpdate = false;
+            }
+            $regex = /foreach\s?\(\s?['|"|\s|]?(.*?)['|"|\s|]?\)\s?:([\s\S]*?)(?:endforeach\s?;)/g;
+            if($regex.exec($html)){
+                $skipUpdate = false;
+            }
+            if($html.indexOf('endif;')!==-1){
+                $skipUpdate = false;
+            }
+            if($skipUpdate) return true;
 
             // If it has {tags} then continue
             if( $html!=='' ) {
@@ -3958,7 +5244,7 @@ function SUPERreCaptcha(){
                     $return = '';
                     if(typeof $v[2] !== 'undefined') $return = $v[2];
                     $rows = '';
-                    $field = SUPER.field(form, $field_name);
+                    $field = SUPER.field(args.form, $field_name);
                     if($field){
                         // Of course we have at least one row, so always return the first row
                         $row = $return.split('<%counter%>').join(1);
@@ -3967,9 +5253,9 @@ function SUPERreCaptcha(){
                         $rows += $row;
                         // Loop through all the fields that have been dynamically added by the user
                         $i=2;
-                        $found = SUPER.field_exists(form, $field_name + '_' + ($i));
+                        $found = SUPER.field_exists(args.form, $field_name + '_' + ($i));
                         while($found){
-                            $found = SUPER.field_exists(form, $field_name + '_' + ($i));
+                            $found = SUPER.field_exists(args.form, $field_name + '_' + ($i));
                             if($found){
                                 $row = $return.split('<%counter%>').join($i);
                                 $row_regex = /<%(.*?)%>/g;
@@ -3995,15 +5281,18 @@ function SUPERreCaptcha(){
                     $html = $html.split($original).join($rows);
                 }
                 $array = [];
-                $regular_expression = /\{(.*?)\}/g;
-                while (($match = $regular_expression.exec($html)) !== null) {
+                $regex = /{([^\\\/\s"'+]*?)}/g;
+                while (($match = $regex.exec($html)) !== null) {
                     $array[$counter] = $match[1];
                     $counter++;
                 }
                 if( $array.length>0 ) {
                     for ($counter = 0; $counter < $array.length; $counter++) {
                         $values = $array[$counter];
-                        $new_value = SUPER.update_variable_fields.replace_tags(form, $regular_expression, '{'+$values+'}', $target);
+                        args.value = '{'+$values+'}'; //values[1];
+                        args.target = $target;
+                        $new_value = SUPER.update_variable_fields.replace_tags(args);
+                        delete args.target;
                         $html = $html.replace('{'+$values+'}', $new_value);
                     }
                 }
@@ -4017,13 +5306,11 @@ function SUPERreCaptcha(){
 
     // Replace form action attribute {tags} with field values
     // @since 4.4.6
-    SUPER.init_replace_post_url_tags = function($changed_field, form){
-        form = SUPER.get_frontend_or_backend_form($changed_field, form);           
-        
+    SUPER.init_replace_post_url_tags = function(args){
         var $match,
-            $target = form.querySelector('form'),
+            $target = args.form.querySelector('form'),
             $actiontags = ($target ? $target.dataset.actiontags : ''),
-            $regular_expression = /\{(.*?)\}/g,
+            $regex = /{([^\\\/\s"'+]*?)}/g,
             $array = [],
             $counter = 0,
             $values,
@@ -4031,14 +5318,17 @@ function SUPERreCaptcha(){
 
         // Only if action is defined
         if($target){
-            while (($match = $regular_expression.exec($actiontags)) !== null) {
+            while (($match = $regex.exec($actiontags)) !== null) {
                 $array[$counter] = $match[1];
                 $counter++;
             }
             if( $array.length>0 ) {
                 for ($counter = 0; $counter < $array.length; $counter++) {
                     $values = $array[$counter];
-                    $new_value = SUPER.update_variable_fields.replace_tags(form, $regular_expression, '{'+$values+'}', $target);
+                    args.value = '{'+$values+'}';
+                    args.target = $target;
+                    $new_value = SUPER.update_variable_fields.replace_tags(args);
+                    delete args.target;
                     $actiontags = $actiontags.replace('{'+$values+'}', $new_value);
                 }
             }
@@ -4206,7 +5496,7 @@ function SUPERreCaptcha(){
                             if($new_placeholder===''){
                                 $new_placeholder += $(this).html();
                             }else{
-                                $new_placeholder += ','+$(this).html();
+                                $new_placeholder += ', '+$(this).html();
                             }
                         }
                     });
@@ -4229,7 +5519,7 @@ function SUPERreCaptcha(){
     };
 
     // @since 3.1.0 - print form data
-    SUPER.init_print_form = function($form, submitButton){
+    SUPER.init_print_form = function(args){
         var items,
             $data,
             $parent,
@@ -4241,11 +5531,11 @@ function SUPERreCaptcha(){
             $file_id,
             win = window.open('','printwindow'),
             $html = '',
-            $print_file = submitButton.querySelector('input[name="print_file"]');
+            $print_file = args.submitButton.querySelector('input[name="print_file"]');
         if( $print_file && $print_file.value!=='' && $print_file.value!='0' ) {
             // @since 3.9.0 - print custom HTML
             $file_id = $print_file.value;
-            $data = SUPER.prepare_form_data($($form));
+            $data = SUPER.prepare_form_data($(args.form));
             $data = SUPER.after_form_data_collected_hook($data.data);
             $.ajax({
                 url: super_common_i18n.ajaxurl,
@@ -4282,7 +5572,7 @@ function SUPERreCaptcha(){
             $css += "</style>";
             $html = $css;
             $html += '<table>';
-            nodes = $form.querySelectorAll('.super-shortcode-field');
+            nodes = args.form.querySelectorAll('.super-shortcode-field');
             for (i = 0; i < nodes.length; i++) { 
                 el = nodes[i];
                 $items = '';
@@ -4294,7 +5584,7 @@ function SUPERreCaptcha(){
                 $html += '</th>';
                 $html += '<td>';
                     if($parent.classList.contains('super-radio')){
-                        $html += $parent.querySelector('.super-active').innerText;
+                        $html += ($parent.querySelector('.super-active') ? $parent.querySelector('.super-active').innerText : '');
                     }else if($parent.classList.contains('super-dropdown')){
                         items = $parent.querySelectorAll('.super-dropdown-ui .super-active');
                         for (ii = 0; ii < items.length; ii++) { 
@@ -4433,6 +5723,13 @@ function SUPERreCaptcha(){
             field = element.closest('.super-field');
             if(!field) continue; // Continue to next field
 
+            // If value is not empty, set filled status
+            if( default_value !== "" ) {
+                field.classList.add('super-filled');
+            }else{
+                field.classList.remove('super-filled');
+            }
+
             // Checkbox and Radio buttons
             if( field.classList.contains('super-checkbox') || field.classList.contains('super-radio') ){
                 innerNodes = form.querySelectorAll('.super-field-wrapper .super-item.super-active');
@@ -4501,6 +5798,9 @@ function SUPERreCaptcha(){
                 for (ii = 0; ii < innerNodes.length; ii++) { 
                     innerNodes[ii].classList.add('super-active');
                 }
+                if(innerNodes.length){
+                    field.classList.add('super-filled');
+                }
                 if(typeof default_value === 'undefined') default_value = '';
                 option = field.querySelector('.super-dropdown-ui .super-item:not(.super-placeholder)[data-value="'+default_value+'"]:not(.super-placeholder)');
                 if(option){
@@ -4549,7 +5849,6 @@ function SUPERreCaptcha(){
                 element.value = '';
                 continue;
             }
-
 
             // Countries field
             if(field.classList.contains('super-countries')){
@@ -4614,15 +5913,7 @@ function SUPERreCaptcha(){
             element.value = value;
         }
 
-        // @since 2.9.0 - make sure to do conditional logic and calculations
-        // This must not be done when a dynamic column is cloned
-        // This would causes issues with variable conditions being executed again and updating fields, resulting
-        // them in becoming emptied, instead of preserving their current value.
-        // Think about a "customer_search" field that populates other fields based on variable conditions like:
-        // {customer_search;2} etc.
-        if(typeof clone === 'undefined') {
-            SUPER.after_field_change_blur_hook(undefined, main_form);
-        }
+        SUPER.after_field_change_blur_hook({form: main_form});
 
         // After form cleared
         SUPER.after_form_cleared_hook(form);
@@ -4939,34 +6230,34 @@ function SUPERreCaptcha(){
             });
             // @since 2.4.0 - after inserting all the fields, update the conditional logic and variable fields
             Object.keys(updatedFields).forEach(function(key) {
-                SUPER.after_field_change_blur_hook(updatedFields[key]);
+                SUPER.after_field_change_blur_hook({el: updatedFields[key]});
             });
         }
     };
 
     // Retrieve entry data through ajax
     // (this function is called when search field is changed, or when $_GET is set on page load)
-    SUPER.populate_form_data_ajax = function(field){
+    SUPER.populate_form_data_ajax = function(args){
         var orderId,
             value,
             skipFields,
             method,
-            form = SUPER.get_frontend_or_backend_form(field);
+            form = SUPER.get_frontend_or_backend_form(args);
 
         // If we are populating based of WC order search
-        if(field.classList.contains('super-wc-order-search')){
+        if(args.el.classList.contains('super-wc-order-search')){
             // Get order ID based on active item
-            value = field.querySelector('.super-active').dataset.value;
+            value = args.el.querySelector('.super-active').dataset.value;
             orderId = value.split(';')[0];
             // Check if we need to skip any fields
             skipFields = '';
-            if(field.querySelector('.super-shortcode-field')){
-                if(field.querySelector('.super-shortcode-field').dataset.wcoss){
-                    skipFields = field.querySelector('.super-shortcode-field').dataset.wcoss; 
+            if(args.el.querySelector('.super-shortcode-field')){
+                if(args.el.querySelector('.super-shortcode-field').dataset.wcoss){
+                    skipFields = args.el.querySelector('.super-shortcode-field').dataset.wcoss; 
                 }
             } 
             // We now have the order ID, let's search the order and get entry data if possible
-            field.querySelector('.super-field-wrapper').classList.add('super-populating');
+            args.el.querySelector('.super-field-wrapper').classList.add('super-populating');
             form.classList.add('super-populating');
             $.ajax({
                 url: super_common_i18n.ajaxurl,
@@ -4980,7 +6271,7 @@ function SUPERreCaptcha(){
                     SUPER.populate_form_with_entry_data(data, form);
                 },
                 complete: function(){
-                    field.querySelector('.super-field-wrapper').classList.remove('super-populating');
+                    args.el.querySelector('.super-field-wrapper').classList.remove('super-populating');
                     form.classList.remove('super-populating');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -4990,13 +6281,13 @@ function SUPERreCaptcha(){
                 }
             });
         }else{
-            field.dataset.typing = 'false';
-            value = field.value;
-            method = field.dataset.searchMethod;
+            args.el.dataset.typing = 'false';
+            value = args.el.value;
+            method = args.el.dataset.searchMethod;
             // Check if we need to skip any fields
-            skipFields = (field.dataset.searchSkip ? field.dataset.searchSkip : '');
+            skipFields = (args.el.dataset.searchSkip ? args.el.dataset.searchSkip : '');
             if( value.length > 2 ) {
-                field.closest('.super-field-wrapper').classList.add('super-populating');
+                args.el.closest('.super-field-wrapper').classList.add('super-populating');
                 form.classList.add('super-populating');
                 $.ajax({
                     url: super_common_i18n.ajaxurl,
@@ -5011,7 +6302,7 @@ function SUPERreCaptcha(){
                         SUPER.populate_form_with_entry_data(data, form);
                     },
                     complete: function(){
-                        field.closest('.super-field-wrapper').classList.remove('super-populating');
+                        args.el.closest('.super-field-wrapper').classList.remove('super-populating');
                         form.classList.remove('super-populating');
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -5026,7 +6317,6 @@ function SUPERreCaptcha(){
 
     // init the form on the frontend
     SUPER.init_super_form_frontend = function(){
-        
         // Do not do anything if all forms where intialized already
         if(document.querySelectorAll('.super-form').length===document.querySelectorAll('.super-form.super-initialized').length){
             return true;
@@ -5046,7 +6336,7 @@ function SUPERreCaptcha(){
                     el.value = result;
                     el.classList.add('super-generated');
                     el.removeAttribute("data-codesettings"); 
-                    SUPER.after_field_change_blur_hook(el);
+                    SUPER.after_field_change_blur_hook({el: el});
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     // eslint-disable-next-line no-console
@@ -5061,7 +6351,7 @@ function SUPERreCaptcha(){
             var field = this;
             if(field.value!==''){
                 field.classList.add('super-dom-populated');
-                SUPER.populate_form_data_ajax(field);
+                SUPER.populate_form_data_ajax({el: field});
             }
         });
 
@@ -5106,9 +6396,23 @@ function SUPERreCaptcha(){
             $(this).mask($(this).data('mask'));
         });
 
+        // Populate signature element with possible saved form progress
+        $('.super-form').each(function(){
+            if($(this).hasClass('super-save-progress')){
+                $(this).find('.super-signature').each(function(){
+                    var value = $(this).find('.super-signature-lines').val();
+                    if(value!==''){
+                        value = value.replace('\\"lines\\"', '"lines"');
+                        $(this).find('.super-signature-canvas').signature('enable').signature('draw', value);
+                    }
+                });
+            }
+        });
+
         // Multi-part
         $('.super-form').each(function(){
-            var $form = $(this),
+            var form = this,
+                $form = $(this),
                 $multipart = {},
                 $multiparts = [],
                 $submit_button,
@@ -5219,15 +6523,53 @@ function SUPERreCaptcha(){
                         $form.prepend($progress_bar);
                     }
                 }
+                
+                // @SINCE 4.9.520 - Remember multi-part position/location and allow to anchor to a specific multi-part
+                // Example: http://domain.com/page#step-49344-3
+                var currentStep = window.location.hash.substring(1);
+                if(currentStep!==''){
+                    var explodedStep = currentStep.split('-');
+                    if(explodedStep[0]==='step'){
+                        var stepFormID = explodedStep[1];
+                        var multiPart = explodedStep[2];
+                        // Lookup the form based on the ID
+                        var multiPartForm = document.querySelector('.super-form-'+stepFormID);
+                        if(multiPartForm){
+                            // We found a form, check if it contains a multi-part, if so then make it active
+                            var nodes = multiPartForm.querySelectorAll('.super-multipart');
+                            // If there are not enough multi-parts default to the first one
+                            if(nodes.length < multiPart) multiPart = "1";
+                            for(var i = 0; i < nodes.length; i++){
+                                if(multiPart==(i+1)){
+                                    nodes[i].classList.add('super-active');
+                                }else{
+                                    nodes[i].classList.remove('super-active');
+                                }
+                            }
+                            nodes = multiPartForm.querySelectorAll('.super-multipart-step');
+                            for(i = 0; i < nodes.length; i++){
+                                if(multiPart==(i+1)){
+                                    nodes[i].classList.add('super-active');
+                                }else{
+                                    nodes[i].classList.remove('super-active');
+                                }
+                            }
+                            var progress = 100 / nodes.length;
+                            progress = progress * parseInt(multiPart, 10);
+                            form.querySelector('.super-multipart-progress-bar').style.width = progress+'%';
+                        }
+                    }
+                }
             }
+            SUPER.init_super_responsive_form_fields({form: form});
+            SUPER.init_common_fields({form: form});
         });
-    
-        SUPER.init_super_responsive_form_fields();
-
-        SUPER.init_common_fields();
 
         $(window).resize(function() {
-            SUPER.init_super_responsive_form_fields();
+            var i, nodes = document.querySelectorAll('.super-form');
+            for(i=0; i<nodes.length; i++){
+                SUPER.init_super_responsive_form_fields({form: nodes[i]});
+            }
         });
         
         var $handle_columns_interval = setInterval(function(){
@@ -5260,7 +6602,7 @@ function SUPERreCaptcha(){
                 $decimals,
                 $thousand_separator,
                 $decimal_separator,
-                $regular_expression,
+                $regex,
                 $wrapper,
                 $number,
                 $amount,
@@ -5283,12 +6625,12 @@ function SUPERreCaptcha(){
                 $decimals = $field.data('decimals');
                 $thousand_separator = $field.data('thousand-separator');
                 $decimal_separator = $field.data('decimal-separator');
-                $regular_expression = '\\d(?=(\\d{' + (3 || 3) + '})+' + ($decimals > 0 ? '\\D' : '$') + ')';
+                $regex = '\\d(?=(\\d{' + (3 || 3) + '})+' + ($decimals > 0 ? '\\D' : '$') + ')';
                 if( $value<$min ) {
                     $value = $min;
                 }
                 $value = parseFloat($value).toFixed(Math.max(0, ~~$decimals));
-                $value = ($decimal_separator ? $value.replace('.', $decimal_separator) : $value).replace(new RegExp($regular_expression, 'g'), '$&' + ($thousand_separator || ''));
+                $value = ($decimal_separator ? $value.replace('.', $decimal_separator) : $value).replace(new RegExp($regex, 'g'), '$&' + ($thousand_separator || ''));
                 $field.simpleSlider({
                     snap: true,
                     step: $steps,
@@ -5299,9 +6641,9 @@ function SUPERreCaptcha(){
                 $wrapper.append('<span class="amount"><i>'+$currency+''+$value+''+$format+'</i></span>');
                 SUPER.reposition_slider_amount_label($field[0]);
 
-                $field.bind("slider:changed", function ($event, $data) {
+                $field.on("slider:changed", function ($event, $data) {
                     $number = parseFloat($data.value).toFixed(Math.max(0, ~~$decimals));
-                    $number = ($decimal_separator ? $number.replace('.', $decimal_separator) : $number).replace(new RegExp($regular_expression, 'g'), '$&' + ($thousand_separator || ''));
+                    $number = ($decimal_separator ? $number.replace('.', $decimal_separator) : $number).replace(new RegExp($regex, 'g'), '$&' + ($thousand_separator || ''));
                     $amount = $wrapper.children('.amount');
                     $dragger = $data.el[0].querySelector('.dragger');
                     $amount.children('i').html($currency+''+($number)+''+$format);
@@ -5359,6 +6701,20 @@ function SUPERreCaptcha(){
         if ( $.isFunction($.fn.tooltipster) ) {
             $('.super-tooltip:not(.tooltipstered)').tooltipster({
                 contentAsHTML: true,
+                trigger: 'custom',
+                triggerOpen: {
+                    click: true,
+                    tap: true,
+                    mouseenter: true,
+                    touchstart: true
+                },
+                triggerClose: {
+                    click: true,
+                    tap: true,
+                    mouseleave: true,
+                    originClick: true,
+                    touchleave: true
+                }
             });
         }
     };
@@ -5390,31 +6746,39 @@ function SUPERreCaptcha(){
     };
 
     // Handle the responsiveness of the form
-    SUPER.init_super_responsive_form_fields = function(){
-        var $classes = [
-            'super-first-responsiveness',
-            'super-second-responsiveness',
-            'super-third-responsiveness',
-            'super-fourth-responsiveness',
-            'super-last-responsiveness'
-        ];
-        var $window_classes = [
-            'super-window-first-responsiveness',
-            'super-window-second-responsiveness',
-            'super-window-third-responsiveness',
-            'super-window-fourth-responsiveness',
-            'super-window-last-responsiveness'
-        ];
+    SUPER.responsive_form_fields_timeout = {};
+    SUPER.init_super_responsive_form_fields = function(args){
+        if(typeof args === 'undefined') args = {};
+        if(typeof args.form === 'undefined') {
+            args.form = document.querySelector('.super-form');
+        }
+        var formId = (args.form.querySelector('input[name="hidden_form_id"]') ? args.form.querySelector('input[name="hidden_form_id"]').value : 0);
+		if (SUPER.responsive_form_fields_timeout[formId] !== null) {
+			clearTimeout(SUPER.responsive_form_fields_timeout[formId]);
+		}
+        SUPER.responsive_form_fields_timeout[formId] = setTimeout(function () {
+            var $classes = [
+                'super-first-responsiveness',
+                'super-second-responsiveness',
+                'super-third-responsiveness',
+                'super-fourth-responsiveness',
+                'super-last-responsiveness'
+            ];
+            var $window_classes = [
+                'super-window-first-responsiveness',
+                'super-window-second-responsiveness',
+                'super-window-third-responsiveness',
+                'super-window-fourth-responsiveness',
+                'super-window-last-responsiveness'
+            ];
 
-        var $new_class = '';
-        var $new_window_class = '';
-        var $window_width = $(window).outerWidth(true);
+            var $new_class = '';
+            var $new_window_class = '';
+            var $window_width = $(window).outerWidth(true);
 
-        $('.super-form').each(function(){
-
-            var $this = $(this);
-            var $width = $(this).outerWidth(true);
-
+            var $this = $(args.form);
+            var $width = $this.outerWidth(true);
+            // Change in width, apply responsiveness
             if($width > 0 && $width < 530){
                 SUPER.remove_super_form_classes($this,$classes);
                 $this.addClass($classes[0]);
@@ -5495,14 +6859,24 @@ function SUPERreCaptcha(){
 
             // Check for slider fields, reposition "Dragger" element based on "Track" width
             // If the dragger position exceeds the track width adjust it to be 
+            // selector.simpleSlider("setValue", value);
             // Sets the value of the slider.
+            // selector.simpleSlider("setRatio", ratio);
             var nodes = $this[0].querySelectorAll('.super-slider');
             for(var i=0; i < nodes.length; i++){
                 var $field = $(nodes[i].querySelector('.super-shortcode-field'));
                 if(!$field) continue;
                 // Must trigger a change:
                 var originalValue = $field.val();
-                SUPER.reposition_slider_amount_label($field[0], originalValue);
+                if(typeof $field.data("slider-object") === 'undefined'){
+                    // Must re-generate slider field, because this is a cloned form
+                    if(nodes[i].querySelector('.slider')){
+                        nodes[i].querySelector('.slider').remove();
+                    }
+                    SUPER.init_slider_field();
+                }else{
+                    SUPER.reposition_slider_amount_label($field[0], originalValue);
+                }
             }
 
             ///var formId = 0;
@@ -5512,7 +6886,7 @@ function SUPERreCaptcha(){
             ///// First disable the UI on the map for nicer print of the map
             ///// And make map fullwidth and directions fullwidth
             ///for(i=0; i < SUPER.google_maps_api.allMaps[formId].length; i++){
-            ///    nodes = SUPER.google_maps_api.allMaps[formId][i].__gm.Na.parentNode.querySelectorAll(':scope > div');
+            ///    nodes = SUPER.google_maps_api.allMaps[formId][i]['super_el'].querySelectorAll(':scope > div');
             ///    for(var x=0; x < nodes.length; x++){
             ///        nodes[x].style.width = '100%';
             ///        if(nodes[x].classList.contains('super-google-map-directions')){
@@ -5522,11 +6896,13 @@ function SUPERreCaptcha(){
             ///    }
             ///}
 
-        });
+            // @since 1.3
+            SUPER.after_responsive_form_hook($classes, args.form, $new_class, $window_classes, $new_window_class);
 
-        // @since 1.3
-        SUPER.after_responsive_form_hook($classes, $new_class, $window_classes, $new_window_class);
-
+            if(typeof args.callback === 'function'){
+                args.callback();
+            }
+        }, 500);
     };
 
     // Update field visibility
@@ -5538,7 +6914,7 @@ function SUPERreCaptcha(){
             $nodes = $('.super-elements-container .super-field.super-filter[data-filtervalue], .super-settings .super-field.super-filter[data-filtervalue]');
             $nodes.addClass('super-hidden');
         }else{
-            $name = $this.find('.element-field').attr('name');
+            $name = $this.find('.super-element-field').attr('name');
             $nodes =  $('.super-elements-container .super-field[data-parent="'+$name+'"], .super-settings .super-field[data-parent="'+$name+'"]');
         }
         $nodes.each(function(){
@@ -5555,10 +6931,10 @@ function SUPERreCaptcha(){
             if($container.length===0){
                 $container = $this.parents('.super-settings:eq(0)');
             }
-            $parent = $container.find('.element-field[name="'+$this.data('parent')+'"]');
+            $parent = $container.find('.super-element-field[name="'+$this.data('parent')+'"]');
             // If is radio button
             if($parent.attr('type')=='radio'){
-                $parent = $container.find('.element-field[name="'+$this.data('parent')+'"]:checked');
+                $parent = $container.find('.super-element-field[name="'+$this.data('parent')+'"]:checked');
             }
             $value = $parent.val();
             if(typeof $value==='undefined') $value = '';
@@ -5592,8 +6968,7 @@ function SUPERreCaptcha(){
             nodes = document.querySelectorAll('.super-form .super-distance-calculator');
 
         for( i = 0; i < nodes.length; i++){
-            nodes[i];
-            form = SUPER.get_frontend_or_backend_form(nodes[i]);
+            form = SUPER.get_frontend_or_backend_form({el: nodes[i]});
             method = nodes[i].dataset.distanceMethod;
             if(method=='start'){
                 destination = nodes[i].dataset.distanceDestination;
@@ -5746,7 +7121,7 @@ function SUPERreCaptcha(){
             var field = this;
             if (timeout !== null) clearTimeout(timeout);
             timeout = setTimeout(function () {
-                SUPER.calculate_distance(field);
+                SUPER.calculate_distance({el: field});
             }, 1000);
         });
 
@@ -5760,7 +7135,7 @@ function SUPERreCaptcha(){
         });  
         
         function super_update_dropdown_value(e, dropdown, key){
-            var i,nodes,value,name,max,min,total,names='',values='',counter,validation,duration,form,
+            var i,nodes,value,name,max,min,total,names='',values='',counter,validation,form,
                 input = dropdown.querySelector('.super-field-wrapper > input'),
                 parent = dropdown.querySelector('.super-dropdown-ui'),
                 placeholder = parent.querySelector('.super-placeholder'),
@@ -5811,15 +7186,14 @@ function SUPERreCaptcha(){
             }
             validation = input.dataset.validation;
             if(typeof validation !== 'undefined' && validation !== false){
-                duration = SUPER.get_duration();
                 form = input.closest('.super-form');
-                SUPER.handle_validations(input, validation, '', duration, form);
+                SUPER.handle_validations({el: input, form: form, validation: validation});
             }
             if(key=='enter') {
                 dropdown.classList.remove('super-focus-dropdown');
                 dropdown.classList.remove('super-string-found');
             }
-            SUPER.after_dropdown_change_hook(input);
+            SUPER.after_dropdown_change_hook({el: input});
             e.preventDefault();
         }
 
@@ -5862,8 +7236,18 @@ function SUPERreCaptcha(){
                         }
                         if( !element.classList.contains('super-textarea') ) {
                             if(!form.querySelector('.super-form-button.super-loading')){
-                                submitButton = form.querySelector('.super-form-button .super-button-wrap .super-button-name[data-action="submit"]').parentNode;
-                                SUPER.validate_form( form, submitButton, undefined, e, true );
+                                submitButton = form.querySelector('.super-form-button .super-button-wrap .super-button-name[data-action="submit"]');
+                                if(submitButton) {
+                                    var args = {
+                                        el: undefined,
+                                        form: form,
+                                        submitButton: submitButton.parentNode,
+                                        validateMultipart: undefined,
+                                        event: e,
+                                        doingSubmit: true
+                                    };
+                                    SUPER.validate_form(args);
+                                }
                             }
                             e.preventDefault();
                         }
@@ -5975,11 +7359,11 @@ function SUPERreCaptcha(){
         });
 
         var timeout = null;
-        $doc.on('keyup', '.super-text .super-shortcode-field[data-search="true"]', function(){ 
+        $doc.on('keyup paste', '.super-text .super-shortcode-field[data-search="true"]', function(){ 
             var field = this;
             if (timeout !== null) clearTimeout(timeout);
             timeout = setTimeout(function () {
-                SUPER.populate_form_data_ajax(field);
+                SUPER.populate_form_data_ajax({el: field});
             }, 1000);
         });
 

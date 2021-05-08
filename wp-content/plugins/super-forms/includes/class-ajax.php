@@ -85,10 +85,19 @@ class SUPER_Ajax {
 
             'update_unique_code'            => true, // @since 4.9.46
 
-            //'smtp_test'                     => false, // @since 4.9.5
+            'api_cancel_subscription'       => false,
+            'api_start_trial'               => false,
+            'api_checkout'                  => false,
+            'api_register_user'             => false,
+            'api_login_user'                => false,
+            'api_send_reset_password_email' => false,
+            'api_reset_password'            => false,
+            'api_logout_user'               => false,
+            'api_verify_code'               => false,
+            'api_auth'                      => false,
+            'api_submit_feedback'           => false,
 
         );
-
         foreach ( $ajax_events as $ajax_event => $nopriv ) {
             add_action( 'wp_ajax_super_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
@@ -96,6 +105,153 @@ class SUPER_Ajax {
                 add_action( 'wp_ajax_nopriv_super_' . $ajax_event, array( __CLASS__, $ajax_event ) );
             }
         }
+    }
+
+    public static function api_get_auth(){
+        if (isset($_COOKIE['super_forms'])) {
+            return ($_COOKIE['super_forms']);
+        }
+		return array("wp_admin" => "false");
+    }
+    public static function api_auth(){
+        $auth = $_POST['auth'];
+        $result = setcookie(
+            'super_forms[wp_admin]', // name
+            $auth, // value
+            time()+60*120, // expires after 15 minutes
+            '',  // path
+            '', // domain
+            false, // secure (many WP dashboard might not have valid certificate, or are not forced to https protocol)
+            true // httponly
+        );
+        echo ($result===true ? 'true' : 'false');
+        die();
+    }
+    public static function api_submit_feedback() {
+        $custom_args = array(
+            'body' => (array(
+                'addon_title' => $_POST['addon_title'],
+                'feedback' => $_POST['feedback'],
+                'email' => $_POST['email']
+            ))
+        );
+        self::api_do_request('feedback/submit', $custom_args);
+    }
+    public static function api_verify_code() {
+        $custom_args = array(
+            'body' => (array(
+                'code' => $_POST['code']
+            ))
+        );
+        self::api_do_request('verify/code', $custom_args);
+    }
+    public static function api_register_user() {
+        $custom_args = array(
+            'body' => (array(
+                'email' => $_POST['email'],
+                'password' => $_POST['password']
+            ))
+        );
+        self::api_do_request('register', $custom_args);
+    }
+    public static function api_send_reset_password_email() {
+        $custom_args = array(
+            'body' => (array(
+                'email' => $_POST['email'],
+                'data' => $_POST['data']
+            ))
+        );
+        self::api_do_request('send_reset_password_email', $custom_args);
+    }
+    public static function api_reset_password() {
+        $custom_args = array(
+            'body' => (array(
+                'code' => $_POST['code'],
+                'password' => $_POST['password']
+            ))
+        );
+        self::api_do_request('reset_password', $custom_args);
+    }
+    public static function api_login_user() {
+        $custom_args = array(
+            'body' => (array(
+                'email' => $_POST['email'],
+                'password' => $_POST['password']
+            ))
+        );
+        self::api_do_request('login', $custom_args);
+    }
+    public static function api_logout_user() {
+        self::api_do_request('logout', array());
+    }
+    public static function api_cancel_subscription() {
+        $custom_args = array(
+            'body' => (array(
+                'slug' => $_POST['slug'],
+                'data' => $_POST['data']
+            ))
+        );
+        self::api_do_request('addons/cancel', $custom_args);
+    }
+    public static function api_start_trial() {
+        $custom_args = array(
+            'body' => (array(
+                'slug' => $_POST['slug'],
+                'data' => $_POST['data']
+            ))
+        );
+        self::api_do_request('addons/start_trial', $custom_args);
+    }
+    public static function api_checkout() {
+        $custom_args = array(
+            'body' => (array(
+                'plans' => $_POST['plans'],
+                'payment_method_id' => $_POST['payment_method_id'],
+                'invoice_id' => $_POST['invoice_id'],
+                'data' => $_POST['data']
+            ))
+        );
+        self::api_do_request('addons/checkout', $custom_args);
+    }
+
+    public static function api_do_request($route, $custom_args, $method='echo'){
+        $args = self::api_default_post_args($custom_args);
+        if($route==='logout'){
+            setcookie('super_forms[wp_admin]', '', time()-3600);
+        }
+        $api_endpoint = (isset($_POST['api_endpoint']) ? $_POST['api_endpoint'] : SUPER_API_ENDPOINT);
+        $r = wp_remote_post($api_endpoint . '/' . $route, $args);
+        $response = self::api_handle_response($r, $args);
+        if($method=='return') return $response;
+        if($method=='echo') echo $response;
+        die();
+    }
+
+    public static function api_default_post_args($custom_args){
+        $default_args = array(
+            'method' => 'POST',
+            'timeout' => 45,
+            'data_format' => 'body',
+            'headers' => array('Content-Type' => 'application/json; charset=utf-8')
+        );
+        $custom_args['body']['auth'] = self::api_get_auth();
+        $custom_args['body'] = json_encode($custom_args['body']);
+        return array_merge($default_args, $custom_args);
+    }
+
+    public static function api_handle_response($r, $args){
+        $body = '';
+        if ( is_wp_error( $r ) ) {
+            $err = $r->get_error_message();
+            $body .= '<div class="error notice" style="margin-top:50px;">';
+                $body .= '<p>'.esc_html__('Unable to load content, please refresh the page, or try again later.', 'super-forms').'</p>';
+                $body .= '<textarea style="display:none;opacity:0;">' . $err . '</textarea>';
+            $body .= '</div>';
+        }else{
+            // Just an API error/notice/success message or HTML payload
+            $body .= $r['body'];
+        }
+        return $body;
     }
 
     // @since 4.9.46
@@ -197,10 +353,10 @@ class SUPER_Ajax {
                                 }
                                 $settings_html .= '<div class="super-field' . $filter . '"' . $parent . '' . $filtervalue;
                                 $settings_html .= '>';
-                                    if( isset( $v['name'] ) ) $settings_html .= '<div class="field-name">' . esc_html($v['name']) . '</div>';
+                                    if( isset( $v['name'] ) ) $settings_html .= '<div class="super-field-name">' . esc_html($v['name']) . '</div>';
                                     if( isset( $v['desc'] ) ) $settings_html .= '<i class="info super-tooltip" title="' . esc_attr($v['desc']) . '"></i>';
-                                    if( isset( $v['label'] ) ) $settings_html .= '<div class="field-label">' . nl2br($v['label']) . '</div>';
-                                    $settings_html .= '<div class="field-input">';
+                                    if( isset( $v['label'] ) ) $settings_html .= '<div class="super-field-label">' . nl2br($v['label']) . '</div>';
+                                    $settings_html .= '<div class="super-field-input">';
                                         if( !isset( $v['type'] ) ) $v['type'] = 'text';
                                         $settings_html .= call_user_func( array( 'SUPER_Field_Types', $v['type'] ), $k, $v );
                                     $settings_html .= '</div>';
@@ -216,10 +372,10 @@ class SUPER_Ajax {
                             }
                             if( ( !isset( $v['hidden'] ) ) || ( $v['hidden']==false ) )  {
                                 $settings_html .= '<div class="super-field">';
-                                    if( isset( $v['name'] ) ) $settings_html .= '<div class="field-name">' . esc_html($v['name']) . '</div>';
+                                    if( isset( $v['name'] ) ) $settings_html .= '<div class="super-field-name">' . esc_html($v['name']) . '</div>';
                                     if( isset( $v['desc'] ) ) $settings_html .= '<i class="info super-tooltip" title="' . esc_attr($v['desc']) . '"></i>';
-                                    if( isset( $v['label'] ) ) $settings_html .= '<div class="field-label">' . nl2br($v['label']) . '</div>';
-                                    $settings_html .= '<div class="field-input">';
+                                    if( isset( $v['label'] ) ) $settings_html .= '<div class="super-field-label">' . nl2br($v['label']) . '</div>';
+                                    $settings_html .= '<div class="super-field-input">';
                                         if( !isset( $v['type'] ) ) $v['type'] = 'text';
                                         $settings_html .= call_user_func( array( 'SUPER_Field_Types', $v['type'] ), $k, $v );
                                     $settings_html .= '</div>';
@@ -361,8 +517,11 @@ class SUPER_Ajax {
     */
     public static function save_form_progress() {
         if(!empty($_POST['form_id'])){
-            $data = $_POST['data'];
             $form_id = absint($_POST['form_id']);
+            $data = false; // Clear date by default
+            if(!empty($_POST['data'])){
+                $data = $_POST['data'];
+            }
             SUPER_Forms()->session->set( 'super_form_progress_' . $form_id, $data );
         }
         die();
@@ -376,18 +535,16 @@ class SUPER_Ajax {
     */
     public static function calculate_distance() {
         global $wpdb;
-   
         $units = sanitize_text_field($_POST['units']);
-        $q = '';
-        if($units=='imperial') $q = '&units=imperial';
-   
+        $url = 'https://maps.googleapis.com/maps/api/directions/json?';
         $origin = sanitize_text_field($_POST['origin']);
         $destination = sanitize_text_field($_POST['destination']);
-        $url = 'https://maps.googleapis.com/maps/api/directions/json?gl=uk' . $q . '&origin=' . $origin . '&destination=' . $destination;
-
+        $url .= 'origin=' . $origin . '&destination=' . $destination;
         $global_settings = SUPER_Common::get_global_settings();
         if( !empty($global_settings['form_google_places_api']) ) $url .= '&key=' . $global_settings['form_google_places_api'];
-        
+        if( !empty($global_settings['google_maps_api_language']) ) $url .= '&language=' . $global_settings['google_maps_api_language'];
+        if( !empty($global_settings['google_maps_api_region']) ) $url .= '&region=' . $global_settings['google_maps_api_region'];
+        if($units=='imperial') $url .= '&units=imperial';
         $response = wp_remote_get( $url, array('timeout'=>60) );
         if ( is_wp_error( $response ) ) {
             $error_message = $response->get_error_message();
@@ -483,7 +640,7 @@ class SUPER_Ajax {
                     }else{
                         echo date_i18n('d M Y @ H:i:s', strtotime($v->post_date));
                     }
-                    echo '<span>Restore backup</span></li>';
+                    echo '<span>'.esc_html__('Restore backup', 'super-forms').'</span></li>';
                 }
                 echo '</ul>';
             }
@@ -630,6 +787,27 @@ class SUPER_Ajax {
             if( isset($entry[0])) {
                 $data = get_post_meta( $entry[0]->ID, '_super_contact_entry_data', true );
                 unset($data['hidden_form_id']);
+                $entry_status = get_post_meta( absint($entry[0]->ID), '_super_contact_entry_status', true );
+                // If entry status is empty, return the post status instead
+                if(empty($entry_status)){
+                    $entry_status = get_post_status($entry[0]->ID);
+                }
+                $data['hidden_contact_entry_status'] = array(
+                    'name' => 'hidden_contact_entry_status',
+                    'value' => $entry_status,
+                    'type' => 'var'
+                );
+                $data['hidden_contact_entry_id'] = array(
+                    'name' => 'hidden_contact_entry_id',
+                    'value' => $entry[0]->ID,
+                    'type' => 'entry_id'
+                );
+                $entry_title = get_the_title($entry[0]->ID);
+                $data['hidden_contact_entry_title'] = array(
+                    'name' => 'hidden_contact_entry_title',
+                    'value' => $entry_title,
+                    'type' => 'var'
+                );
                 // @since 3.2.0 - skip specific fields from being populated
                 $skip = sanitize_text_field($_POST['skip']);
                 $skip_fields = explode( "|", $skip );
@@ -637,13 +815,6 @@ class SUPER_Ajax {
                     if( isset($data[$field_name]) ) {
                         unset($data[$field_name]);
                     }
-                }
-                if( isset($entry[0])) {
-                    $data['hidden_contact_entry_id'] = array(
-                        'name' => 'hidden_contact_entry_id',
-                        'value' => $entry[0]->ID,
-                        'type' => 'entry_id'
-                    );
                 }
             }
             echo json_encode($data);
@@ -759,8 +930,18 @@ class SUPER_Ajax {
                 }
             }
         }
-
-        $file_location = '/uploads/php/files/super-contact-entries.csv';
+        
+        // Delete old files
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/super-contact-entries-*.csv';
+        $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
+        $files = glob($source);
+        foreach($files as $v){
+            if( file_exists( $v ) ) {
+                SUPER_Common::delete_file( $v );
+            }
+        }
+        // Save new file
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/super-contact-entries-'.strtotime(date_i18n('Y-m-d H:i:s')).'.csv';
         $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
         if( file_exists( $source ) ) {
             SUPER_Common::delete_file( $source );
@@ -824,7 +1005,8 @@ class SUPER_Ajax {
             }
         }
         $columns[] = 'entry_ip';
-        echo '<span class="button super-export-selected-columns-toggle" style="margin-top:10px;">Toggle all fields</span>';
+        echo '<span class="button super-export-selected-columns-toggle" style="margin-top:10px;">'.esc_html__('Toggle all fields', 'super-forms').'</span>';
+        echo '<span class="button button-primary button-large super-export-selected-columns" style="margin: 10px 30px 0px 0px;">'.esc_html__('Export', 'super-forms').'</span>';
         echo '<ul class="super-export-entry-columns">';
         foreach( $columns as $k => $v ) {
             echo '<li class="super-entry-column" data-name="' . esc_attr($v) . '">';
@@ -836,7 +1018,7 @@ class SUPER_Ajax {
         }
         echo '</ul>';
         echo '<input type="hidden" name="query" value="' . $query . '" />';
-        echo '<span class="button button-primary button-large super-export-selected-columns">Export</span>';
+        echo '<span class="button button-primary button-large super-export-selected-columns" style="margin: 0px 30px 0px 0px;">'.esc_html__('Export', 'super-forms').'</span>';
         die();
     }
 
@@ -907,40 +1089,50 @@ class SUPER_Ajax {
             $array[$v['name']] = $v['value'];
         }
         if($array['smtp_enabled']=='enabled'){
-            if ( !class_exists( 'PHPMailer' ) ) {
-                require_once( 'phpmailer/class.phpmailer.php' );
+            // @since 4.9.551 - WordPress changed the location of PHPMailer apperantly...
+            global $wp_version;
+            if ( version_compare( $wp_version, '5.5', '<' ) ) {
+                require_once(ABSPATH . WPINC . "/class-phpmailer.php");
+                require_once(ABSPATH . WPINC . "/class-smtp.php");
+                require_once(ABSPATH . WPINC . "/class-pop3.php");
+				$phpmailer = new PHPMailer();
+            }else{
+				require_once(ABSPATH . WPINC . "/PHPMailer/PHPMailer.php");
+          		require_once(ABSPATH . WPINC . "/PHPMailer/SMTP.php");
+          		require_once(ABSPATH . WPINC . "/class-pop3.php");
+				$phpmailer = new \PHPMailer\PHPMailer\PHPMailer();
             }
-            if ( !class_exists( 'SMTP' ) ) {
-                require_once( 'phpmailer/class.smtp.php' );
-            }
-            $mail = new PHPMailer;
-            $mail->isSMTP();
-            $mail->Host = $array['smtp_host'];
-            $mail->Username = $array['smtp_username'];
-            $mail->Password = $array['smtp_password'];
-            $mail->Port = $array['smtp_port'];
-            if( $array['smtp_auth']=='enabled' ) $mail->SMTPAuth = true;
-            if( $array['smtp_secure']!='' ) $mail->SMTPSecure = $array['smtp_secure']; 
-            if($mail->smtpConnect()!==true){
-                $reflector = new \ReflectionClass($mail);
-                $classProperty = $reflector->getProperty('language');
-                $classProperty->setAccessible(true);
-                $error_data = $classProperty->getValue($mail);
-                foreach($error_data as $ek => $ev){
+
+            $phpmailer->isSMTP();
+            $phpmailer->Host = $array['smtp_host'];
+            $phpmailer->Port = $array['smtp_port'];
+            $phpmailer->Username = $array['smtp_username'];
+            $phpmailer->Password = $array['smtp_password'];
+            if( $array['smtp_auth']=='enabled' ) $phpmailer->SMTPAuth = true;
+            if( $array['smtp_secure']!='' ) $phpmailer->SMTPSecure = $array['smtp_secure']; 
+            try {
+                if($phpmailer->smtpConnect()){
+                    $phpmailer->smtpClose();
+                }else{
                     SUPER_Common::output_message(
                         $error='smtp_error',
-                        $ev
+                        esc_html__( 'Invalid SMTP settings!', 'super-forms' )
                     );
                     die();
                 }
+            } catch (Exception $e) {
                 SUPER_Common::output_message(
                     $error='smtp_error',
-                    esc_html__( 'Invalid SMTP settings!', 'super-forms' )
+                    $e->getMessage()
                 );
                 die();
             }
         }
         update_option( 'super_settings', $array );
+        SUPER_Common::output_message(
+            $error = false,
+            $msg = ''
+        );
         die();
     }
 
@@ -1002,26 +1194,7 @@ class SUPER_Ajax {
                                 'type' => $column_type
                             );
                             continue;
-                        }
-                        if( $column_type=='var' ) {
-                            $entries[$row]['data'][$column_name] = array(
-                                'name' => $column_name,
-                                'label' => $column_label,
-                                'value' => $v,
-                                'type' => $column_type
-                            );
-                            continue;
-                        }
-                        if( $column_type=='text' ) {
-                            $entries[$row]['data'][$column_name] = array(
-                                'name' => $column_name,
-                                'label' => $column_label,
-                                'value' => $v,
-                                'type' => $column_type
-                            );
-                            continue;
-                        }
-                        if( $column_type=='file' ) {
+                        }elseif( $column_type=='file' ) {
                             $files = explode( ",", $v );   
                             $entries[$row]['data'][$column_name] = array(
                                 'name' => $column_name,
@@ -1036,6 +1209,14 @@ class SUPER_Ajax {
                                     'value' => $v,
                                 );
                             }
+                            continue;
+                        }else{
+                            $entries[$row]['data'][$column_name] = array(
+                                'name' => $column_name,
+                                'label' => $column_label,
+                                'value' => $v,
+                                'type' => $column_type
+                            );
                             continue;
                         }
                         $entries[$row][$column_type] = $v;
@@ -1087,7 +1268,7 @@ class SUPER_Ajax {
             }
         }
 
-        echo '<div class="message success">';
+        echo '<div class="message super-success">';
         echo sprintf( esc_html__( '%d of %d contact entries imported!', 'super-forms' ), $imported, count($entries) );
         echo '</div>';
         die();
@@ -1148,18 +1329,20 @@ class SUPER_Ajax {
         }else{
             $title = get_the_title( $form_id );
         }
-
-        $settings = json_decode( stripslashes( $_POST['settings'] ), true );
-        $elements = json_decode( stripslashes( $_POST['elements'] ), true );
-        $translations = get_post_meta( $form_id, '_super_translations', true );
+        $formSettings = $_POST['formSettings'];
+        $formElements = wp_unslash($_POST['formElements']);
+        $formElements = json_decode($formElements, true);
+        $translationSettings = get_post_meta( $form_id, '_super_translations', true );
         $export = array(
             'title' => $title,
-            'settings' => $settings,
-            'elements' => $elements,
-            'translations' => $translations
+            'settings' => $formSettings,
+            'elements' => $formElements,
+            'translations' => $translationSettings
         );
         $export = '<html>'.maybe_serialize($export);
-        $file_location = '/uploads/php/files/super-form-export.html';
+        $filename = $title.'-super-forms-export.html';
+        $filename = sanitize_file_name($filename);
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/' . $filename;
         $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
         file_put_contents($source, $export);
         echo SUPER_PLUGIN_FILE . $file_location;
@@ -1189,7 +1372,7 @@ class SUPER_Ajax {
             if($html_tag==='<html>'){
                 $contents = substr($contents, 6);
             }
-
+            
             // Check if content is json (backward compatibility import from older SF versions)
             json_decode($contents);
             if( json_last_error() == JSON_ERROR_NONE ) {
@@ -1263,7 +1446,7 @@ class SUPER_Ajax {
      *  @since      1.9
     */
     public static function export_forms() {
-        $file_location = '/uploads/php/files/super-forms-export.html';
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/super-forms-export.html';
         $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
         ini_set('max_execution_time', 0);
         global $wpdb;
@@ -1457,7 +1640,18 @@ class SUPER_Ajax {
                 }
             }
         }
-        $file_location = '/uploads/php/files/super-contact-entries.csv';
+
+        // Delete old files
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/super-contact-entries-*.csv';
+        $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
+        $files = glob($source);
+        foreach($files as $v){
+            if( file_exists( $v ) ) {
+                SUPER_Common::delete_file( $v );
+            }
+        }
+        // Save new file
+        $file_location = '/' . SUPER_PHP_UPLOAD_DIR . '/super-contact-entries-'.strtotime(date_i18n('Y-m-d H:i:s')).'.csv';
         $source = urldecode( SUPER_PLUGIN_DIR . $file_location );
         if( file_exists( $source ) ) {
             SUPER_Common::delete_file( $source );
@@ -1541,14 +1735,24 @@ class SUPER_Ajax {
     public static function save_form( $id=null, $formElements=null, $translationSettings=null, $formSettings=null, $title=null ) {
         if(empty($id)){
             if(isset($_POST['form_id'])) $id = $_POST['form_id'];
-            $_POST['formElements'] = wp_unslash($_POST['formElements']);
-            $formElements = json_decode($_POST['formElements'], true);
-            $_POST['formSettings'] = wp_unslash($_POST['formSettings']);
-            $formSettings = json_decode($_POST['formSettings'], true);
-            $_POST['translationSettings'] = wp_unslash($_POST['translationSettings']);
-            $translationSettings = json_decode($_POST['translationSettings'], true);
+            if(empty($formElements)){
+                $_POST['formElements'] = wp_unslash($_POST['formElements']);
+                $formElements = json_decode($_POST['formElements'], true);
+            }
+            if(empty($formSettings)){
+                $_POST['formSettings'] = wp_unslash($_POST['formSettings']);
+                $formSettings = json_decode($_POST['formSettings'], true);
+            }
+            if(empty($translationSettings)){
+                $_POST['translationSettings'] = wp_unslash($_POST['translationSettings']);
+                $translationSettings = json_decode($_POST['translationSettings'], true);
+            }
         }
         $id = absint( $id );
+
+        // @since 4.9.6 - secrets
+        $localSecrets = (!empty($_POST['localSecrets']) ? $_POST['localSecrets'] : '');
+        $globalSecrets = (!empty($_POST['globalSecrets']) ? $_POST['globalSecrets'] : '');
 
         $formElements = wp_slash($formElements); // This is required to keep "Custom regex" working e.g: \\d will become \\\\d
         $formSettings = wp_slash($formSettings); // This is required to keep Custom CSS {content: '\x123';} working
@@ -1592,6 +1796,9 @@ class SUPER_Ajax {
             add_post_meta( $id, '_super_form_settings', $formSettings );
             add_post_meta( $id, '_super_elements', $formElements );
 
+            // @since 4.9.6 - secrets
+            add_post_meta( $id, '_super_local_secrets', $localSecrets );
+
             // @since 3.1.0 - save current plugin version / form version
             add_post_meta( $id, '_super_version', SUPER_VERSION );
 
@@ -1619,6 +1826,9 @@ class SUPER_Ajax {
             }
             update_post_meta( $id, '_super_form_settings', $formSettings );
             update_post_meta( $id, '_super_elements', $formElements );
+            
+            // @since 4.9.6 - secrets
+            update_post_meta( $id, '_super_local_secrets', $localSecrets );
 
             // @since 3.1.0 - save current plugin version / form version
             update_post_meta( $id, '_super_version', SUPER_VERSION );
@@ -1640,6 +1850,10 @@ class SUPER_Ajax {
             // @since 4.7.0 - translations
             add_post_meta( $backup_id, '_super_translations', $translationSettings );
         }
+
+        // @since 4.9.6 - secrets
+        update_option( 'super_global_secrets', $globalSecrets );
+
         echo $id;
         die();
 
@@ -1693,10 +1907,10 @@ class SUPER_Ajax {
                 $hidden = ' super-hidden';
             }
             $result .= '<div class="super-field' . $filter . $hidden . '"' . $parent . '' . $filtervalue . '>';
-                if( isset( $fv['name'] ) ) $result .= '<div class="field-name">' . $fv['name'] . '</div>';
+                if( isset( $fv['name'] ) ) $result .= '<div class="super-field-name">' . $fv['name'] . '</div>';
                 if( isset( $fv['desc'] ) ) $result .= '<i class="info super-tooltip" title="' . $fv['desc'] . '"></i>';
-                if( isset( $fv['label'] ) ) $result .= '<div class="field-label">' . nl2br($fv['label']) . '</div>';
-                $result .= '<div class="field-input"';
+                if( isset( $fv['label'] ) ) $result .= '<div class="super-field-label">' . nl2br($fv['label']) . '</div>';
+                $result .= '<div class="super-field-input"';
                 if( !empty($fv['allow_empty']) ) {
                     $result .= ' data-allow-empty="true"';
                 }
@@ -1764,7 +1978,7 @@ class SUPER_Ajax {
                         $result .= '<strong style="color:red;">' . esc_html__( 'Please note', 'super-forms' ) . ':</strong> ' . esc_html__('Your icons will not be displayed because you currently have enabled the option to hide field icons under "Form Settings > Theme & Colors > Hide field icons"', 'super-forms' );
                     }
                     if($k==='distance_calculator' && empty($settings['form_google_places_api'])){
-                        $result .= '<strong style="color:red;">' . esc_html__( 'Please note', 'super-forms' ) . ':</strong> ' . sprintf( esc_html__( 'In order to use this feature you must provide your Google API key in %sSuper Forms > Settings > Form Settings%s', 'super-forms' ), '<a target="_blank" href="' . admin_url() . 'admin.php?page=super_settings#form-settings">', '</a>' );
+                        $result .= '<strong style="color:red;">' . esc_html__( 'Please note', 'super-forms' ) . ':</strong> ' . sprintf( esc_html__( 'In order to use this feature you must provide your Google API key in %sSuper Forms > Settings > Form Settings%s', 'super-forms' ), '<a target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#form-settings') . '">', '</a>' );
                     }
                     if( isset( $v['fields'] ) ) {
                         $result .= self::loop_over_element_setting_fields($v['fields'], $data, $shortcodes, $group, $tag, $k);
@@ -1797,7 +2011,7 @@ class SUPER_Ajax {
                 foreach( $tabs as $k => $v ){                
                     if( isset( $v['fields'] ) ) {
                         foreach( $v['fields'] as $fk => $fv ) {
-                            if(empty($fv['i18n'])) continue;
+                            if(!isset($data[$fk]) || empty($fv['i18n'])) continue;
 
                             // Make sure to skip this file if it's source location is invalid
                             if( ( isset( $fv['filter'] ) ) && ( $fv['filter']==true ) && (isset($fv['parent'])) ) {
@@ -1811,10 +2025,10 @@ class SUPER_Ajax {
                                 $hidden = ' hidden';
                             }
                             $result .= '<div class="super-field' . $hidden . '">';
-                                if( isset( $fv['name'] ) ) $result .= '<div class="field-name">' . $fv['name'] . '</div>';
+                                if( isset( $fv['name'] ) ) $result .= '<div class="super-field-name">' . $fv['name'] . '</div>';
                                 if( isset( $fv['desc'] ) ) $result .= '<i class="info super-tooltip" title="' . $fv['desc'] . '"></i>';
-                                if( isset( $fv['label'] ) ) $result .= '<div class="field-label">' . nl2br($fv['label']) . '</div>';
-                                $result .= '<div class="field-input"';
+                                if( isset( $fv['label'] ) ) $result .= '<div class="super-field-label">' . nl2br($fv['label']) . '</div>';
+                                $result .= '<div class="super-field-input"';
                                 if( !empty($fv['allow_empty']) ) {
                                     $result .= ' data-allow-empty="true"';
                                 }
@@ -1852,7 +2066,6 @@ class SUPER_Ajax {
         die();
         
     }
-    
     
     /** 
      *  Retrieve the HTML for the element that is being dropped inside a dropable element
@@ -2091,14 +2304,13 @@ class SUPER_Ajax {
                 if(!empty($user_limits[$current_user_id])) {
                     $count = absint($user_limits[$current_user_id])+1;
                 }
-
                 $limit = 0;
                 if( !empty($settings['user_form_locker_limit']) ){
                     $limit = absint($settings['user_form_locker_limit']);
                 } 
 
                 $display_msg = false;
-                if( $count>=$limit ) {
+                if( $count>$limit ) {
                     $msg = '';
                     if($settings['user_form_locker_msg_title']!='') {
                         $msg .= '<h1>' . $settings['user_form_locker_msg_title'] . '</h1>';
@@ -2124,15 +2336,14 @@ class SUPER_Ajax {
             }
             $settings['header_additional'] = $header_additional;
         }
-
-
+ 
+        
         /** 
          *  Make sure to also save the file into the WP Media Library
          *  In case a user deletes Super Forms these files are not instantly deleted without warning
          *
          *  @since      1.1.8
         */
-        
         if( ( isset( $data ) ) && ( count( $data )>0 ) ) {
             $delete_dirs = array();
             foreach( $data as $k => $v ) {
@@ -2140,11 +2351,44 @@ class SUPER_Ajax {
                 if( $v['type']=='files' ) {
                     if( ( isset( $v['files'] ) ) && ( count( $v['files'] )!=0 ) ) {
                         foreach( $v['files'] as $key => $value ) {
+                            // If there is a generated PDF let it act as a regular file upload
+                            // Try to generate PDF file
+                            if(isset($value['datauristring'])){
+                                try {
+                                    $imgData = str_replace( ' ', '+', $value['datauristring']);
+                                    // Delete datauristring because it is quite large and we don't want to store it into the database under contact entry meta data!
+                                    unset($value['datauristring']);
+                                    $imgData =  substr( $imgData, strpos( $imgData, "," )+1 );
+                                    $imgData = base64_decode( $imgData );
+                                    // Path where the image is going to be saved
+                                    $folder = SUPER_PLUGIN_DIR . '/' . SUPER_PHP_UPLOAD_DIR;
+                                    $folderResult = SUPER_Common::generate_random_folder($folder);
+                                    $folderPath = $folderResult['folderPath'];
+                                    $folderName = $folderResult['folderName'];
+                                    $value['value'] = SUPER_Common::email_tags( $value['value'], $data, $settings );
+                                    $value['label'] = SUPER_Common::email_tags( $value['label'], $data, $settings );
+                                    $fileName = $value['value'];
+                                    $fileLocation = trailingslashit($folderPath) . $fileName;
+                                    // Write $imgData into the image file
+                                    $file = fopen( $fileLocation, 'w' );
+                                    fwrite( $file, $imgData );
+                                    fclose( $file );
+                                    $value['url'] = $fileLocation;
+                                    $data[$k]['files'][$key] = $value;
+                                } catch (Exception $e) {
+                                    // Print error message
+                                    SUPER_Common::output_message(
+                                        $error = true,
+                                        $e->getMessage()
+                                    );
+                                }
+                            }
+
                             // Before we proceed check if the file already exists, if so, do nothing
                             // Exclude files that are being uploaded for the first time
-                            // They will be in the "uploads/php" directory
+                            // They will be in the "u" directory
                             $file = $value['url'];
-                            if(!strpos($file, 'uploads/php/files')) {
+                            if(!strpos($file, SUPER_PHP_UPLOAD_DIR)) {
                                 $file_headers = @get_headers($file);
                                 if($file_headers && $file_headers[0] != '404') {
                                     continue;
@@ -2159,7 +2403,7 @@ class SUPER_Ajax {
                             if( ($file=='') || ($folder=='') ) continue;
 
                             // Get source file
-                            $sourcePath = SUPER_PLUGIN_DIR . '/uploads/php/files/' . $folder . '/' . $file;
+                            $sourcePath = SUPER_PLUGIN_DIR . '/'.SUPER_PHP_UPLOAD_DIR.'/' . $folder . '/' . $file;
                             $sourcePath = urldecode( $sourcePath );
                             // Determine location to store the file
                             $wp_upload_dir = wp_upload_dir();
@@ -2200,7 +2444,7 @@ class SUPER_Ajax {
                                 $error = error_get_last();
                                 SUPER_Common::delete_dir( dirname($sourcePath) );
                                 SUPER_Common::delete_dir( $folderPath );
-                                SUPER_Common::output_message(true, '<strong>' . esc_html__( 'Upload failed', 'super-forms' ) . ':</strong> ' . $error['message']);
+                                SUPER_Common::output_message(true, '<strong>' . esc_html__( 'Upload failed1', 'super-forms' ) . ':</strong> ' . $error['message']);
                             }else{
                                 if( !empty( $dir ) ) $delete_dirs[] = $dir;
                                 $filetype = wp_check_filetype( basename( $newfile ), null );
@@ -2239,6 +2483,9 @@ class SUPER_Ajax {
                 SUPER_Common::delete_dir( $dir );
             }
         }
+        
+        // @since 4.9.5
+        $data = apply_filters( 'super_after_processing_files_data_filter', $data, array( 'post'=>$_POST, 'settings'=>$settings ) );        
 
         // @since 2.8.0 - save generated code(s) into options table instaed of postmeta table per contact entry
         foreach( $data as $k => $v ) {
@@ -2295,27 +2542,99 @@ class SUPER_Ajax {
 
         $contact_entry_id = null;
         if( $settings['save_contact_entry']=='yes' ) {
+
+            // First save the entry simply because we need the ID
             $post = array(
                 'post_status' => 'super_unread',
                 'post_type' => 'super_contact_entry' ,
-                'post_parent' => $data['hidden_form_id']['value'] // @since 1.7 - save the form ID as the parent
+                'post_parent' => $form_id // @since 1.7 - save the form ID as the parent
             );
-
             // @since 3.8.0 - save the post author based on session if set (currently used by Register & Login Add-on)
             $post_author = SUPER_Forms()->session->get( 'super_update_user_meta' );
             if( $post_author!=false ) {
                 $post['post_author'] = absint($post_author);
             }
+            $contact_entry_id = wp_insert_post($post);
 
-            $contact_entry_id = wp_insert_post($post); 
+            // Check if we prevent saving duplicate entry titles
+            // Return error message to user
+            $contact_entry_title = esc_html__( 'Contact entry', 'super-forms' );
+            if( !isset( $settings['enable_custom_entry_title'] ) ) $settings['enable_custom_entry_title'] = '';
+            if( $settings['enable_custom_entry_title']=='true' ) {
+                if( !isset( $settings['contact_entry_title'] ) ) $settings['contact_entry_title'] = $contact_entry_title;
+                if( !isset( $settings['contact_entry_add_id'] ) ) $settings['contact_entry_add_id'] = '';
+                $contact_entry_title = SUPER_Common::email_tags( $settings['contact_entry_title'], $data, $settings );
+                if($settings['contact_entry_add_id']=='true'){
+                    if($contact_entry_title==''){
+                        $contact_entry_title = $contact_entry_id;
+                    }else{
+                        $contact_entry_title = $contact_entry_title . $contact_entry_id;
+                    }
+                }
+            }else{
+                $contact_entry_title = $contact_entry_title . ' ' . $contact_entry_id;
+            }
+            // Update title
+            $post = array(
+                'ID' => $contact_entry_id,
+                'post_title' => $contact_entry_title,
+            );
+            wp_update_post($post);
+
+            // @since 4.9.600 - check if entry title already exists
+            if(!empty($settings['contact_entry_unique_title']) && $settings['contact_entry_unique_title']==='true'){
+                if(empty($settings['contact_entry_unique_title_compare'])) $settings['contact_entry_unique_title_compare'] = 'form';
+                global $wpdb;
+                $total = 0;
+                if(empty($settings['contact_entry_unique_title_trashed'])) $settings['contact_entry_unique_title_trashed'] = '';
+                // By default we do not compare against trashed entries
+                $trash_compare = "post_status != 'trash' AND ";
+                if($settings['contact_entry_unique_title_trashed']==='true'){
+                    // If user also wishes to compare against trashed entries
+                    $trash_compare = '';
+                }
+                if($settings['contact_entry_unique_title_compare']==='form'){
+                    $query = $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE $trash_compare post_type = 'super_contact_entry' AND post_parent = '%d' AND post_title = '%s'", $form_id, $contact_entry_title);
+                    $total = $wpdb->get_var($query);
+                }elseif($settings['contact_entry_unique_title_compare']==='global'){
+                    $query = $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE $trash_compare post_type = 'super_contact_entry' AND post_title = '%s'", $contact_entry_title);
+                    $total = $wpdb->get_var($query);
+                }elseif($settings['contact_entry_unique_title_compare']==='ids'){
+                    if(empty($settings['contact_entry_unique_title_form_ids'])) $settings['contact_entry_unique_title_form_ids'] = '';
+                    $ids = $settings['contact_entry_unique_title_form_ids'];
+                    $ids = sanitize_text_field($ids);
+                    $ids = explode(',', $ids);
+                    $form_ids = array();
+                    foreach($ids as $k => $v){
+                        $v = trim($v);
+                        if(empty($v)) continue;
+                        $form_ids[$k] = absint($v);
+                    }
+                    unset($ids);
+                    $form_ids_placeholder = implode( ', ', array_fill( 0, count( $form_ids ), '%d' ) );
+                    $prepare_values  = array_merge( $form_ids, array( $contact_entry_title ) );
+                    $query = $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->posts WHERE $trash_compare post_type = 'super_contact_entry' AND post_parent IN ($form_ids_placeholder) AND post_title = '%s'", $prepare_values);
+                    $total = $wpdb->get_var($query);
+                }
+                if($total>1){ // If 2 entries found, it means the current created entry has the same title as an already existing entry
+                    wp_delete_post( $contact_entry_id, true );
+                    SUPER_Common::output_message(
+                        $error = true,
+                        $msg = esc_html(SUPER_Common::email_tags( $settings['contact_entry_unique_title_msg'], $data, $settings ))
+                    );
+                }
+            }
+
             $response_data['contact_entry_id'] = $contact_entry_id;
 
             // @since 3.4.0 - save custom contact entry status
-            $entry_status = sanitize_text_field( $_POST['entry_status'] );
-            if($entry_status!=''){
-                $settings['contact_entry_custom_status'] = $entry_status;
+            if(!empty($_POST['entry_status'])){
+                $entry_status = sanitize_text_field( $_POST['entry_status'] );
+                if($entry_status!=''){
+                    $settings['contact_entry_custom_status'] = $entry_status;
+                }
             }
-            if( (isset($settings['contact_entry_custom_status'])) && ($settings['contact_entry_custom_status']!='') ) {
+            if(!empty($settings['contact_entry_custom_status'])){
                 add_post_meta( $contact_entry_id, '_super_contact_entry_status', $settings['contact_entry_custom_status'] );
             }
 
@@ -2367,6 +2686,7 @@ class SUPER_Ajax {
                                     $final_entry_data[$k] = $v;
                                 }
                             }else{
+                                if(!empty($v['value'])) $v['value'] = SUPER_Common::email_tags( $v['value'], $data, $settings );
                                 $final_entry_data[$k] = $v;
                             }
                         }
@@ -2374,6 +2694,7 @@ class SUPER_Ajax {
                 }
             }
         }
+
         // @since 2.2.0 - update contact entry data by ID
         if($entry_id!=0){
             $result = update_post_meta( $entry_id, '_super_contact_entry_data', $final_entry_data);
@@ -2391,30 +2712,6 @@ class SUPER_Ajax {
         if( $settings['save_contact_entry']=='yes' ){
             add_post_meta( $contact_entry_id, '_super_contact_entry_data', $final_entry_data);
             add_post_meta( $contact_entry_id, '_super_contact_entry_ip', SUPER_Common::real_ip() );
-
-            // @since 1.2.6     - custom contact entry titles
-            $contact_entry_title = esc_html__( 'Contact entry', 'super-forms' );
-            if( !isset( $settings['enable_custom_entry_title'] ) ) $settings['enable_custom_entry_title'] = '';
-            if( $settings['enable_custom_entry_title']=='true' ) {
-                if( !isset( $settings['contact_entry_title'] ) ) $settings['contact_entry_title'] = $contact_entry_title;
-                if( !isset( $settings['contact_entry_add_id'] ) ) $settings['contact_entry_add_id'] = '';
-                $contact_entry_title = SUPER_Common::email_tags( $settings['contact_entry_title'], $data, $settings );
-                if($settings['contact_entry_add_id']=='true'){
-                    if($contact_entry_title==''){
-                        $contact_entry_title = $contact_entry_id;
-                    }else{
-                        $contact_entry_title = $contact_entry_title . ' ' . $contact_entry_id;
-                    }
-                }
-            }else{
-                $contact_entry_title = $contact_entry_title . ' ' . $contact_entry_id;
-            }
-
-            $contact_entry = array(
-                'ID' => $contact_entry_id,
-                'post_title' => $contact_entry_title,
-            );
-            wp_update_post( $contact_entry );
 
             /** 
              *  Hook after inserting contact entry
@@ -2449,11 +2746,16 @@ class SUPER_Ajax {
                 if( isset($settings['confirm_email_loop']) ) {
                     $confirm_row = $settings['confirm_email_loop'];
                 }
-
+                // Exclude from emails
+                // 0 = Do not exclude from e-mails
+                // 1 = Exclude from confirmation email
+                // 2 = Exclude from all email
+                // 3 = Exclude from admin email
                 if( !isset( $v['exclude'] ) ) {
                     $v['exclude'] = 0;
                 }
                 if( $v['exclude']==2 ) {
+                    // Exclude from all emails
                     continue;
                 }
 
@@ -2531,10 +2833,14 @@ class SUPER_Ajax {
                                     !empty($settings['file_upload_remove_hyperlink_in_emails']) ) {
                                     $files_value .= $value['value'] . '<br /><br />';
                                 }else{
-                                    $files_value .= '<a href="' . $value['url'] . '" target="_blank">' . $value['value'] . '</a><br /><br />';
+                                    $files_value .= '<a href="' . esc_url($value['url']) . '" target="_blank">' . esc_html($value['value']) . '</a><br /><br />';
                                 }
                             }
-                            // Exclude file from email completely
+                            // Check if we should exclude the file from emails
+                            // 0 = Do not exclude from e-mails
+                            // 1 = Exclude from confirmation email
+                            // 2 = Exclude from all email
+                            // 3 = Exclude from admin email
                             if( $v['exclude']!=2 ) {
                                 // Get either URL or Secure file path
                                 if(!empty($value['attachment'])){
@@ -2543,13 +2849,18 @@ class SUPER_Ajax {
                                     // See if this was a secure file upload
                                     if(!empty($value['path'])) $fileValue = wp_normalize_path(trailingslashit($value['path']) . $value['value']);
                                 }
+                                // 1 = Exclude from confirmation email
                                 if( $v['exclude']==1 ) {
-                                    // Only exclude from confirmation email
                                     $attachments[$value['value']] = $fileValue;
                                 }else{
-                                    // Do not exclude
-                                    $attachments[$value['value']] = $fileValue;
-                                    $confirm_attachments[$value['value']] = $fileValue;
+                                    // 3 = Exclude from admin email
+                                    if( $v['exclude']==3 ) {
+                                        $confirm_attachments[$value['value']] = $fileValue;
+                                    }else{
+                                        // Do not exclude
+                                        $attachments[$value['value']] = $fileValue;
+                                        $confirm_attachments[$value['value']] = $fileValue;
+                                    }
                                 }
                             }
                         }
@@ -2596,17 +2907,20 @@ class SUPER_Ajax {
                 }
 
                 // @since 4.5.0 - check if value is empty, and if we need to exclude it from the email
-                if( $settings['email_exclude_empty']=='true' && empty($v['value']) ) {
+                // 0 = Do not exclude from e-mails
+                // 1 = Exclude from confirmation email
+                // 2 = Exclude from all email
+                // 3 = Exclude from admin email
+                if( $v['exclude']==3 || ($settings['email_exclude_empty']=='true' && empty($v['value']) )) {
+                    // Exclude from admin email loop
                 }else{
                     $email_loop .= $row;
                 }
-                if( $v['exclude']==1 ) {
+                if( $v['exclude']==1 || ($settings['confirm_exclude_empty']=='true' && empty($v['value']) )) {
+                    // Exclude from confirmation email loop
                 }else{
-                    if( $settings['confirm_exclude_empty']=='true' && empty($v['value']) ) {
-                    }else{
-                        $confirm_loop .= $confirm_row;
-                    }
-                }                    
+                    $confirm_loop .= $confirm_row;
+                }
             }
         }
 
@@ -3022,7 +3336,14 @@ class SUPER_Ajax {
                 }
             }
             if( (!empty($settings['form_post_option'])) && ($save_msg==true) ) {
-                SUPER_Forms()->session->set( 'super_msg', $session_data );
+                // Only store the message into a session if the form is submitted as a normal POST request.
+                // This will not be the case when `custom parameter string for POST method` is enabled.
+                // In this case we do not want to store the thank you message into a session because if we
+                // navigate to a different page it would show the thank you message again to the user while
+                // it was already displayed to the user
+                if( $settings['form_post_custom']!=='true' ) {
+                    SUPER_Forms()->session->set( 'super_msg', $session_data );
+                }
             }
             if($save_msg==false) $msg = '';
 
@@ -3050,33 +3371,6 @@ class SUPER_Ajax {
             die();
         }
     }
-
-    // /** 
-    //  *  Send an test email through SMTP
-    //  *
-    //  *  @param  array  $settings
-    //  *
-    //  *  @since      1.0.0
-    // */
-    // public static function smtp_test() {
-    //     var_dump('test smtp_test()');
-    //     die();
-    //     // $settings = SUPER_Common::get_form_settings($form_id);
-    //     // $from = 'no-reply@f4d.nl';
-    //     // $to = sanitize_email($_POST['email']);
-    //     // $from_name = 'f4d.nl';
-    //     // $subject = 'Subject';
-    //     // $email_body = 'Email body';
-
-    //     // // Send the email
-    //     // $mail = SUPER_Common::email( $to, $from, $from_name, false, '', '', '', '', $subject, $email_body, $settings );
-
-    //     // // Return error message
-    //     // if( !empty( $mail->ErrorInfo ) ) {
-    //     //     $msg = esc_html__( 'Message could not be sent. Error: ' . $mail->ErrorInfo, 'super-forms' );
-    //     //     SUPER_Common::output_message( $error=true, $msg );
-    //     // }
-    // }
 }
 endif;
 SUPER_Ajax::init();

@@ -49,6 +49,9 @@ class SUPER_Field_Types {
                     if( isset( $fv['name'] ) ) {
                         echo '<h2>' . $fv['name'] . '</h2>';
                     }
+                    if( isset( $fv['label'] ) ) {
+                        echo '<div class="field-description">' . $fv['label'] . '</div>';
+                    }
                     if( isset( $fv['desc'] ) ) {
                         echo '<div class="field-description">' . $fv['desc'] . '</div>';
                     }
@@ -101,7 +104,7 @@ class SUPER_Field_Types {
                     $v = array_merge($v, $field['default'][$k]);
                 }
                 $return .= '<div class="super-multi-items super-tab-item">';
-                    if($translating!=='true'){
+                    if($translating!==true){
                         $return .= '<div class="super-sorting">';
                             $return .= '<span class="up"><i class="fas fa-arrow-up"></i></span>';
                             $return .= '<span class="down"><i class="fas fa-arrow-down"></i></span>';
@@ -109,7 +112,7 @@ class SUPER_Field_Types {
                     }
                     $return .= '<input type="text" placeholder="' . esc_html__( 'Title', 'super-forms' ) . '" value="' . esc_attr( $v['title'] ) . '" name="title">';
                     $return .= '<textarea placeholder="' . esc_html__( 'Description', 'super-forms' ) . '" name="desc">' . esc_attr( $v['desc'] ) . '</textarea>';
-                    if($translating!=='true'){
+                    if($translating!==true){
                         $return .= '<i class="super-add super-add-item fas fa-plus"></i>';
                         $return .= '<i class="super-delete fas fa-trash-alt"></i>';
                         if( !isset( $v['image'] ) ) $v['image'] = '';
@@ -120,12 +123,12 @@ class SUPER_Field_Types {
                         $image = !empty( $image[0] ) ? $image[0] : '';
                         if( !empty( $image ) ) {
                             $return .= '<li data-file="' . $v['image'] . '">';
-                            $return .= '<div class="image"><img src="' . $image . '"></div>';
+                            $return .= '<div class="image"><img src="' . esc_url($image) . '"></div>';
                             $return .= '<input type="number" placeholder="' . esc_html__( 'width', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['max_width'] ) ) . '" name="max_width">';
                             $return .= '<span>px</span>';
                             $return .= '<input type="number" placeholder="' . esc_html__( 'height', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['max_height'] ) ) . '" name="max_height">';
                             $return .= '<span>px</span>';
-                            $return .= '<a href="#" class="super-delete">Delete</a>';
+                            $return .= '<a href="#" class="super-delete">'.esc_html__('Delete', 'super-forms').'</a>';
                             $return .= '</li>';
                         }
                         $return .= '</ul>';
@@ -135,7 +138,7 @@ class SUPER_Field_Types {
 
                 $return .= '</div>';
             }
-            $return .= '<textarea name="' . $id . '" class="element-field multi-items-json">' . json_encode( $data[$id] ) . '</textarea>';
+            $return .= '<textarea name="' . $id . '" class="super-element-field multi-items-json">' . json_encode( $data[$id] ) . '</textarea>';
         }
         return $return;
     }
@@ -151,7 +154,7 @@ class SUPER_Field_Types {
     // @since 3.4.0 - field to reset submission counter
     public static function reset_submission_count( $id, $field ) {
         $return  = '<div class="input">';
-            $return .= '<input type="number" id="field-' . $id . '" name="' . $id . '" class="element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
+            $return .= '<input type="number" id="field-' . $id . '" name="' . $id . '" class="super-element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
             $return .= '<span class="super-button super-reset-submission-counter super-delete">' . esc_html__( 'Reset Submission Counter', 'super-forms' ) . '</span>';
         $return .= '</div>';
         return $return;
@@ -164,7 +167,7 @@ class SUPER_Field_Types {
         if(isset($field['multiple'])) $multiple = ' multiple';
         if(isset($field['filter'])) $filter = ' filter';
         $return  = '<div class="input">';
-            $return .= '<select id="field-'.$id.'" name="'.$id.'" data-value="'.$field['default'].'" class="element-field previously-created-fields '.$multiple.'"'.$multiple.$filter.'>';
+            $return .= '<select id="field-'.$id.'" name="'.$id.'" data-value="'.$field['default'].'" class="super-element-field previously-created-fields '.$multiple.'"'.$multiple.$filter.'>';
             foreach($field['values'] as $k => $v ) {
                 $selected = '';
                 if($field['default']==$k){
@@ -184,7 +187,7 @@ class SUPER_Field_Types {
         if(isset($field['multiple'])) $multiple = ' multiple';
         if(isset($field['filter'])) $filter = ' filter';
         $return  = '<div class="input">';
-            $return .= '<select id="field-'.$id.'" name="'.$id.'" class="element-field previously-created-product-fields '.$multiple.'"'.$multiple.$filter.'>';
+            $return .= '<select id="field-'.$id.'" name="'.$id.'" class="super-element-field previously-created-product-fields '.$multiple.'"'.$multiple.$filter.'>';
             foreach($field['values'] as $k => $v ) {
                 $selected = '';
                 if($field['default']==$k){
@@ -232,7 +235,7 @@ class SUPER_Field_Types {
                 }
                 $return .= '<div class="super-multi-items super-dropdown-item">';
                     if( !isset( $v['checked'] ) ) $v['checked'] = 'false';
-                    if($translating!=='true'){
+                    if($translating!==true){
                         $return .= '<input data-prev="'.$v['checked'].'" ' . ($id=='radio_items' || $id=='autosuggest_items' ? 'type="radio"' : 'type="checkbox"') . ( ($v['checked']==1 || $v['checked']=='true') ? ' checked="checked"' : '' ) . '">';
                         $return .= '<div class="super-sorting">';
                             $return .= '<span class="up"><i class="fas fa-arrow-up"></i></span>';
@@ -240,9 +243,9 @@ class SUPER_Field_Types {
                         $return .= '</div>';
                     }
                     $return .= '<input type="text" placeholder="' . esc_html__( 'Label', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['label'] ) ) . '" name="label">';
-                    $return .= '<input type="text" ' . ($translating=='true' ? 'disabled="disabled" ' : '') . 'placeholder="' . esc_html__( 'Value', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['value'] ) ) . '" name="value">';
+                    $return .= '<input type="text" ' . ($translating===true ? 'disabled="disabled" ' : '') . 'placeholder="' . esc_html__( 'Value', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['value'] ) ) . '" name="value">';
                     
-                    if($translating!=='true'){
+                    if($translating!==true){
                         $return .= '<i class="super-add super-add-item fas fa-plus"></i>';
                         $return .= '<i class="super-delete fas fa-trash-alt"></i>';
 
@@ -256,12 +259,12 @@ class SUPER_Field_Types {
                             $image = !empty( $image[0] ) ? $image[0] : '';
                             if( !empty( $image ) ) {
                                 $return .= '<li data-file="' . $v['image'] . '">';
-                                $return .= '<div class="image"><img src="' . $image . '"></div>';
+                                $return .= '<div class="image"><img src="' . esc_url($image) . '"></div>';
                                 $return .= '<input type="number" placeholder="' . esc_html__( 'width', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['max_width'] ) ) . '" name="max_width">';
                                 $return .= '<span>px</span>';
                                 $return .= '<input type="number" placeholder="' . esc_html__( 'height', 'super-forms' ) . '" value="' . esc_attr( stripslashes( $v['max_height'] ) ) . '" name="max_height">';
                                 $return .= '<span>px</span>';
-                                $return .= '<a href="#" class="super-delete">Delete</a>';
+                                $return .= '<a href="#" class="super-delete">'.esc_html__('Delete', 'super-forms').'</a>';
                                 $return .= '</li>';
                             }
                             $return .= '</ul>';
@@ -272,7 +275,7 @@ class SUPER_Field_Types {
 
                 $return .= '</div>';
             }
-            $return .= '<textarea name="' . $id . '" class="element-field multi-items-json">' . json_encode( $data[$id] ) . '</textarea>';
+            $return .= '<textarea name="' . $id . '" class="super-element-field multi-items-json">' . json_encode( $data[$id] ) . '</textarea>';
         }
         return $return;
     }
@@ -296,12 +299,12 @@ class SUPER_Field_Types {
         $image = !empty( $image[0] ) ? $image[0] : '';
         if( !empty( $image ) ) {
             $return .= '<li data-file="' . $field['default'] . '">';
-            $return .= '<div class="image"><img src="' . $image . '"></div>';
-            $return .= '<a href="#" class="super-delete">Delete</a>';
+            $return .= '<div class="image"><img src="' . esc_url($image) . '"></div>';
+            $return .= '<a href="#" class="super-delete">'.esc_html__('Delete', 'super-forms').'</a>';
             $return .= '</li>';
         }
         $return .= '</ul>';
-        $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="element-field" />';
+        $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="super-element-field" />';
         $return .= '</div>';
         return $return;
     }
@@ -340,14 +343,14 @@ class SUPER_Field_Types {
                 }
 
                 $return .= '<li data-file="' . $v . '">';
-                $return .= '<div class="image"><img src="' . $icon . '"></div>';
-                $return .= '<a href="' . $url . '">' . $filename . '</a>';
-                $return .= '<a href="#" class="super-delete">Delete</a>';
+                $return .= '<div class="image"><img src="' . esc_url($icon) . '"></div>';
+                $return .= '<a href="' . esc_url($url) . '">' . $filename . '</a>';
+                $return .= '<a href="#" class="super-delete">'.esc_html__('Delete', 'super-forms').'</a>';
                 $return .= '</li>';
             }
         }
         $return .= '</ul>';
-        $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="element-field" />';
+        $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="super-element-field" />';
         $return .= '</div>';
         return $return;
     }
@@ -367,7 +370,7 @@ class SUPER_Field_Types {
     //Number slider
     public static function slider($id, $field){
         $return  = '<div class="slider-field">';
-        $return .= '<input type="text" name="'.$id.'" value="'.esc_attr($field['default']).'" id="field-'.$id.'" data-steps="'.$field['steps'].'" data-min="'.$field['min'].'" data-max="'.$field['max'].'" class="element-field" />';
+        $return .= '<input type="text" name="'.$id.'" value="'.esc_attr($field['default']).'" id="field-'.$id.'" data-steps="'.$field['steps'].'" data-min="'.$field['min'].'" data-max="'.$field['max'].'" class="super-element-field" />';
         $return .= '</div>';
         return $return;
     }
@@ -385,7 +388,7 @@ class SUPER_Field_Types {
             if( isset( $field['maxlength'] ) ) {
                 $return .= ( $field['maxlength'] > 0 ? 'maxlength="' . $field['maxlength'] . '"' : '' );
             }
-            $return .= 'name="' . $id . '" class="element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
+            $return .= 'name="' . $id . '" class="super-element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
         $return .= '</div>';
         if( isset( $field['info'] ) ) $return .= '<p>' . $field['info'] . '</p>';
         return $return;
@@ -409,7 +412,7 @@ class SUPER_Field_Types {
             $return .= '<input type="text"';
             // get first part of placeholder
             $return .= ( $placeholders[0]!='' ? 'placeholder="' . $placeholders[0] . '"' : '' );
-            $return .= 'name="' . $id . '_1" class="element-field" value="' . esc_attr( stripslashes( $defaults[0] ) ) . '" />';
+            $return .= 'name="' . $id . '_1" class="super-element-field" value="' . esc_attr( stripslashes( $defaults[0] ) ) . '" />';
 
             $return .= '<select name="' . $id . '_2">';
             $return .= '<option' . ($defaults[1]=='==' ? ' selected="selected"' : '') . ' value="==">== (' . esc_html__( 'Equal', 'super-forms' ) . '</option>';
@@ -418,9 +421,9 @@ class SUPER_Field_Types {
             $return .= '<input type="text"';
             // get second part of placeholder
             $return .= ( $placeholders[1]!='' ? 'placeholder="' . $placeholders[1] . '"' : '' );
-            $return .= 'name="' . $id . '_3" class="element-field" value="' . esc_attr( stripslashes( $defaults[2] ) ) . '" />';
+            $return .= 'name="' . $id . '_3" class="super-element-field" value="' . esc_attr( stripslashes( $defaults[2] ) ) . '" />';
 
-            $return .= '<input type="hidden" name="' . $id . '" class="element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
+            $return .= '<input type="hidden" name="' . $id . '" class="super-element-field" value="' . esc_attr( stripslashes( $field['default'] ) ) . '" />';
         $return .= '</div>';
         return $return;
     }
@@ -435,7 +438,7 @@ class SUPER_Field_Types {
                 $return .= '<label><input type="checkbox" value="' . $k . '" ' . ($field['default']==$k ? 'checked="checked"' : '') . '>' . $v . '</label>';
             }
             $return .= '</div>';
-            $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="element-field" />';
+            $return .= '<input type="hidden" name="' . $id . '" value="' . esc_attr( $field['default'] ) . '" id="field-' . $id . '" class="super-element-field" />';
         $return .= '</div>';
         return $return;
     }
@@ -453,7 +456,7 @@ class SUPER_Field_Types {
             if(isset($field['maxlength'])){
                 $return .= ($field['maxlength'] > 0 ? 'maxlength="' . $field['maxlength'] . '"' : '');
             }
-            $return .= 'name="'.$id.'" class="element-field" value="' . esc_attr( $field['default'] ) . '" />';
+            $return .= 'name="'.$id.'" class="super-element-field" value="' . esc_attr( $field['default'] ) . '" />';
         $return .= '</div>';
         return $return;
     }
@@ -472,22 +475,29 @@ class SUPER_Field_Types {
             $return .= ($field['required']==true ? 'required="true" ' : '');
         }
         $value = esc_textarea(wp_unslash($field['default']));
-        $return .= 'rows="' . $field['rows'] . '" class="element-field">' . $value . '</textarea>';
+        $return .= 'rows="' . $field['rows'] . '" class="super-element-field">' . $value . '</textarea>';
         return $return;
     }
     
     // address_auto_complete
     public static function address_auto_populate( $id, $field, $data ) {
         $mappings = array(
+            'name' => esc_html__( 'Name of place', 'super-forms' ),
+            'formatted_address' => esc_html__( 'The Place\'s full address', 'super-forms' ),
+            'formatted_phone_number' => esc_html__( 'The Place\'s phone number, formatted according to the number\'s regional convention', 'super-forms' ),
+            'international_phone_number' => esc_html__( 'The Place\'s phone number in international format', 'super-forms' ),
+            'website' => esc_html__( 'The authoritative website for this Place, such as a business\' homepage', 'super-forms' ),
             'street_number' => esc_html__( 'Street number', 'super-forms' ),
             'street_name' => esc_html__( 'Street name', 'super-forms' ),
             'street_name_number' => esc_html__( 'Street name + nr', 'super-forms' ),
             'street_number_name' => esc_html__( 'Street nr + name', 'super-forms' ),
-            'city' => esc_html__( 'City name', 'super-forms' ),
+            'city' => esc_html__( 'City name', 'super-forms' ), // see: https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
             'state' => esc_html__( 'State/Province', 'super-forms' ),
             'postal_code' => esc_html__( 'Postal code', 'super-forms' ),
             'country' => esc_html__( 'Country name', 'super-forms' ),
-            'municipality' => esc_html__( 'Municipality', 'super-forms' )
+            'municipality' => esc_html__( 'Municipality', 'super-forms' ),
+            'lat' => esc_html__( 'Latitude', 'super-forms' ),
+            'lng' => esc_html__( 'Longitude', 'super-forms' )
         );
         $return = '';
         if( ( isset( $data[$id] ) ) && ( $data[$id]!='' ) ) {
@@ -499,9 +509,9 @@ class SUPER_Field_Types {
                     $return .= '<select class="super-previously-created" name="field" data-value="' . $data[$id][$i]['field'] . '"></select>';
                     $type = $data[$id][$i]['type'];
                     $return .= '<select name="type" data-value="' . $type . '">';
-                        $return .= '<option value="">- retrieve method -</option>';
-                        $return .= '<option value="long"' . ($type=='long' ? ' selected="selected"' : '') . '>Long name (default)</option>';
-                        $return .= '<option value="short"' . ($type=='short' ? ' selected="selected"' : '') . '>Short name</option>';
+                        $return .= '<option value="">- '.esc_html__('retrieve method', 'super-forms').' -</option>';
+                        $return .= '<option value="long"' . ($type=='long' ? ' selected="selected"' : '') . '>'.esc_html__('Long name (default)', 'super-forms').'</option>';
+                        $return .= '<option value="short"' . ($type=='short' ? ' selected="selected"' : '') . '>'.esc_html__('Short name', 'super-forms').'</option>';
                     $return .= '</select>';
                 $return .= '</div>';
                 $i++;
@@ -513,14 +523,15 @@ class SUPER_Field_Types {
                     $return .= '<input type="hidden" name="key" value="' . $k . '" />';
                     $return .= '<select class="super-previously-created" name="field" data-value=""></select>';
                     $return .= '<select name="type" data-value="">';
-                        $return .= '<option value="long">Long name (default)</option>';
-                        $return .= '<option value="short">Short name</option>';
+                        $return .= '<option value="">- '.esc_html__('retrieve method', 'super-forms').' -</option>';
+                        $return .= '<option value="long">'.esc_html__('Long name (default)', 'super-forms').'</option>';
+                        $return .= '<option value="short">'.esc_html__('Short name', 'super-forms').'</option>';
                     $return .= '</select>';
                 $return .= '</div>';
             }
         }
         if( is_array( $field['default'] ) ) $field['default'] = json_encode( $field['default'] );
-        $return .= '<textarea name="' . $id . '" class="element-field multi-items-json">' . $field['default'] . '</textarea>';
+        $return .= '<textarea name="' . $id . '" class="super-element-field multi-items-json">' . $field['default'] . '</textarea>';
         return $return;
     }
 
@@ -556,8 +567,8 @@ class SUPER_Field_Types {
                     $return .= '<input type="text" placeholder="Value" value="' . $v['value'] . '" name="conditional_value">';
                     $return .= '<select name="conditional_and_method">';
                         $return .= '<option selected="selected" value="">- select -</option>';
-                        $return .= '<option' . ('and'==$v['and_method'] ? ' selected="selected"' : '') . '  value="and">AND</option>';
-                        $return .= '<option' . ('or'==$v['and_method'] ? ' selected="selected"' : '') . '  value="or">OR</option>';
+                        $return .= '<option' . ('and'==$v['and_method'] ? ' selected="selected"' : '') . '  value="and">'.esc_html__('AND', 'super-forms').'</option>';
+                        $return .= '<option' . ('or'==$v['and_method'] ? ' selected="selected"' : '') . '  value="or">'.esc_html__('OR', 'super-forms').'</option>';
                     $return .= '</select>';
                     $return .= '<input type="text" placeholder="Field {tag}" value="' . $field_and . '" name="conditional_field_and">';
                     $return .= '<select name="conditional_logic_and">';
@@ -584,8 +595,8 @@ class SUPER_Field_Types {
                 $return .= '<input type="text" placeholder="Value" value="" name="conditional_value">';
                 $return .= '<select name="conditional_and_method">';
                     $return .= '<option selected="selected" value="">- select -</option>';
-                    $return .= '<option value="and">AND</option>';
-                    $return .= '<option value="or">OR</option>';
+                    $return .= '<option value="and">'.esc_html__('AND', 'super-forms').'</option>';
+                    $return .= '<option value="or">'.esc_html__('OR', 'super-forms').'</option>';
                 $return .= '</select>';
                 $return .= '<input type="text" placeholder="Field {tag}" value="" name="conditional_field_and">';
                 $return .= '<select name="conditional_logic_and">';
@@ -601,7 +612,7 @@ class SUPER_Field_Types {
             $return .= '</div>';
         }
         if( is_array( $field['default'] ) ) $field['default'] = json_encode( $field['default'] );
-        $return .= '<textarea name="' . $id . '" class="element-field multi-items-json">' . $field['default'] . '</textarea>';
+        $return .= '<textarea name="' . $id . '" class="super-element-field multi-items-json">' . $field['default'] . '</textarea>';
         return $return;
     }
 
@@ -652,8 +663,8 @@ class SUPER_Field_Types {
                     $return .= '<input type="text" placeholder="Value" value="' . $v['value'] . '" name="conditional_value">';
                     $return .= '<select name="conditional_and_method">';
                         $return .= '<option selected="selected" value="">- select -</option>';
-                        $return .= '<option' . ('and'==$v['and_method'] ? ' selected="selected"' : '') . '  value="and">AND</option>';
-                        $return .= '<option' . ('or'==$v['and_method'] ? ' selected="selected"' : '') . '  value="or">OR</option>';
+                        $return .= '<option' . ('and'==$v['and_method'] ? ' selected="selected"' : '') . '  value="and">'.esc_html__('AND', 'super-forms').'</option>';
+                        $return .= '<option' . ('or'==$v['and_method'] ? ' selected="selected"' : '') . '  value="or">'.esc_html__('OR', 'super-forms').'</option>';
                     $return .= '</select>';
                     $return .= '<input type="text" placeholder="Field {tag}" value="' . $field_and . '" name="conditional_field_and">';
                     $return .= '<select name="conditional_logic_and">';
@@ -682,8 +693,8 @@ class SUPER_Field_Types {
                 $return .= '<input type="text" placeholder="Value" value="" name="conditional_value">';
                 $return .= '<select name="conditional_and_method">';
                     $return .= '<option selected="selected" value="">- select -</option>';
-                    $return .= '<option value="and">AND</option>';
-                    $return .= '<option value="or">OR</option>';
+                    $return .= '<option value="and">'.esc_html__('AND', 'super-forms').'</option>';
+                    $return .= '<option value="or">'.esc_html__('OR', 'super-forms').'</option>';
                 $return .= '</select>';
                 $return .= '<input type="text" placeholder="Field {tag}" value="" name="conditional_field_and">';
                 $return .= '<select name="conditional_logic_and">';
@@ -701,7 +712,7 @@ class SUPER_Field_Types {
                 $return .= '</div>';
         }
         if( is_array( $field['default'] ) ) $field['default'] = json_encode( $field['default'] );
-        $return .= '<textarea name="' . $id . '" class="element-field multi-items-json">' . $field['default'] . '</textarea>';
+        $return .= '<textarea name="' . $id . '" class="super-element-field multi-items-json">' . $field['default'] . '</textarea>';
         return $return;
     }
     
@@ -714,7 +725,7 @@ class SUPER_Field_Types {
             if(isset($field['required'])){
                 $return .= ($field['required']==true ? 'required="true"' : '');
             }
-            $return .= 'name="'.$id.'" data-format="H:i" data-step="5" class="element-field super-timepicker" value="'.esc_attr($field['default']).'" />';
+            $return .= 'name="'.$id.'" data-format="H:i" data-step="5" class="super-element-field super-timepicker" value="'.esc_attr($field['default']).'" />';
         $return .= '</div>';
         return $return;
     }
@@ -735,7 +746,7 @@ class SUPER_Field_Types {
                     $class = ' super-active';
                 }
                 $return .= '<div class="super-image-select-option' . $class . '">';
-                    $return .= '<input type="radio"' . $selected . ' value="' . esc_attr( $k ) . '" id="field-' . $id . '" name="' . $id . '" class="element-field"' . $filter . '>';
+                    $return .= '<input type="radio"' . $selected . ' value="' . esc_attr( $k ) . '" id="field-' . $id . '" name="' . $id . '" class="super-element-field"' . $filter . '>';
                     $return .= '<span class="super-image-select-option-icon"><i class="' . $v['icon'] . '"></i></span>';
                     $return .= '<span class="super-image-select-option-title">' . esc_html( $v['title'] ) . '</span>';
                 $return .= '</div>';
@@ -753,7 +764,7 @@ class SUPER_Field_Types {
         if( isset( $field['multiple'] ) ) $multiple = ' multiple';
         if( isset( $field['filter'] ) ) $filter = ' filter';
         $return  = '<div class="input">';
-            $return .= '<select id="field-' . $id . '" name="' . $id . '" class="element-field ' . $multiple . '"' . $multiple . $filter . '>';
+            $return .= '<select id="field-' . $id . '" name="' . $id . '" class="super-element-field ' . $multiple . '"' . $multiple . $filter . '>';
             foreach( $field['values'] as $k => $v ) {
                 $selected = '';
                 if( ( isset( $field['multiple'] ) ) && ( $field['default']!='' ) ) {
@@ -777,7 +788,7 @@ class SUPER_Field_Types {
     public static function color($id, $field){
         $return  = '<div class="super-color-picker-container">';
             $return .= '<div class="super-color-picker">';
-                $return .= '<input type="text" id="field-'.$id.'" name="'.$id.'" class="element-field" value="'.esc_attr($field['default']).'" />';
+                $return .= '<input type="text" id="field-'.$id.'" name="'.$id.'" class="super-element-field" value="'.esc_attr($field['default']).'" />';
             $return .= '</div>';
         $return .= '</div>';
         return $return;
@@ -790,7 +801,7 @@ class SUPER_Field_Types {
             $return .= '<div class="super-color-picker-container">';
                 if(isset($v['label'])) $return .= '<div class="super-color-picker-label">'.$v['label'].'</div>';
                 $return .= '<div class="super-color-picker">';
-                    $return .= '<input type="text" id="field-'.$k.'" name="'.$k.'" class="element-field" value="'.esc_attr($v['default']).'" />';
+                    $return .= '<input type="text" id="field-'.$k.'" name="'.$k.'" class="super-element-field" value="'.esc_attr($v['default']).'" />';
                 $return .= '</div>';
             $return .= '</div>';
         }
@@ -798,26 +809,6 @@ class SUPER_Field_Types {
         return $return;
     }
     
-    // // SMTP Test
-    // //Input field    
-    // public static function smtp_test() {
-    //     $return = '<div class="super-smtp-test">';
-    //         $return .= '<div class="super-smtp-test-row">';
-    //             $return .= '<input type="text" name="smpt_test_to" value="'.get_option('admin_email').'" />';
-    //         $return .= '</div>';
-    //         $return .= '<div class="super-smtp-test-row">';
-    //             $return .= '<label>';
-    //                 $return .= '<input type="checkbox" checked="checked" name="smpt_test_html" />';
-    //                 $return .= '<span>' . esc_html( 'Send in HTML or plain text format.', 'super-forms' ) . '</span>';
-    //             $return .= '</label>';
-    //         $return .= '</div>';
-    //         $return .= '<span class="button super-button super-send-smtp-test"><i class="fas fa-envelope"></i> ' . esc_html( 'Send Test Email', 'super-forms' ) . '</span>';
-    //     $return .= '</div>';
-    //     return $return;
-    // }
-
-
-
     //Icon list
     public static function icon($id, $field){
         
@@ -843,7 +834,7 @@ class SUPER_Field_Types {
             $return .= '<i class="' . explode(';', $v)[1] . ' fa-' . explode(';', $v)[0] . ($default==$v ? ' super-active' : '') . '"></i>';
         }
         $return .= '</div>';
-        $return .= '<input type="hidden" name="'.$id.'" value="'.esc_attr($field['default']).'" id="field-'.$id.'" class="element-field" />';
+        $return .= '<input type="hidden" name="'.$id.'" value="'.esc_attr($field['default']).'" id="field-'.$id.'" class="super-element-field" />';
         $return .= '</div>';
         return $return;
     

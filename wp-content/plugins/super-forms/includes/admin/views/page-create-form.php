@@ -118,7 +118,7 @@
             </div>
             <div class="super-wizard-preview">
                 <h2>Form preview</h2>
-                <img data-preview-url="<?php echo SUPER_PLUGIN_FILE; ?>" src="<?php echo SUPER_PLUGIN_FILE . 'assets/images/wizard-preview/squared-medium.png'; ?>" />
+                <img data-preview-url="<?php echo SUPER_PLUGIN_FILE; ?>" src="<?php echo esc_url(SUPER_PLUGIN_FILE . 'assets/images/wizard-preview/squared-medium.png'); ?>" />
             </div>
 
             <span class="super-button super-skip-wizard"><?php echo esc_html__( 'Skip wizard', 'super-forms' ); ?></span>
@@ -173,11 +173,11 @@
                 <ul>
                     <?php
                     if(count($forms)==0){
-                        echo '<li><a href="admin.php?page=super_create_form">' . esc_html__( 'No forms found, create one!', 'super-forms' ) . '</a></li>';
+                        echo '<li><a href="' . esc_url('admin.php?page=super_create_form') . '">' . esc_html__( 'No forms found, create one!', 'super-forms' ) . '</a></li>';
                     }else{
                         foreach($forms as $value){
                             if($form_id!=$value->ID){
-                                echo '<li value="' . $value->ID . '"><a href="admin.php?page=super_create_form&id=' . $value->ID . '">' . $value->post_title . '</a></li>';
+                                echo '<li value="' . $value->ID . '"><a href="' . esc_url('admin.php?page=super_create_form&id=' . $value->ID) . '">' . $value->post_title . '</a></li>';
                             }
                         }
                     }
@@ -187,8 +187,8 @@
             <input type="text" name="title" class="form-name super-tooltip" title="<?php echo esc_attr__( 'Enter a name for your form', 'super-forms' ); ?>" value="<?php echo $title; ?>" />
             <?php
             if(isset($_GET['id'])){
-                echo '<input type="text" readonly="readonly" class="super-get-form-shortcodes super-tooltip" title="' . esc_attr__( 'Paste shortcode on any page', 'super-forms' ) . '" value=\'[super_form id="' . $form_id . '"]\' />';
-                echo '<input type="hidden" name="form_id" value="' . $form_id . '" />';
+                echo '<input type="text" readonly="readonly" class="super-get-form-shortcodes super-tooltip" title="' . esc_attr__( 'Paste shortcode on any page', 'super-forms' ) . '" value=\'[super_form id="' . absint($form_id) . '"]\' />';
+                echo '<input type="hidden" name="form_id" value="' . absint($form_id) . '" />';
             }else{
                 echo '<input type="hidden" name="form_id" value="" />';
                 echo '<input type="text" readonly="readonly" class="super-get-form-shortcodes super-tooltip" title="' . esc_attr__( 'Please save your form first!', 'super-forms' ) . '" value="[form-not-saved-yet]" />';
@@ -226,14 +226,14 @@
                 <?php
                 if( $form_id==0 ) {
                     echo '<div class="super-demos-notice">';
-                    echo '<h2>' . sprintf( esc_html__( '%1$sNew:%2$s Secure File Uploads', 'super-forms' ), '<span style="color:red;">', '</span>' ) . '</h2>';
-                    echo '<p>' . sprintf( esc_html__( 'By default any files uploaded via your forms will no longer be visible in the %1$sMedia Library%2$s. To change this behaviour you can visit the File Upload Settings.', 'super-forms'), '<a target="_blank" href="' . get_admin_url() . 'upload.php' . '">', '</a>') . '</p>';
-                    echo '<p><a target="_blank" href="' . admin_url() . 'admin.php?page=super_settings#file-upload-settings" class="button button-primary button-large">' . esc_html__( 'Change File Upload Settings', 'super-forms' ) . '</a></p>';
+                    echo '<h1>' . esc_html__( 'What\'s new?', 'super-forms' ) . '</h1>';
+                    echo '<h2>' . sprintf( esc_html__( 'PDF Generator Add-on %1$sBETA%2$s', 'super-forms' ), '<span style="color:red;">', '</span>' ) . '</h2>';
+                    echo '<p>' . sprintf( esc_html__( 'I know many of you have been waiting for this for a long time. Hopefully it was worth waiting for you! You can then start a 15 day trial for free! This should give you enough time to play around and to decide if this Add-on works well with your forms. Once you activated the Add-on you can enable PDF generation on your forms under the "PDF" Tab on the builder page. Please keep in mind that this Add-on is currently in BETA stage. We would love to get your feedback which you can submit via the %1$sAdd-ons%2$s page.', 'super-forms'), '<a target="_blank" href="' . esc_url(get_admin_url() . 'admin.php?page=super_addons') . '">', '</a>') . '</p>';
+                    echo '<p><a target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_addons') . '" class="button button-primary button-large">' . esc_html__( 'Start 15 day trial', 'super-forms' ) . '</a></p>';
                     echo '<hr />';
-                    echo '<h2>Creating a new form?</h2>';
-                    $admin_url = get_admin_url() . 'admin.php?page=super_demos';
-                    echo '<p>' . sprintf( esc_html__( 'Take the time to check out one of the many ready to use forms in the %1$sDemos%2$s!', 'super-forms'), '<a target="_blank" href="' . $admin_url . '">', '</a>' ) . '</p>';
-                    echo ' <a target="_blank" href="' . $admin_url . '" class="button button-primary button-large">' . esc_html__( 'Bring me to the Demos!', 'super-forms' ) . '</a>';
+                    echo '<h2>' . sprintf( esc_html__( 'Secure File Uploads', 'super-forms' ), '<span style="color:red;">', '</span>' ) . '</h2>';
+                    echo '<p>' . sprintf( esc_html__( 'By default any files uploaded via your forms will no longer be visible in the %1$sMedia Library%2$s. To change this behaviour you can visit the File Upload Settings.', 'super-forms'), '<a target="_blank" href="' . esc_url(get_admin_url() . 'upload.php') . '">', '</a>') . '</p>';
+                    echo '<p><a target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#file-upload-settings') . '" class="button button-primary button-large">' . esc_html__( 'Change File Upload Settings', 'super-forms' ) . '</a></p>';
                     echo '</div>';
                 }
 
@@ -255,6 +255,7 @@
                 $tabs = array(
                     'builder' => esc_html__( 'Builder', 'super-forms' ),
                     'translations' => esc_html__( 'Translations', 'super-forms' ),
+                    'secrets' => esc_html__( 'Secrets', 'super-forms' ),
                     //'triggers' => esc_html__( 'Triggers', 'super-forms' )
                 );
                 $tabs = apply_filters( 'super_create_form_tabs', $tabs );
@@ -267,7 +268,7 @@
                         echo esc_html($v);
                         if(!is_array($translations)) $translations = array();
                         if($k==='builder' && !empty($translations) && current($translations)){
-                            echo '<img src="'. SUPER_PLUGIN_FILE . 'assets/images/blank.gif" class="flag flag-' . current($translations)['flag'] . '" />';
+                            echo '<img src="'. esc_url(SUPER_PLUGIN_FILE . 'assets/images/blank.gif') . '" class="flag flag-' . current($translations)['flag'] . '" />';
                         }
                         echo '</span>';
                         ob_start();
@@ -277,7 +278,7 @@
                         // super_create_form_`code`_tab
                         // super_create_form_`translations`_tab
                         // super_create_form_`triggers`_tab
-                        do_action( 'super_create_form_' . $k . '_tab', array( 'form_id'=>$form_id, 'translations'=>$translations, 'shortcodes'=>$shortcodes, 'settings'=>$settings, 'theme_style'=>$theme_style, 'style_content'=>$style_content ) );
+                        do_action( 'super_create_form_' . $k . '_tab', array( 'form_id'=>$form_id, 'secrets'=>array('local'=>$localSecrets, 'global'=>$globalSecrets), 'translations'=>$translations, 'shortcodes'=>$shortcodes, 'settings'=>$settings, 'theme_style'=>$theme_style, 'style_content'=>$style_content ) );
                         echo '</div>';
                         $tabs_content .= ob_get_contents();
                         ob_end_clean();
@@ -352,10 +353,10 @@
                                             }
                                             echo '<div class="super-field' . $filter . '"' . $parent . '' . $filtervalue;
                                             echo '>';
-                                                if( isset( $v['name'] ) ) echo '<div class="field-name">' . $v['name'] . '</div>';
+                                                if( isset( $v['name'] ) ) echo '<div class="super-field-name">' . $v['name'] . '</div>';
                                                 if( isset( $v['desc'] ) ) echo '<i class="info super-tooltip" title="' . esc_attr($v['desc']) . '"></i>';
-                                                if( isset( $v['label'] ) ) echo '<div class="field-label">' . nl2br($v['label']) . '</div>';
-                                                echo '<div class="field-input">';
+                                                if( isset( $v['label'] ) ) echo '<div class="super-field-label">' . nl2br($v['label']) . '</div>';
+                                                echo '<div class="super-field-input">';
                                                     if( !isset( $v['type'] ) ) $v['type'] = 'text';
                                                     echo call_user_func( array( 'SUPER_Field_Types', $v['type'] ), $k, $v );
                                                 echo '</div>';

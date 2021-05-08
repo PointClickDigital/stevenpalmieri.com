@@ -1,9 +1,8 @@
-# Email Templates Add-on
+# E-mail Templates Add-on
 
 **Download link:**
 
-https://codecanyon.net/item/super-forms-email-templates/14468280
-
+<https://codecanyon.net/item/super-forms-email-templates/14468280>
 
 **Documentation:**
 

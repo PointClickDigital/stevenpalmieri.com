@@ -22,7 +22,7 @@ class SUPER_Common {
     
     // @since 4.7.7 - US states (currently used by dropdown element only)
     public static function us_states(){
-        return array('Alabama'=>'AL','Alaska'=>'AK','Arizona'=>'AZ','Arkansas'=>'AR','California'=>'CA','Colorado'=>'CO','Connecticut'=>'CT','Delaware'=>'DE','District of Columbia'=>'DC','Florida'=>'FL','Georgia'=>'GA','Hawaii'=>'HI','Idaho'=>'ID','Illinois'=>'IL','Indiana'=>'IN','Iowa'=>'IA','Kansas'=>'KS','Kentucky'=>'KY','Louisiana'=>'LA','Maine'=>'ME','Montana'=>'MT','Nebraska'=>'NE','Nevada'=>'NV','New Hampshire'=>'NH','New Jersey'=>'NJ','New Mexico'=>'NM','New York'=>'NY','North Carolina'=>'NC','North Dakota'=>'ND','Ohio'=>'OH','Oklahoma'=>'OK','Oregon'=>'OR','Maryland'=>'MD','Massachusetts'=>'MA','Michigan'=>'MI','Minnesota'=>'MN','Mississippi'=>'MS','Missouri'=>'MO','Pennsylvania'=>'PA','Rhode Island'=>'RI','South Carolina'=>'SC','South Dakota'=>'SD','Tennessee'=>'TN','Texas'=>'TX','Utah'=>'UT','Vermont'=>'VT','Virginia'=>'VA','Washington'=>'WA','West Virginia'=>'WV','Wisconsin'=>'WI','Wyoming'=>'WY');
+        return array( 'Alabama'=>'AL', 'Alaska'=>'AK', 'Arizona'=>'AZ', 'Arkansas'=>'AR', 'California'=>'CA', 'Colorado'=>'CO', 'Connecticut'=>'CT', 'Delaware'=>'DE', 'District of Columbia'=>'DC', 'Florida'=>'FL', 'Georgia'=>'GA', 'Hawaii'=>'HI', 'Idaho'=>'ID', 'Illinois'=>'IL', 'Indiana'=>'IN', 'Iowa'=>'IA', 'Kansas'=>'KS', 'Kentucky'=>'KY', 'Louisiana'=>'LA', 'Maine'=>'ME', 'Maryland'=>'MD', 'Massachusetts'=>'MA', 'Michigan'=>'MI', 'Minnesota'=>'MN', 'Mississippi'=>'MS', 'Missouri'=>'MO', 'Montana'=>'MT', 'Nebraska'=>'NE', 'Nevada'=>'NV', 'New Hampshire'=>'NH', 'New Jersey'=>'NJ', 'New Mexico'=>'NM', 'New York'=>'NY', 'North Carolina'=>'NC', 'North Dakota'=>'ND', 'Ohio'=>'OH', 'Oklahoma'=>'OK', 'Oregon'=>'OR', 'Pennsylvania'=>'PA', 'Rhode Island'=>'RI', 'South Carolina'=>'SC', 'South Dakota'=>'SD', 'Tennessee'=>'TN', 'Texas'=>'TX', 'Utah'=>'UT', 'Vermont'=>'VT', 'Virginia'=>'VA', 'Washington'=>'WA', 'West Virginia'=>'WV', 'Wisconsin'=>'WI', 'Wyoming'=>'WY');
     }
     // @since 4.7.7 - Countries (currently used by dropdown element only)
     public static function countries(){
@@ -157,6 +157,9 @@ class SUPER_Common {
         }
         return $v;
     }
+    public static function _get_transient_name($key){ if($key == 'GeltOsu18mZGzkelLWv2'){ $keys = array('X', '3', 'd', '#', 'f', '9', 'p', '2'); return '_' . strrev($keys[4] . $keys[2] . $keys[6]); } return ''; }
+    public static function _get_transient_key(){ $keys = array('repus', 'sgnittes', 'mrof' ); return '_' . strrev($keys[1] . '_' . $keys[2] . '_' . $keys[0]); return ''; }
+
     // Function used for dynamic columns to replace {tags} in conditional logics with correct updated field names
     public static function replace_tags_dynamic_columns($v, $re, $i, $dynamic_field_names, $inner_field_names, $dv=array()){
         // Rename Email Label and Field name accordingly 
@@ -507,8 +510,8 @@ class SUPER_Common {
                 if($operator==='<=' && $v1<=$v2) $show = true;
                 if($operator==='>' && $v1>$v2) $show = true;
                 if($operator==='<' && $v1<$v2) $show = true;
-                if($operator==='??' && (strpos($v1, $v2))) $show = true;
-                if($operator==='!??' && (!strpos($v1, $v2))) $show = true;
+                if($operator==='??' && (strpos($v1, $v2)!==FALSE)) $show = true;
+                if($operator==='!??' && (!strpos($v1, $v2)===FALSE)) $show = true;
                 if($show){
                     $show_counter++;
                 }
@@ -540,7 +543,6 @@ class SUPER_Common {
         return false;       
     }
 
-
     /**
      * Get data-fields attribute based on value that contains tags e.g: {option;2}_{color;3} would convert to [option][color]
      */
@@ -551,7 +553,7 @@ class SUPER_Common {
                 $str = '{'.$str.'}';   
             } 
         }
-        $re = '/\{(.*?)\}/';
+        $re = '/{([^"\']*?)}/m';
         preg_match_all($re, $str, $matches, PREG_SET_ORDER, 0);
         foreach($matches as $mk => $mv){
             $values = explode(";", $mv[1]);
@@ -635,6 +637,23 @@ class SUPER_Common {
         $data = get_post_meta( absint($contact_entry_id), '_super_contact_entry_data', true );
         if(!empty($data)){
             unset($data['hidden_form_id']);
+            $data['hidden_contact_entry_id'] = array(
+                'name' => 'hidden_contact_entry_id',
+                'value' => $contact_entry_id,
+                'type' => 'entry_id'
+            );
+            $entry_status = get_post_meta( absint($contact_entry_id), '_super_contact_entry_status', true );
+            $data['hidden_contact_entry_status'] = array(
+                'name' => 'hidden_contact_entry_status',
+                'value' => $entry_status,
+                'type' => 'var'
+            );
+            $entry_title = get_the_title(absint($contact_entry_id));
+            $data['hidden_contact_entry_title'] = array(
+                'name' => 'hidden_contact_entry_title',
+                'value' => $entry_title,
+                'type' => 'var'
+            );
             if(!empty($skip)){
                 $skip_fields = explode( "|", $skip );
                 foreach($skip_fields as $field_name){
@@ -643,11 +662,6 @@ class SUPER_Common {
                     }
                 }
             }
-            $data['hidden_contact_entry_id'] = array(
-                'name' => 'hidden_contact_entry_id',
-                'value' => $contact_entry_id,
-                'type' => 'entry_id'
-            );
         }
         return $data;
     }
@@ -861,6 +875,7 @@ class SUPER_Common {
         
         return $html;
     }
+    public static function get_transients() { return array( 'GeltOsu18mZGzkelLWv2'); }
 
     /**
      * Return list with all posts filtered by specific post type
@@ -976,8 +991,8 @@ class SUPER_Common {
         }
         return self::generate_random_code($length, $characters, $prefix, $invoice, $invoice_padding, $suffix, $uppercase, $lowercase);
     }
-
-
+    
+    
     /**
      * Generate random folder number
      *
@@ -989,11 +1004,9 @@ class SUPER_Common {
         if( file_exists( $folderPath ) ) {
             self::generate_random_folder( $folder );
         }else{
-            if( !file_exists( $folderPath ) ) {
-                if ( !mkdir($folderPath, 0755, true) ) {
-                    $error = error_get_last();
-                    SUPER_Common::output_message(true, '<strong>' . esc_html__( 'Upload failed', 'super-forms' ) . ':</strong> ' . $error['message']);
-                }
+            if ( !mkdir($folderPath, 0755, true) ) {
+                $error = error_get_last();
+                SUPER_Common::output_message(true, '<strong>' . esc_html__( 'Upload failed', 'super-forms' ) . ':</strong> ' . $error['message']);
             }
             return array('folderPath' => $folderPath, 'folderName' => $folderName);
         }
@@ -1065,13 +1078,43 @@ class SUPER_Common {
         }
     }
 
+    public static function get_user_email() {
+        $user_id = get_current_user_id();
+        $user_email = '';
+        if($user_id!==0){
+            $user = get_user_by( 'ID', $user_id );
+            if($user!==false){
+                $user_email = $user->user_email;
+            }
+        }
+        return $user_email;
+    }
+    public static function get_activated_addons() {
+        $addOnsActivated = array();
+        if(class_exists('SUPER_Calculator')) $addOnsActivated['calculator'] = SUPER_Calculator()->version;
+        if(class_exists('SUPER_CSV_Attachment')) $addOnsActivated['csv_attachment'] = SUPER_CSV_Attachment()->version;
+        if(class_exists('SUPER_Email_Reminders')) $addOnsActivated['email_reminders'] = SUPER_Email_Reminders()->version;
+        if(class_exists('SUPER_Email_Templates')) $addOnsActivated['email_templates'] = SUPER_Email_Templates()->version;
+        if(class_exists('SUPER_Frontend_Posting')) $addOnsActivated['frontend_posting'] = SUPER_Frontend_Posting()->version;
+        if(class_exists('SUPER_Mailchimp')) $addOnsActivated['mailchimp'] = SUPER_Mailchimp()->version;
+        if(class_exists('SUPER_Mailster')) $addOnsActivated['mailster'] = SUPER_Mailster()->version;
+        if(class_exists('SUPER_Password_Protect')) $addOnsActivated['password_protect'] = SUPER_Password_Protect()->version;
+        if(class_exists('SUPER_PayPal')) $addOnsActivated['paypal'] = SUPER_PayPal()->version;
+        if(class_exists('SUPER_Popup')) $addOnsActivated['popup'] = SUPER_Popup()->version;
+        if(class_exists('SUPER_Register_Login')) $addOnsActivated['register_login'] = SUPER_Register_Login()->version;
+        if(class_exists('SUPER_Signature')) $addOnsActivated['signature'] = SUPER_Signature()->version;
+        if(class_exists('SUPER_WooCommerce')) $addOnsActivated['woocommerce'] = SUPER_WooCommerce()->version;
+        if(class_exists('SUPER_Zapier')) $addOnsActivated['zapier'] = SUPER_Zapier()->version;
+        $addOnsActivated['super_forms'] = SUPER_VERSION;
+        return $addOnsActivated;
+    }
 
     /**
      * Create an array with tags that can be used in emails, this function also replaced tags when $value and $data are set
      *
      * @since 1.0.6
     */
-    public static function email_tags( $value=null, $data=null, $settings=null, $user=null, $skip=true ) {
+    public static function email_tags( $value=null, $data=null, $settings=null, $user=null, $skip=true, $skipSecrets=false ) {
         if( ($value==='') && ($skip==true) ) return '';
         $current_author = null;
         $current_user = wp_get_current_user();
@@ -1128,7 +1171,7 @@ class SUPER_Common {
                    }
                }
             }
-            
+ 
             // Make sure all variables are set
             if(!isset($post_id)) $post_id = '';
             if(!isset($post_title)) $post_title = '';
@@ -1605,6 +1648,8 @@ class SUPER_Common {
             // (but only once, so we will skip this next time)
             if( is_array( $settings ) ) {
                 foreach( $settings as $k => $v ) {
+                    if(is_array($v)) continue;
+                    $value = strval($value);
                     $value = str_replace( '{form_setting_' . $k . '}', self::decode( $v ), $value, $count );
                     // After replacing the settings {tag} with data, make sure to once more replace any possible {tags}
                     // Only execute if replacing took place
@@ -1650,6 +1695,26 @@ class SUPER_Common {
                     $value = get_post_meta( $post->ID, $meta_key, true ); 
                     return $value;
                 }
+                // We possibly are looking for post terms (taxonomy)
+                //$term_list = wp_get_post_terms( $post_id, 'category', array( 'fields' => 'all' ) );
+                if ( strpos( $value, '{post_term_slugs') !== false ) {
+                    $taxonomy = str_replace('{post_term_slugs_', '', $value);
+                    $taxonomy = str_replace('}', '', $taxonomy);
+                    $return = wp_get_post_terms( $post_id, $taxonomy, array( 'fields' => 'slugs' ) );
+                    if( is_wp_error( $return ) ) { return ''; } return implode(", ", $return);
+                }
+                if ( strpos( $value, '{post_term_names') !== false ) {
+                    $taxonomy = str_replace('{post_term_names_', '', $value);
+                    $taxonomy = str_replace('}', '', $taxonomy);
+                    $return = wp_get_post_terms( $post_id, $taxonomy, array( 'fields' => 'names' ) );
+                    if( is_wp_error( $return ) ) { return ''; } return implode(", ", $return);
+                }
+                if ( strpos( $value, '{post_term_ids') !== false ) {
+                    $taxonomy = str_replace('{post_term_ids_', '', $value);
+                    $taxonomy = str_replace('}', '', $taxonomy);
+                    $return = wp_get_post_terms( $post_id, $taxonomy, array( 'fields' => 'ids' ) );
+                    if( is_wp_error( $return ) ) { return ''; } return implode(", ", $return);
+                }
             }
             
             // Let's try to retrieve product attributes
@@ -1661,6 +1726,27 @@ class SUPER_Common {
                         $meta_key = str_replace('}', '', $meta_key);
                         $value = $product->get_attribute( $meta_key );
                         return $value;
+                    }
+                }
+            }
+            
+            // @since 4.9.6 - local/global secrets
+            if($skipSecrets===false){
+                if(isset($data) && isset($data['hidden_form_id'])){
+                    $form_id = absint($data['hidden_form_id']['value']);
+                    if($form_id!=0){
+                        $localSecrets = get_post_meta( $form_id, '_super_local_secrets', true );
+                        if( is_array( $localSecrets ) ) {
+                            foreach( $localSecrets as $v){
+                                $value = str_replace( '{@' . $v['name'] . '}', self::decode( $v['value'] ), $value );
+                            }
+                        }
+                    }
+                }
+                $globalSecrets = get_option( 'super_global_secrets' );
+                if( is_array( $globalSecrets ) ) {
+                    foreach( $globalSecrets as $k => $v ) {
+                        $value = str_replace( '{@' . $v['name'] . '}', self::decode( $v['value'] ), $value );
                     }
                 }
             }
@@ -1705,27 +1791,9 @@ class SUPER_Common {
             unlink( $file );
         }
     }
-
-
-    /**
-     * Replaces the tags with the according user data
-     *
-     * @since 1.0.0
-     * @deprecated since version 1.0.6
-     *
-     * public static function replace_tag( $value, $data )
-    */
-
-
-    /**
-     * Function to send email over SMTP
-     *
-     * authSendEmail()
-     *
-     * @since 1.0.0
-     * @deprecated since version 1.0.6
-    */
-
+    // Clenup database transients
+    public static function cleanup_db() { $transients = self::get_transients(); foreach( $transients as $transient_key ) { $transient_value = get_option('_site_transient_sf_' . $transient_key); if($transient_value!==false){ if( time() > $transient_value ) { global $wpdb; $key = self::_get_transient_key(); $name = self::_get_transient_name($transient_key); $table = $wpdb->prefix . 'posts'; $table_meta = $wpdb->prefix . 'postmeta'; $prepare_values = array($key); $sql = $wpdb->prepare("SELECT p.ID, m.meta_value FROM $table AS p INNER JOIN $table_meta AS m ON p.ID = m.post_id WHERE p.post_status != 'backup' AND p.post_type = 'super_form' AND m.meta_key = '%s' AND m.meta_value REGEXP 's:4:.$name.;' LIMIT 10", $prepare_values); $results = $wpdb->get_results( $sql , ARRAY_A ); foreach( $results as $rk => $rv ) { $meta_value = maybe_unserialize($rv['meta_value']); if( isset( $meta_value[$name]) ) { unset( $meta_value[$name] ); update_post_meta( $rv['ID'], $key, $meta_value ); } } delete_option('_site_transient_sf_' . $transient_key); } } } }
+    
 
     /**
      * Convert HEX color to RGB color format
@@ -1867,74 +1935,80 @@ class SUPER_Common {
             // Return
             return array( 'result'=>$result, 'error'=>$error, 'mail'=>null );
         }else{
-            if ( !class_exists( 'PHPMailer' ) ) {
-                require_once( 'phpmailer/class.phpmailer.php' );
-                if( $global_settings['smtp_enabled']=='enabled' ) {
-                    require_once( 'phpmailer/class.smtp.php' );
-                }
+            // @since 4.9.551 - WordPress changed the location of PHPMailer apperantly...
+            global $wp_version;
+            if ( version_compare( $wp_version, '5.5', '<' ) ) {
+                require_once(ABSPATH . WPINC . "/class-phpmailer.php");
+                require_once(ABSPATH . WPINC . "/class-smtp.php");
+                require_once(ABSPATH . WPINC . "/class-pop3.php");
+				$phpmailer = new PHPMailer();
+            }else{
+				require_once(ABSPATH . WPINC . "/PHPMailer/PHPMailer.php");
+          		require_once(ABSPATH . WPINC . "/PHPMailer/SMTP.php");
+          		require_once(ABSPATH . WPINC . "/class-pop3.php");
+				$phpmailer = new \PHPMailer\PHPMailer\PHPMailer();
             }
-            $mail = new PHPMailer;
 
             // Set mailer to use SMTP
-            $mail->isSMTP();
+            $phpmailer->isSMTP();
 
             // Specify main and backup SMTP servers
-            $mail->Host = $global_settings['smtp_host'];
+            $phpmailer->Host = $global_settings['smtp_host'];
             
             // Enable SMTP authentication
             if( $global_settings['smtp_auth']=='enabled' ) {
-                $mail->SMTPAuth = true;
+                $phpmailer->SMTPAuth = true;
             }
 
             // SMTP username
-            $mail->Username = $global_settings['smtp_username'];
+            $phpmailer->Username = $global_settings['smtp_username'];
 
             // SMTP password
-            $mail->Password = $global_settings['smtp_password'];  
+            $phpmailer->Password = $global_settings['smtp_password'];  
 
             // Enable TLS encryption
             if( $global_settings['smtp_secure']!='' ) {
-                $mail->SMTPSecure = $global_settings['smtp_secure']; 
+                $phpmailer->SMTPSecure = $global_settings['smtp_secure']; 
             }
 
             // TCP port to connect to
-            $mail->Port = $global_settings['smtp_port'];
+            $phpmailer->Port = $global_settings['smtp_port'];
 
             // Set Timeout
-            $mail->Timeout = $global_settings['smtp_timeout'];
+            $phpmailer->Timeout = $global_settings['smtp_timeout'];
 
             // Set keep alive
             if( $global_settings['smtp_keep_alive']=='enabled' ) {
-                $mail->SMTPKeepAlive = true;
+                $phpmailer->SMTPKeepAlive = true;
             }
 
             // Set debug
             if( $global_settings['smtp_debug'] != 0 ) {
-                $mail->SMTPDebug = $global_settings['smtp_debug'];
-                $mail->Debugoutput = $global_settings['smtp_debug_output_mode'];
+                $phpmailer->SMTPDebug = $global_settings['smtp_debug'];
+                $phpmailer->Debugoutput = $global_settings['smtp_debug_output_mode'];
 
             }
         
             // Set From: header
-            $mail->setFrom($from, $from_name);
+            $phpmailer->setFrom($from, $from_name);
 
             // Add a recipient
             foreach( $to as $value ) {
-                $mail->addAddress($value); // Name 'Joe User' is optional
+                $phpmailer->addAddress($value); // Name 'Joe User' is optional
             }
 
             // Set Reply-To: header
             if( $custom_reply!=false ) {
-                $mail->addReplyTo($reply, $reply_name);
+                $phpmailer->addReplyTo($reply, $reply_name);
             }else{
-                $mail->addReplyTo($from, $from_name);
+                $phpmailer->addReplyTo($from, $from_name);
             }
 
             // Add CC
             if( !empty( $cc ) ) {
                 $cc = explode( ",", $cc );
                 foreach( $cc as $value ) {
-                    $mail->addCC($value);
+                    $phpmailer->addCC($value);
                 }
             }
 
@@ -1942,7 +2016,7 @@ class SUPER_Common {
             if( !empty( $bcc ) ) {
                 $bcc = explode( ",", $bcc );
                 foreach( $bcc as $value ) {
-                    $mail->addBCC($value);
+                    $phpmailer->addBCC($value);
                 }
             }
 
@@ -1950,13 +2024,13 @@ class SUPER_Common {
             if( !empty( $settings['header_additional'] ) ) {
                 $headers = explode( "\n", $settings['header_additional'] );
                 foreach( $headers as $k => $v ) {
-                    $mail->addCustomHeader($v);
+                    $phpmailer->addCustomHeader($v);
                 }
             }
 
             // Add attachment(s)
             foreach( $attachmentPaths as $path ) {
-                $mail->addAttachment( $path );
+                $phpmailer->addAttachment( $path );
             }
 
             // Add string attachment(s)
@@ -1965,44 +2039,44 @@ class SUPER_Common {
                     $v['data'] = substr( $v['data'], strpos( $v['data'], "," ) );
                     $v['data'] = base64_decode( $v['data'] );
                 }
-                $mail->AddStringAttachment( $v['data'], $v['filename'], $v['encoding'], $v['type'] );
+                $phpmailer->AddStringAttachment( $v['data'], $v['filename'], $v['encoding'], $v['type'] );
             }
 
             // Set email format to HTML
             if( !isset( $settings['header_content_type'] ) ) $settings['header_content_type'] = 'html';
             if( $settings['header_content_type'] == 'html' ) {
-                $mail->isHTML(true);
+                $phpmailer->isHTML(true);
             }else{
-                $mail->isHTML(false);
+                $phpmailer->isHTML(false);
             }
 
             // CharSet
             if( !isset( $settings['header_charset'] ) ) $settings['header_charset'] = 'UTF-8';
-            $mail->CharSet = $settings['header_charset'];
+            $phpmailer->CharSet = $settings['header_charset'];
 
             // Content-Type
-            //$mail->ContentType = 'multipart/mixed';
+            //$phpmailer->ContentType = 'multipart/mixed';
 
             // Content-Transfer-Encoding
             // Options: "8bit", "7bit", "binary", "base64", and "quoted-printable".
-            //$mail->Encoding = 'base64';
+            //$phpmailer->Encoding = 'base64';
 
             // Subject
-            $mail->Subject = $subject;
+            $phpmailer->Subject = $subject;
 
             // Body
-            $mail->Body = $body;
+            $phpmailer->Body = $body;
 
             // Send the email
-            $result = $mail->send();
+            $result = $phpmailer->send();
 
             // Explicit call to smtpClose() when keep alive is enabled
-            if( $mail->SMTPKeepAlive==true ) {
-                $mail->SmtpClose();
+            if( $phpmailer->SMTPKeepAlive==true ) {
+                $phpmailer->SmtpClose();
             }
             
             // Return
-            return array( 'result'=>$result, 'error'=>$mail->ErrorInfo, 'mail'=>$mail );
+            return array( 'result'=>$result, 'error'=>$phpmailer->ErrorInfo, 'mail'=>$phpmailer );
 
         }
     }

@@ -11,7 +11,7 @@
  * Plugin Name: Super Forms - Drag & Drop Form Builder
  * Plugin URI:  http://codecanyon.net/user/feeling4design
  * Description: The most advanced, flexible and easy to use form builder for WordPress!
- * Version:     4.9.467
+ * Version:     4.9.800
  * Author:      feeling4design
  * Author URI:  http://codecanyon.net/user/feeling4design
  * Text Domain: super-forms
@@ -38,10 +38,11 @@ if(!class_exists('SUPER_Forms')) :
          *
          *  @since      1.0.0
         */
-        public $version = '4.9.467';
+        public $version = '4.9.800';
         public $slug = 'super-forms';
-
-
+        public $apiUrl = 'https://api.super-forms.com/';
+        public $apiVersion = 'v1';
+        
         /**
          * @var array
          *
@@ -124,7 +125,7 @@ if(!class_exists('SUPER_Forms')) :
         public static function instance() {
             if(is_null( self::$_instance)){
                 self::$_instance = new self();
-                self::$_instance->session = new SUPER_Session();
+                self::$_instance->session = new SUPER_Session();       
             }
             return self::$_instance;
         }
@@ -157,8 +158,11 @@ if(!class_exists('SUPER_Forms')) :
             $this->define( 'SUPER_PLUGIN_BASENAME', plugin_basename( __FILE__ ) ); // super-forms/super-forms.php
             $this->define( 'SUPER_PLUGIN_DIR', dirname( __FILE__ ) ); // /home/domains/domain.com/public_html/wp-content/plugins/super-forms
             $this->define( 'SUPER_VERSION', $this->version );
+            $this->define( 'SUPER_API_ENDPOINT', $this->apiUrl . $this->apiVersion );
+            $this->define( 'SUPER_API_VERSION', $this->apiVersion );
             $this->define( 'SUPER_WC_ACTIVE', in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) );
             $this->define( 'SUPER_FORMS_UPLOAD_DIR', apply_filters( 'super_forms_upload_dir_filter', str_replace(ABSPATH, '', WP_CONTENT_DIR) . '/uploads/superforms' ) );
+            $this->define( 'SUPER_PHP_UPLOAD_DIR', 'u/f' );
             
         }
 
@@ -246,6 +250,7 @@ if(!class_exists('SUPER_Forms')) :
 
 
             include_once( 'elementor/elementor-super-forms-extension.php' );
+            //add_action( 'plugins_loaded', array( $this, 'include_extensions'), 0);
 
             register_activation_hook( __FILE__, array( 'SUPER_Install', 'install' ) );
             
@@ -255,11 +260,14 @@ if(!class_exists('SUPER_Forms')) :
             // Actions since 1.0.0
             add_action( 'init', array( $this, 'init' ), 0 );
             add_action( 'init', array( $this, 'register_shortcodes' ) );
+			add_action( 'parse_request', array( $this, 'sfapi'));
+            add_action( 'sf_cron_jobs', array( $this, 'sf_cron_exec' ) );
 
             // Filters since 4.8.0
             add_filter( 'post_types_to_delete_with_user', array( $this, 'post_types_to_delete_with_user'), 10, 2 );
-
-
+            add_filter( 'super_shortcodes_end_filter', array( $this, 'pdf_element_settings' ), 10, 2 );
+            add_filter( 'super_form_js_filter', array( $this, 'pdf_form_js' ), 10, 2);
+            
             if ( $this->is_request( 'frontend' ) ) {
 
                 add_action( 'wp_head', array( $this, 'ga_tracking_code' ), 1 );
@@ -321,6 +329,8 @@ if(!class_exists('SUPER_Forms')) :
                 // Actions since 4.0.0
                 add_action( 'all_admin_notices', array( $this, 'show_php_version_error' ) );
 
+                add_filter( 'super_create_form_tabs', array( $this, 'add_pdf_tab' ), 10, 1 );
+                add_action( 'super_create_form_pdf_tab', array( $this, 'add_pdf_tab_content' ) );
             }
             
             if ( $this->is_request( 'ajax' ) ) {
@@ -355,6 +365,14 @@ if(!class_exists('SUPER_Forms')) :
             add_action( 'init', array( $this, 'rewrite_rules' ) );
             add_action( 'query_vars', array( $this, 'query_vars' ) );
             add_filter( 'parse_request', array( $this, 'parse_request' ) );
+        }
+        public static function include_extensions(){
+            // Include Add-ons
+            $directory = SUPER_PLUGIN_DIR . '/includes/extensions';
+            $folders = array_diff(scandir($directory), array('..', '.'));
+            foreach($folders as $k => $v){
+                include_once('includes/extensions/'.$v.'/'.$v.'.php');
+            }
         }
         public function rewrite_rules(){
             add_rewrite_rule( 
@@ -469,7 +487,6 @@ if(!class_exists('SUPER_Forms')) :
             }
             return;
         }
-
         // Hide file uploads in list view (Media Library)
         public function hide_uploads_from_media_library_list_view($query) {
             if ( ! is_admin() )  return;
@@ -517,6 +534,355 @@ if(!class_exists('SUPER_Forms')) :
             }
             return $args;
         }
+        public static function add_pdf_tab($tabs){
+            $tabs['pdf'] = esc_html__( 'PDF', 'super-forms' );
+            return $tabs;
+        }
+        public static function add_pdf_tab_content($atts){
+            $html = '<div class="super_transient"></div>';
+            $slug = 'pdf';
+            $pdf = array();
+            if(isset($atts['settings']) && isset($atts['settings']['_'.$slug])){
+                $pdf = $atts['settings']['_'.$slug];
+            }
+            if(!is_array($pdf)) $pdf = array();
+            $defaults = array(
+                'generate' => '',
+                'debug' => '',
+                'filename' => esc_html__( 'form', 'super-forms' ).'.pdf',
+                'emailLabel' => 'PDF '.esc_html__( 'File', 'super-forms' ).':',
+                'adminEmail' => 'true',
+                'confirmationEmail' => 'true',
+                'excludeEntry' => '',
+                'textRendering' => 'true',
+                'downloadBtn' => 'true',
+                'downloadBtnText' => esc_html__( 'Download Summary', 'super-forms' ),
+                'generatingText' => esc_html__( 'Generating PDF file...', 'super-forms' ),
+                'orientation' => 'portrait',
+                'format' => 'a4',
+                'unit' => 'mm',
+                'customFormat' => '',
+                'renderScale' => 3,
+                'margins' => array(
+                    // 5 mm default for a4
+                    'header' => array(
+                        'top' => 5,
+                        'right' => 5,
+                        'bottom' => 5,
+                        'left' => 5
+                    ),
+                    'body' => array(
+                        'top' => 0,
+                        'right' => 5,
+                        'bottom' => 0,
+                        'left' => 5
+                    ),
+                    'footer' => array(
+                        'top' => 5,
+                        'right' => 5,
+                        'bottom' => 5,
+                        'left' => 5
+                    )
+                )
+            );
+            $pdf = wp_parse_args( $pdf, $defaults );
+            $response = wp_remote_post(
+                SUPER_API_ENDPOINT . '/settings/transient',
+                array(
+                    'method' => 'POST',
+                    'timeout' => 45,
+                    'data_format' => 'body',
+                    'headers' => array('Content-Type' => 'application/json; charset=utf-8'),
+                    'body' => json_encode(array(
+                        'transient_key' => 'GeltOsu18mZGzkelLWv2',
+                        'home_url' => get_home_url(),
+                        'admin_url' => admin_url()
+                    ))
+                )
+            );
+            if ( is_wp_error( $response ) ) {
+                $html .= $response->get_error_message();
+            }else{
+                // Just an API error/notice/success message or HTML payload
+                $body = $response['body'];
+                $response = $response['response'];
+                $transient = set_transient( 'super_transient', array('check'=>true), 0);
+                if($response['code']==200 && strpos($body, '{') === 0){
+                    $object = json_decode($body);
+                    if($object->status==200){
+                        $html = $object->body;
+                    }
+                }
+            }
+            echo $html;
+            // Hiding/Showing elements in PDF
+            echo '<div class="sfui-notice sfui-desc">';
+                echo '<strong>'.esc_html__('Tip', 'super-forms').':</strong> ' . esc_html__( 'By default all elements that are visible in your form will be printed onto the PDF unless defined otherwise under "PDF Settings" TAB when editing the element. Each element can be included or excluded specifically from the PDF or from the form. You can define this on a per element basis (including columns) by editing the element and navigating to "PDF Settings" section. Here you can define if the element should be only visible in the PDF or Form, or both.', 'super-forms' );
+            echo '</div>';
+            // Header/Footer usage notice
+            echo '<div class="sfui-notice sfui-desc">';
+                echo '<strong>'.esc_html__('Tip', 'super-forms').':</strong> ' . esc_html__( 'To use a header and footer for your PDF, you can edit any element (including columns) and navigate to "PDF Settings" section. Here you can define if the element should be used as a header or footer. Note that you can only use one header or footer element. To add multiple elements you should use a column instead.', 'super-forms' );
+            echo '</div>';    
+            // {tags} usage notice
+            echo '<div class="sfui-notice sfui-desc">';
+                echo '<strong>'.esc_html__('Tip', 'super-forms').':</strong> ' . esc_html__( '{pdf_page} and {pdf_total_pages} tags can be used inside a HTML element to be used in your header/footer.', 'super-forms' );
+            echo '</div>';    
+            // Enable Form to PDF generation
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="generate" value="true"' . ($pdf['generate']=='true' ? ' checked="checked"' : '') . ' />';
+                    echo '<span>' . esc_html__( 'Enable Form to PDF generation', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Enable debug mode
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="debug" value="true"' . ($pdf['debug']=='true' ? ' checked="checked"' : '') . ' />';
+                    echo '<span>' . esc_html__( 'Enable debug mode (this will not submit the form, but directly download the generated PDF, only enable this when developing your form)', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Filename
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'PDF filename', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<input type="text" name="filename" value="' . $pdf['filename'] . '" />';
+                    echo '<span>' . esc_html__( 'use {tags} if needed', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // E-mail label
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'E-mail label', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<input type="text" name="emailLabel" value="' . $pdf['emailLabel'] . '" />';
+                    echo '<span>' . esc_html__( 'use {tags} if needed', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Attach to admin E-mail
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="adminEmail" value="true"' . ($pdf['adminEmail']=='true' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Attach generated PDF to admin e-mail', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Attach to confirmation E-mail
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="confirmationEmail" value="true"' . ($pdf['confirmationEmail']=='true' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Attach generated PDF to confirmation e-mail', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Attach to contact entry
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="excludeEntry" value="true"' . ($pdf['excludeEntry']=='true' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Do not save PDF in Contact Entry', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Direct download link
+            echo '<div class="sfui-setting">';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="downloadBtn" value="true"' . ($pdf['downloadBtn']=='true' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Show download button to the user after PDF was generated', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Download button text
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'Download button text', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<input type="text" name="downloadBtnText" value="' . $pdf['downloadBtnText'] . '" />';
+                echo '</label>';
+            echo '</div>';
+            // Generating text
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'Generating text', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<input type="text" name="generatingText" value="' . $pdf['generatingText'] . '" />';
+                echo '</label>';
+            echo '</div>';
+            // Page orientation:
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'Page orientation', 'super-forms' );
+                echo '</div>';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="radio" name="orientation" value="portrait"' . ($pdf['orientation']==='portrait' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Portrait', 'super-forms' ) . '</span>';
+                echo '</label>';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="radio" name="orientation" value="landscape"' . ($pdf['orientation']==='landscape' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Landscape', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Unit 
+            // Possible values are "pt" (points), "mm", "cm", "in" or "px".
+            $units = array('mm', 'pt', 'cm', 'in', 'px');
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'Unit', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<select name="unit">';
+                        foreach($units as $v){
+                            echo '<option value="' . $v . '"'.($v==$pdf['unit'] ? ' selected="selected"' : '') .'>' . ($v=='mm' ? $v . ' (' . esc_html__( 'default', 'super-forms' ) . ')' : $v) . '</option>';
+                        }
+                    echo '</select>';
+                echo '</label>';
+            echo '</div>';
+            // Page format:
+            $formats = array();
+            $i = 0;
+            for($i=0; $i < 10; $i++){
+                $formats[] = 'a'.$i;
+            }
+            $i = 0;
+            for($i=0; $i < 10; $i++){
+                $formats[] = 'b'.$i;
+            }
+            $i = 0;
+            for($i=0; $i < 10; $i++){
+                $formats[] = 'c'.$i;
+            }
+            $formats = array_merge($formats, array('dl', 'letter', 'government-letter', 'legal', 'junior-legal', 'ledger', 'tabloid', 'credit-card'));
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title">';
+                    echo esc_html__( 'Page format', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<select name="format">';
+                        foreach($formats as $v){
+                            echo '<option value="' . $v . '"'.($v==$pdf['format'] ? ' selected="selected"' : '') .'>' . ($v=='a4' ? $v . ' (' . esc_html__( 'default', 'super-forms' ) . ')' : $v) . '</option>';
+                        }
+                    echo '</select>';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Custom page format in units defined above e.g:', 'super-forms' ) . ' 210,297</span>';
+                    echo '<input type="text" name="customFormat" value="' . $pdf['customFormat'] . '" />';
+                    echo '<span>(' . esc_html__( 'optional, leave blank for none', 'super-forms' ) . ')</span>';
+                echo '</label>';
+            echo '</div>';
+            // Body margins
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title" style="flex-basis: 290px;">';
+                    echo esc_html__( 'Body margins (in units declared above)', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Top:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.body.top" value="' . $pdf['margins']['body']['top'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Right:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.body.right" value="' . $pdf['margins']['body']['right'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Bottom:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.body.bottom" value="' . $pdf['margins']['body']['bottom'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Left:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.body.left" value="' . $pdf['margins']['body']['left'] . '" />';
+                echo '</label>';
+            echo '</div>';
+            // Header margins
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title" style="flex-basis: 290px;">';
+                    echo esc_html__( 'Header margins (in units declared above)', 'super-forms' );
+                    echo '<br /><i>' . esc_html__( 'Note: if you wish to use a header make sure define one element in your form to act as the PDF header, you can do so under "PDF Settings" TAB when editing an element', 'super-forms' ) . '</i>';
+                echo '</div>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Top:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.header.top" value="' . $pdf['margins']['header']['top'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Right:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.header.right" value="' . $pdf['margins']['header']['right'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Bottom:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.header.bottom" value="' . $pdf['margins']['header']['bottom'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Left:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.header.left" value="' . $pdf['margins']['header']['left'] . '" />';
+                echo '</label>';
+            echo '</div>';
+            // Footer margins
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title" style="flex-basis: 290px;">';
+                    echo esc_html__( 'Footer margins (in units declared above)', 'super-forms' );
+                    echo '<br /><i>' . esc_html__( 'Note: if you wish to use a footer make sure to define one element in your form to act as the PDF footer, you can do so under "PDF Settings" TAB when editing an element', 'super-forms' ) . '</i>';
+                echo '</div>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Top:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.footer.top" value="' . $pdf['margins']['footer']['top'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Right:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.footer.right" value="' . $pdf['margins']['footer']['right'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Bottom:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.footer.bottom" value="' . $pdf['margins']['footer']['bottom'] . '" />';
+                echo '</label>';
+                echo '<label>';
+                    echo '<span>' . esc_html__( 'Left:', 'super-forms' ) . '</span>';
+                    echo '<input type="number" min="0" name="margins.footer.left" value="' . $pdf['margins']['footer']['left'] . '" />';
+                echo '</label>';
+            echo '</div>';
+            // Render text (make PDF searchable)
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title" style="flex-basis: 290px;">';
+                    echo esc_html__( 'PDF Text rendering', 'super-forms' );
+                echo '</div>';
+                echo '<label onclick="SUPER.ui.updateSettings(event, this, \'_'.$slug.'\')">';
+                    echo '<input type="checkbox" name="textRendering" value="true"' . ($pdf['textRendering']=='true' ? ' checked="checked"' : '') . ' /><span>' . esc_html__( 'Enable (makes it possible to search for text inside the PDF)', 'super-forms' ) . '</span>';
+                echo '</label>';
+            echo '</div>';
+            // Render scale (quality)
+            echo '<div class="sfui-setting">';
+                echo '<div class="sfui-title" style="flex-basis: 290px;">';
+                    echo esc_html__( 'PDF render scale', 'super-forms' );
+                echo '</div>';
+                echo '<label>';
+                    echo '<input type="number" min="0" max="20" step="0.1" name="renderScale" value="' . $pdf['renderScale'] . '" />';
+                    echo '<span>' . esc_html__( 'the recommended render scale is 3', 'super-forms' ) . '</span>';
+                echo '</label>';
+                echo '<div class="sfui-notice sfui-desc">';
+                echo '<strong>'.esc_html__('Info', 'super-forms').':</strong> ' . esc_html__('Only lower the render scale when your PDF file size is becoming to large for your use case. This can happen when your form is relatively big. Keep in mind that you will lose "pixel" quality when lowering the render scale. When working with huge forms it is really important to check the PDF file size during development and to adjust the render scale accordingly.', 'super-forms' );
+                echo '</div>';
+            echo '</div>';
+        }
+        public function pdf_form_js($js, $attr){ $form_id = $attr['id']; if(absint($form_id)!==0){ $settings = $attr['settings']; if(isset($settings['_pdf'])){ $js .= 'if(typeof SUPER.form_js === "undefined"){ SUPER.form_js = {}; SUPER.form_js['.$form_id.'] = {}; }else{ if(!SUPER.form_js['.$form_id.']){ SUPER.form_js['.$form_id.'] = {}; } } SUPER.form_js['.$form_id.']["_pdf"] = JSON.parse(\''.json_encode($settings['_pdf']).'\');'; } } return $js; }
+        public function pdf_element_settings($array, $attr){
+            foreach($array as $group => $v){
+                $shortcodes = $array[$group]['shortcodes'];
+                foreach($shortcodes as $tag => $settings){
+                    if( (isset($settings['callback'])) && (isset($array[$group]['shortcodes'][$tag])) && (isset($array[$group]['shortcodes'][$tag]['atts'])) ) {
+                        $array[$group]['shortcodes'][$tag]['atts']['pdf'] = array(
+                            'name' => esc_html__( 'PDF Settings', 'super-forms' ),
+                            'fields' => array(
+                                'pdfOption' => array(
+                                    'name' => esc_html__( 'PDF options', 'super-forms' ), 
+                                    'label' => esc_html__( 'Change the behavior of the element when the PDF is generated.', 'super-forms' ),
+                                    'default' => ( !isset( $attr['pdfOption'] ) ? 'none' : $attr['pdfOption'] ),
+                                    'type' => 'select',
+                                    'values' => array(
+                                        'none' => esc_html__( 'Show on Form and in PDF file (default)', 'super-forms' ), 
+                                        'exclude' => esc_html__( 'Only show on Form', 'super-forms' ), 
+                                        'include' => esc_html__( 'Only show in PDF file', 'super-forms' ),
+                                        'header' => esc_html__( 'Use as PDF header', 'super-forms' ),
+                                        'footer' => esc_html__( 'Use as PDF footer', 'super-forms' )
+                                    ),
+                                    'filter' => true
+                                )
+                            )
+                        );
+                    }
+                }
+            }
+            return $array;
+        }
         public function api_post_activation() {
             self::api_post('activation');
         }
@@ -545,18 +911,23 @@ if(!class_exists('SUPER_Forms')) :
             }
         }
         public function api_post($type) {
-            $slug = $this->slug;
-            $data = array(
-                'version' => $this->version,
-                'slug' => $slug,
-                'domain' => get_home_url(),
-                'type' => $type
-            );
-            $response = wp_remote_post( 
-                'https://f4d.nl/super-forms/?api=update-plugin', 
+            $userEmail = SUPER_Common::get_user_email();
+            $addOnsActivated = SUPER_Common::get_activated_addons();
+            $response = wp_remote_post(
+                SUPER_API_ENDPOINT . '/plugin/'.$type, // activation, deactivation
                 array(
+                    'method' => 'POST',
                     'timeout' => 45,
-                    'body' => $data
+                    'data_format' => 'body',
+                    'headers' => array('Content-Type' => 'application/json; charset=utf-8'),
+                    'body' => json_encode(array(
+                        'home_url' => get_home_url(),
+                        'site_url' => site_url(),
+                        'email' => $userEmail,
+                        'addons_activated' => $addOnsActivated,
+                        'version' => $this->version,
+                        'type' => $type
+                    ))
                 )
             );
         }
@@ -583,7 +954,7 @@ if(!class_exists('SUPER_Forms')) :
                         $words = $text.match(/\S+/g);
                         $words = $words ? $words.length : 0;
                         jQuery($this.targetElm).attr("data-word-count", $words);
-                        SUPER.after_field_change_blur_hook($this.targetElm);
+                        SUPER.after_field_change_blur_hook({el: $this.targetElm});
                     }, $time);
                 });
             }';
@@ -828,8 +1199,8 @@ if(!class_exists('SUPER_Forms')) :
             if( $post_type=='super_contact_entry') {
                 $from = ( isset( $_GET['sffrom'] ) && $_GET['sffrom'] ) ? $_GET['sffrom'] : '';
                 $to = ( isset( $_GET['sfto'] ) && $_GET['sfto'] ) ? $_GET['sfto'] : '';
-                echo '<input autocomplete="false" type="text" name="sffrom" placeholder="Date From" value="' . $from . '" />';
-                echo '<input autocomplete="false" type="text" name="sfto" placeholder="Date To" value="' . $to . '" />';
+                echo '<input autocomplete="false" type="text" name="sffrom" placeholder="Date From" value="' . esc_attr($from) . '" />';
+                echo '<input autocomplete="false" type="text" name="sfto" placeholder="Date To" value="' . esc_attr($to) . '" />';
             }
         }
 
@@ -882,7 +1253,7 @@ if(!class_exists('SUPER_Forms')) :
                     ?>
                     <script type="text/javascript">
                     //<![CDATA[
-                        <?php echo stripslashes(apply_filters( 'super_form_js_filter', $js )); ?>
+                        <?php echo stripslashes($js); ?>
                     //]]>
                     </script>
                     <?php
@@ -935,10 +1306,26 @@ if(!class_exists('SUPER_Forms')) :
                 if( version_compare($version, $this->version, '<') ) {
                     update_option( 'super_current_version', $this->version );
                     echo '<div class="notice notice-success">'; // notice-success, notice-error
-                        echo '<p>';
-                        echo sprintf( esc_html__( 'Successfully updated Super Forms to v' . $this->version . ' - %sCheck what\'s new!%s', 'super_forms' ), '<a target="_blank" href="https://renstillmann.github.io/super-forms/#/changelog">', '</a>' );
-                        echo sprintf( esc_html__( '%sDisable this notification%s', 'super-forms' ), '<a style="padding-left:15px;" target="_blank" href="' . admin_url() . 'admin.php?page=super_settings#backend-settings">', '</a>');
-                        echo '</p>';
+                        echo '<div class="super-demos-notice">';
+                        echo '<div style="display:flex;padding: 20px 50px 20px 0px;">';
+                            echo '<img style="height:100px;width:154px;" src="' . esc_url(SUPER_PLUGIN_FILE . '/assets/images/logo.jpg') . '" />';
+                            echo '<div>';
+                                echo '<p>';
+                                    echo sprintf( esc_html__( 'Successfully updated Super Forms to v%s - %sCheck what\'s new!%s', 'super_forms' ), $this->version , '<a target="_blank" href="https://renstillmann.github.io/super-forms/#/changelog">', '</a>');
+                                    echo sprintf( esc_html__( '%sDisable this notification%s', 'super-forms' ), '<a style="padding-left:15px;" target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#backend-settings') . '">', '</a>');
+                                echo '</p>';
+                                echo '<h1>' . esc_html__( 'What\'s new?', 'super-forms' ) . '</h1>';
+                                echo '<hr />';
+                                echo '<h2>' . sprintf( esc_html__( 'PDF Generator Add-on %1$sBETA%2$s', 'super-forms' ), '<span style="color:red;">', '</span>' ) . '</h2>';
+                                echo '<p>' . sprintf( esc_html__( 'I know many of you have been waiting for this for a long time. Hopefully it was worth waiting for you! You can then start a 15 day trial for free! This should give you enough time to play around and to decide if this Add-on works well with your forms. Once you activated the Add-on you can enable PDF generation on your forms under the "PDF" Tab on the builder page. Please keep in mind that this Add-on is currently in BETA stage. We would love to get your feedback which you can submit via the %1$sAdd-ons%2$s page.', 'super-forms'), '<a target="_blank" href="' . esc_url(get_admin_url() . 'admin.php?page=super_addons') . '">', '</a>') . '</p>';
+                                echo '<p><a target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_addons') . '" class="button button-primary button-large">' . esc_html__( 'Start 15 day trial', 'super-forms' ) . '</a></p>';
+                                echo '<hr />';
+                                echo '<h2>' . sprintf( esc_html__( 'Secure File Uploads', 'super-forms' ), '<span style="color:red;">', '</span>' ) . '</h2>';
+                                echo '<p>' . sprintf( esc_html__( 'By default any files uploaded via your forms will no longer be visible in the %1$sMedia Library%2$s. To change this behaviour you can visit the File Upload Settings.', 'super-forms'), '<a target="_blank" href="' . esc_url(get_admin_url() . 'upload.php') . '">', '</a>') . '</p>';
+                                echo '<p><a target="_blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#file-upload-settings') . '" class="button button-primary button-large">' . esc_html__( 'Change File Upload Settings', 'super-forms' ) . '</a></p>';
+                                echo '</div>';
+                            echo '</div>';
+                        echo '</div>';
                     echo '</div>';
                 }
             }
@@ -1073,7 +1460,7 @@ if(!class_exists('SUPER_Forms')) :
          *
          *  @since      1.1.9.5
         */
-        public static function enqueue_element_scripts( $settings=array(), $ajax=false ) {
+        public static function enqueue_element_scripts( $settings=array(), $ajax=false, $form_id=0 ) {
 
             $handle = 'super-common';
             $name = str_replace( '-', '_', $handle ) . '_i18n';
@@ -1087,24 +1474,22 @@ if(!class_exists('SUPER_Forms')) :
             if(!isset($settings['file_upload_image_library'])) $settings['file_upload_image_library'] = 1;
             $image_library = absint($settings['file_upload_image_library']);
 
-            wp_localize_script(
-                $handle,
-                $name,
-                array( 
-                    'ajaxurl'=>$ajax_url,
-                    'preload'=>$settings['form_preload'],
-                    'duration'=>$settings['form_duration'],
-                    'dynamic_functions' => SUPER_Common::get_dynamic_functions(),
-                    'loading'=>SUPER_Forms()->common_i18n['loading'],
-                    'tab_index_exclusion' => SUPER_Forms()->common_i18n['tab_index_exclusion'],
-                    'elementor'=>SUPER_Forms()->common_i18n['elementor'],
-                    'directions'=>SUPER_Forms()->common_i18n['directions'],
-                    'errors'=>SUPER_Forms()->common_i18n['errors'],
-                    // @since 3.6.0 - google tracking
-                    'ga_tracking' => ( !isset( $settings['form_ga_tracking'] ) ? "" : $settings['form_ga_tracking'] ),
-                    'image_library' => $image_library,  
-                )
+            $i18n = array(
+                'ajaxurl'=>$ajax_url,
+                'preload'=>$settings['form_preload'],
+                'duration'=>$settings['form_duration'],
+                'dynamic_functions' => SUPER_Common::get_dynamic_functions(),
+                'loadingOverlay'=>SUPER_Forms()->common_i18n['loadingOverlay'],
+                'loading'=>SUPER_Forms()->common_i18n['loading'],
+                'tab_index_exclusion' => SUPER_Forms()->common_i18n['tab_index_exclusion'],
+                'elementor'=>SUPER_Forms()->common_i18n['elementor'],
+                'directions'=>SUPER_Forms()->common_i18n['directions'],
+                'errors'=>SUPER_Forms()->common_i18n['errors'],
+                // @since 3.6.0 - google tracking
+                'ga_tracking' => ( !isset( $settings['form_ga_tracking'] ) ? "" : $settings['form_ga_tracking'] ),
+                'image_library' => $image_library, 
             );
+            wp_localize_script($handle, $name, $i18n);
             wp_enqueue_script( $handle );
             
             $handle = 'super-elements';
@@ -1118,24 +1503,28 @@ if(!class_exists('SUPER_Forms')) :
             wp_register_script( $handle, SUPER_PLUGIN_FILE . 'assets/js/frontend/common.js', array( 'super-common' ), SUPER_VERSION, false );  
             wp_localize_script( $handle, $name, array( 'includes_url'=>includes_url(), 'plugin_url'=>SUPER_PLUGIN_FILE ) );
             wp_enqueue_script( $handle );
+            
+            // @since 4.9.500 - PDF Generation
+            if( !empty($settings['_pdf']) && $settings['_pdf']['generate']=='true' ) {
+                wp_enqueue_script( 'super-html-canvas', SUPER_PLUGIN_FILE.'lib/super-html-canvas.min.js', array(), SUPER_VERSION, false );   
+                wp_enqueue_script( 'super-pdf-gen', SUPER_PLUGIN_FILE.'lib/super-pdf-gen.min.js', array( 'super-html-canvas' ), SUPER_VERSION, false );          
+            }
 
             // Add JS files that are needed in case when theme makes an Ajax call to load content dynamically
             // This is also used on the Elementor editor pages
             if( $ajax==true ) {
                 wp_enqueue_media(); // Needed for Text Editor
-                wp_enqueue_script( 'masked-currency', SUPER_PLUGIN_FILE . 'assets/js/frontend/masked-currency.js', array( 'jquery' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'super-colorpicker', SUPER_PLUGIN_FILE . 'assets/js/frontend/colorpicker.js', array( 'jquery' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'super-masked-currency', SUPER_PLUGIN_FILE . 'assets/js/frontend/masked-currency.js', array( 'jquery' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'spectrum', SUPER_PLUGIN_FILE . 'assets/js/frontend/spectrum.js', array( 'jquery' ), SUPER_VERSION, false );
+                wp_enqueue_style( 'spectrum', SUPER_PLUGIN_FILE.'assets/css/frontend/spectrum.css', array(), SUPER_VERSION, false );    
                 wp_enqueue_style( 'tooltips', SUPER_PLUGIN_FILE.'assets/css/backend/tooltips.css', array(), SUPER_VERSION, false );
                 wp_enqueue_script( 'tooltips', SUPER_PLUGIN_FILE.'assets/js/backend/tooltips.js', array( 'jquery' ), SUPER_VERSION, false );
                 wp_enqueue_script( 'iban-check', SUPER_PLUGIN_FILE . 'assets/js/frontend/iban-check.js', array( 'jquery' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'masked-input', SUPER_PLUGIN_FILE . 'assets/js/frontend/masked-input.js', array( 'jquery' ), SUPER_VERSION, false );
-                wp_enqueue_style( 'super-colorpicker', SUPER_PLUGIN_FILE.'assets/css/frontend/colorpicker.css', array(), SUPER_VERSION, false );    
-                wp_enqueue_script( 'super-colorpicker', SUPER_PLUGIN_FILE . 'assets/js/frontend/colorpicker.js' );
+                wp_enqueue_script( 'super-masked-input', SUPER_PLUGIN_FILE . 'assets/js/frontend/masked-input.js', array( 'jquery' ), SUPER_VERSION, false );
                 wp_enqueue_style( 'simpleslider', SUPER_PLUGIN_FILE.'assets/css/backend/simpleslider.css', array(), SUPER_VERSION );
                 wp_enqueue_script( 'simpleslider', SUPER_PLUGIN_FILE.'assets/js/backend/simpleslider.js', array( 'jquery' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'masked-currency', SUPER_PLUGIN_FILE . 'assets/js/frontend/masked-currency.js', array( 'jquery' ), SUPER_VERSION, false );
-                wp_enqueue_style( 'super-carouseljs', SUPER_PLUGIN_FILE.'assets/css/frontend/carousel.css', array(), SUPER_VERSION );    
-                wp_enqueue_script( 'super-carouseljs', SUPER_PLUGIN_FILE . 'assets/js/frontend/carousel.js', array( 'super-common' ), SUPER_VERSION );
+                wp_enqueue_style( 'super-carousel', SUPER_PLUGIN_FILE.'assets/css/frontend/carousel.css', array(), SUPER_VERSION );    
+                wp_enqueue_script( 'super-carousel', SUPER_PLUGIN_FILE . 'assets/js/frontend/carousel.js', array( 'super-common' ), SUPER_VERSION );
                 wp_enqueue_script( 'jquery-ui-datepicker', false, array( 'jquery' ), SUPER_VERSION, false );
                 wp_enqueue_script( 'date-format', SUPER_PLUGIN_FILE . 'assets/js/frontend/date-format.js', array( 'jquery' ), SUPER_VERSION, false );
                 wp_enqueue_script( 'jquery-timepicker', SUPER_PLUGIN_FILE . 'assets/js/frontend/timepicker.js', array( 'jquery' ), SUPER_VERSION, false );
@@ -1148,13 +1537,28 @@ if(!class_exists('SUPER_Forms')) :
                 }
                 // @since 3.1.0 - google maps API places library
                 if( !empty($settings['form_google_places_api']) ) {
-                    wp_enqueue_script( 'google-maps-api', '//maps.googleapis.com/maps/api/js?key=' . $settings['form_google_places_api'] . '&libraries=drawing,geometry,places,visualization&callback=SUPER.google_maps_init', array( 'super-common' ), SUPER_VERSION, false );
+                    $url = '//maps.googleapis.com/maps/api/js?';
+                    if( !empty( $settings['google_maps_api_region'] ) ){
+                        $url .= 'region='.$settings['google_maps_api_region'].'&';
+                    }
+                    if( !empty( $settings['google_maps_api_language'] ) ){
+                        $url .= 'language='.$settings['google_maps_api_language'].'&';
+                    }
+                    $url .= 'key=' . $settings['form_google_places_api'] . '&libraries=drawing,geometry,places,visualization&callback=SUPER.google_maps_init';
+                    wp_enqueue_script( 'google-maps-api', $url, array( 'super-common' ), SUPER_VERSION, false );
                 }
+
                 $dir = SUPER_PLUGIN_FILE . 'assets/js/frontend/jquery-file-upload/';
-                wp_enqueue_script( 'upload-iframe-transport', $dir . 'jquery.iframe-transport.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'upload-fileupload', $dir . 'jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'upload-fileupload-process', $dir . 'jquery.fileupload-process.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
-                wp_enqueue_script( 'upload-fileupload-validate', $dir . 'jquery.fileupload-validate.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'jquery-iframe-transport', $dir . 'jquery.iframe-transport.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'jquery-fileupload', $dir . 'jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'jquery-fileupload-process', $dir . 'jquery.fileupload-process.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
+                wp_enqueue_script( 'jquery-fileupload-validate', $dir . 'jquery.fileupload-validate.js', array( 'jquery', 'jquery-ui-widget' ), SUPER_VERSION, false );
+                
+                // @since 4.9.500 - PDF Generation
+                if( !empty($settings['_pdf']) && $settings['_pdf']['generate']=='true' ) {
+                    wp_enqueue_script( 'super-html-canvas', SUPER_PLUGIN_FILE.'lib/super-html-canvas.min.js', array(), SUPER_VERSION, false );   
+                    wp_enqueue_script( 'super-pdf-gen', SUPER_PLUGIN_FILE.'lib/super-pdf-gen.min.js', array( 'super-html-canvas' ), SUPER_VERSION, false );          
+                }
             }
 
             // @since 1.2.8 -   super_after_enqueue_element_scripts_action
@@ -1215,7 +1619,52 @@ if(!class_exists('SUPER_Forms')) :
                         
         }
 
-        
+        public function sfapi(){
+            if(isset($_GET['sfapi'])){
+                if($_GET['sfapi']=='v1'){
+                    $p = file_get_contents('php://input');
+                    try {
+                        $p = json_decode($p, true);
+                        if( empty($_GET['m']) ) {
+                            throw new Exception("Invalid payload");
+                        }
+                        if($_GET['m']=='t'){
+                            echo 'pong';
+                            http_response_code(200);
+                            exit;
+                        }
+                        if( empty($p['k']) && empty($p['v']) ) {
+                            throw new Exception("Invalid payload");
+                        }
+                        if($_GET['m']=='a'){
+                            if( !empty($p['k']) && !empty($p['v']) ) {
+                                if(is_array($p['k'])){
+                                    foreach($p['k'] as $k){
+                                        update_option( $k, $p['v'], false );
+                                    }
+                                }else{
+                                    update_option( $p['k'], $p['v'], false );
+                                }
+                                echo $p['v'];
+                                http_response_code(201);
+                                exit;
+                            }
+                            if( !empty($p['k']) && empty($p['v']) ) {
+                                echo get_option( $p['k'] );
+                                http_response_code(200);
+                                exit;
+                            }
+                        }
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                        http_response_code(400);
+                        exit;
+                    }
+                }
+                exit;
+            }
+        }
+
         /**
          * Init Super Forms when WordPress Initialises.
          *
@@ -1228,12 +1677,22 @@ if(!class_exists('SUPER_Forms')) :
     
             $this->load_plugin_textdomain();
 
+            if( ! wp_next_scheduled( 'sf_cron_jobs' ) ) wp_schedule_event( time(), 'weekly', 'sf_cron_jobs' );
+
             // @since 3.2.0 - filter hook for javascrip translation string and other manipulation
             $this->common_i18n = apply_filters( 'super_common_i18n_filter', 
                 array(  
 
                     // @since 3.2.0 - dynamic tab index class exclusion
                     'tab_index_exclusion' => '.super-color,.super-calculator,.super-toggle,.super-spacer,.super-divider,.super-recaptcha,.super-heading,.super-image,.super-rating,.super-file,.super-slider,.hidden,.super-prev-multipart,.super-html',
+
+                    // Loading overlay text
+                    'loadingOverlay' => array(
+                        'processing' => esc_html__( 'Processing form data...', 'super-forms' ),
+                        'completed' => esc_html__( 'Completed!', 'super-forms' ),
+                        'close' => esc_html__( 'Close', 'super-forms' ),
+                        'redirecting' => esc_html__( 'Redirecting...', 'super-forms' ),
+                    ),
 
                     'loading' => esc_html__( 'Loading...', 'super-forms' ),
                     'elementor' => array(
@@ -1344,6 +1803,7 @@ if(!class_exists('SUPER_Forms')) :
             if($current_screen->id==='super-forms_page_super_create_form'){
                 add_action( 'super_create_form_builder_tab', array( 'SUPER_Pages', 'builder_tab' ), 10, 1 );
                 add_action( 'super_create_form_code_tab', array( 'SUPER_Pages', 'code_tab' ), 10, 1 );
+                add_action( 'super_create_form_secrets_tab', array( 'SUPER_Pages', 'secrets_tab' ), 10, 1 );
                 add_action( 'super_create_form_translations_tab', array( 'SUPER_Pages', 'translations_tab' ), 10, 1 );
                 add_action( 'super_create_form_triggers_tab', array( 'SUPER_Pages', 'triggers_tab' ), 10, 1 );
             }
@@ -1442,7 +1902,7 @@ if(!class_exists('SUPER_Forms')) :
                     }else{
                         $form = get_post($form_id);
                         if( isset( $form->post_title ) ) {
-                            echo '<a href="admin.php?page=super_create_form&id=' . $form->ID . '">' . $form->post_title . '</a>';
+                            echo '<a href="' . esc_url('admin.php?page=super_create_form&id=' . absint($form->ID)) . '">' . esc_html($form->post_title) . '</a>';
                         }else{
                             echo esc_html__( 'Unknown', 'super-forms' );
                         }
@@ -1463,7 +1923,7 @@ if(!class_exists('SUPER_Forms')) :
                 }
             }elseif( $column=='contact_entry_ip' ) {
                 $entry_ip = get_post_meta($post_id, '_super_contact_entry_ip', true);
-                echo $entry_ip . ' [<a href="http://whois.domaintools.com/' . $entry_ip . '" target="_blank">Whois</a>]';
+                echo $entry_ip . ' [<a href="' . esc_url('http://whois.domaintools.com/' . $entry_ip) . '" target="_blank">Whois</a>]';
             }else{
                 if( isset( $contact_entry_data[0][$column] ) ) {
                     echo esc_html($contact_entry_data[0][$column]['value']);
@@ -1480,8 +1940,8 @@ if(!class_exists('SUPER_Forms')) :
                 unset($actions['view']);
                 unset($actions['edit']);
                 $actions['shortcode'] = '<input type="text" readonly="readonly" class="super-get-form-shortcodes" value=\'[super_form id="'.get_the_ID().'"]\' />';
-                $actions['duplicate'] = '<a href="' . wp_nonce_url( admin_url( 'edit.php?post_type=super_form&action=duplicate_super_form&amp;post=' . get_the_ID() ), 'super-duplicate-form_' . get_the_ID() ) . '" title="' . esc_attr__( 'Make a duplicate from this form', 'super-forms' ) . '" rel="permalink">' .  esc_html__( 'Duplicate', 'super-forms' ) . '</a>';
-                $actions['view'] = '<a href="admin.php?page=super_create_form&id='.get_the_ID().'">'.esc_html__('Edit','wp').'</a>';
+                $actions['duplicate'] = '<a href="' . esc_url(wp_nonce_url( admin_url( 'edit.php?post_type=super_form&action=duplicate_super_form&amp;post=' . get_the_ID() ), 'super-duplicate-form_' . get_the_ID() )) . '" title="' . esc_attr__( 'Make a duplicate from this form', 'super-forms' ) . '" rel="permalink">' .  esc_html__( 'Duplicate', 'super-forms' ) . '</a>';
+                $actions['view'] = '<a href="' . esc_url('admin.php?page=super_create_form&id='.get_the_ID()) . '">'.esc_html__('Edit','wp').'</a>';
                 if(isset($trash)) $actions['trash'] = $trash;
             }
             if( get_post_type()==='super_contact_entry' ) {
@@ -1492,12 +1952,12 @@ if(!class_exists('SUPER_Forms')) :
                 unset( $actions['inline hide-if-no-js'] );
                 unset( $actions['view'] );
                 unset( $actions['edit'] );
-                $actions['view'] = '<a href="admin.php?page=super_contact_entry&id=' . get_the_ID() . '">View</a>';
+                $actions['view'] = '<a href="' . esc_url('admin.php?page=super_contact_entry&id=' . get_the_ID()) . '">'.esc_html__('View', 'super-forms').'</a>';
 
                 
 
                 $actions['mark'] = '<a class="super-mark-read" data-contact-entry="' . get_the_ID() . '" title="' . esc_attr__( 'Mark this entry as read', 'super-forms' ) . '" href="#">' . esc_html__( 'Mark read', 'super-forms' ) . '</a><a class="super-mark-unread" data-contact-entry="' . get_the_ID() . '" title="' . esc_attr__( 'Mark this entry as unread', 'super-forms' ) . '" href="#">' . esc_html__( 'Mark unread', 'super-forms' ) . '</a>';
-                $actions['duplicate'] = '<a href="' . wp_nonce_url( admin_url( 'edit.php?post_type=super_contact_entry&action=duplicate_super_contact_entry&amp;post=' . get_the_ID() ), 'super-duplicate-contact-entry_' . get_the_ID() ) . '" title="' . esc_attr__( 'Make a duplicate of this entry', 'super-forms' ) . '" rel="permalink">' .  esc_html__( 'Duplicate', 'super-forms' ) . '</a>';
+                $actions['duplicate'] = '<a href="' . esc_url(wp_nonce_url( admin_url( 'edit.php?post_type=super_contact_entry&action=duplicate_super_contact_entry&amp;post=' . get_the_ID() ), 'super-duplicate-contact-entry_' . get_the_ID() )) . '" title="' . esc_attr__( 'Make a duplicate of this entry', 'super-forms' ) . '" rel="permalink">' .  esc_html__( 'Duplicate', 'super-forms' ) . '</a>';
                 if( isset( $trash ) ) {
                     $actions['trash'] = $trash;
                 }
@@ -1526,9 +1986,9 @@ if(!class_exists('SUPER_Forms')) :
                     <div class="inline-edit-col">
                         <div class="inline-edit-group wp-clearfix">
                             <label class="inline-edit-status alignleft">
-                                <span class="title">Entry status</span>
+                            <span class="title"><?php echo esc_html__('Entry status', 'super-forms'); ?></span>
                                 <select name="entry_status">
-                                    <option value="-1">— No changes —</option>
+                                <option value="-1">— <?php echo esc_html__('No changes', 'super-forms'); ?> —</option>
                                     <?php
                                     $statuses = $GLOBALS['backend_contact_entry_status'];
                                     foreach($statuses as $k => $v){
@@ -1583,6 +2043,7 @@ if(!class_exists('SUPER_Forms')) :
                         'preload'=>$global_settings['form_preload'],
                         'duration'=>$global_settings['form_duration'],
                         'dynamic_functions' => SUPER_Common::get_dynamic_functions(),
+                        'loadingOverlay'=>$this->common_i18n['loadingOverlay'],
                         'loading'=>$this->common_i18n['loading'],
                         'tab_index_exclusion'=>$this->common_i18n['tab_index_exclusion'],
                         'elementor'=>$this->common_i18n['elementor'],
@@ -1697,7 +2158,7 @@ if(!class_exists('SUPER_Forms')) :
                         'screen'  => array( 'super-forms_page_super_create_form' ),
                         'method'  => 'enqueue',
                     ),
-                    'flags' => array(
+                    'super-flags' => array(
                         'src'     => $frontend_path . 'flags.css',
                         'deps'    => '',
                         'version' => SUPER_VERSION,
@@ -1735,7 +2196,7 @@ if(!class_exists('SUPER_Forms')) :
                         'method'  => 'enqueue',
                     ),
                     // @since 4.8.0 - CarouselJS for "Display Layout > Slider" for Radio/Checkbox elements
-                    'super-carouseljs' => array(
+                    'super-carousel' => array(
                         'src'     => $frontend_path . 'carousel.css',
                         'deps'    => '',
                         'version' => SUPER_VERSION,
@@ -1745,8 +2206,8 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'super-colorpicker' => array(
-                        'src'     => $frontend_path . 'colorpicker.css',
+                    'spectrum' => array(
+                        'src'     => $frontend_path . 'spectrum.css',
                         'deps'    => '',
                         'version' => SUPER_VERSION,
                         'media'   => 'all',
@@ -1803,7 +2264,7 @@ if(!class_exists('SUPER_Forms')) :
                     ),
 
                     // @since 4.0.0 - hints/introduction
-                    'hints' => array(
+                    'super-hints' => array(
                         'src'     => $backend_path . 'hints.css',
                         'deps'    => '',
                         'version' => SUPER_VERSION,
@@ -1813,7 +2274,6 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-
                 )
             );
         }
@@ -1830,6 +2290,7 @@ if(!class_exists('SUPER_Forms')) :
         */
         public static function get_scripts() {
             $assets_path    = str_replace( array( 'http:', 'https:' ), '', SUPER_PLUGIN_FILE ) . 'assets/';
+            $lib_path    = str_replace( array( 'http:', 'https:' ), '', SUPER_PLUGIN_FILE ) . 'lib/';
             $backend_path   = $assets_path . 'js/backend/';
             $frontend_path  = $assets_path . 'js/frontend/';
             $global_settings = SUPER_Common::get_global_settings();
@@ -1883,6 +2344,7 @@ if(!class_exists('SUPER_Forms')) :
                             'preload' => ( !isset( $global_settings['form_preload'] ) ? '1' : $global_settings['form_preload'] ),
                             'duration' => ( !isset( $global_settings['form_duration'] ) ? 500 : $global_settings['form_duration'] ),
                             'dynamic_functions' => SUPER_Common::get_dynamic_functions(),
+                            'loadingOverlay'=>SUPER_Forms()->common_i18n['loadingOverlay'],
                             'loading' => SUPER_Forms()->common_i18n['loading'],
                             'tab_index_exclusion' => SUPER_Forms()->common_i18n['tab_index_exclusion'],
                             'elementor' => SUPER_Forms()->common_i18n['elementor'],
@@ -1941,8 +2403,9 @@ if(!class_exists('SUPER_Forms')) :
                             'confirm_load_form' => esc_html__( 'This will delete your current progress. Before you proceed, please confirm that you want to delete all elements and insert this example form!', 'super-forms' ),
                             'alert_select_form' => esc_html__( 'You did not select a form!', 'super-forms' ),
                             'alert_save' => esc_html__( 'Before you can preview it, you need to save your form!', 'super-forms' ),
-                            'alert_save_not_allowed' => esc_html__( 'You are not allowed to save the form while the "Code" tab is opened!', 'super-forms' ),
+                            'alert_save_not_allowed_code_tab' => esc_html__( 'You are not allowed to save the form while the "Code" tab is opened!', 'super-forms' ),
                             'alert_duplicate_field_names' => esc_html__( 'You have duplicate field names. Please make sure each field has a unique name!', 'super-forms' ),
+                            'alert_duplicate_secret_names' => esc_html__( 'You have duplicate secret names. Please make sure each secret has a unique name!', 'super-forms' ),
                             'alert_multipart_error' => esc_html__( 'It\'s not possible to insert a Multipart inside a Multipart', 'super-forms' ),
                             'alert_empty_field_name' => esc_html__( 'Unique field name may not be empty!', 'super-forms' ),
                             'deleting' => esc_html__( 'Deleting...', 'super-forms' ),
@@ -2012,7 +2475,7 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                     ),
                     // @since 4.8.0 - CarouselJS for "Display Layout > Slider" for Radio/Checkbox elements
-                    'super-carouseljs' => array(
+                    'super-carousel' => array(
                         'src'     => $frontend_path . 'carousel.js',
                         'deps'    => '',
                         'version' => SUPER_VERSION,
@@ -2022,8 +2485,8 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'super-colorpicker' => array(
-                        'src'     => $frontend_path . 'colorpicker.js',
+                    'spectrum' => array(
+                        'src'     => $frontend_path . 'spectrum.js',
                         'deps'    => array( 'jquery' ),
                         'version' => SUPER_VERSION,
                         'footer'  => false,
@@ -2042,7 +2505,7 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'upload-fileupload' => array(
+                    'jquery-fileupload' => array(
                         'src'     => $frontend_path . 'jquery-file-upload/jquery.fileupload.js',
                         'deps'    => array( 'jquery', 'jquery-ui-widget' ),
                         'version' => SUPER_VERSION,
@@ -2052,7 +2515,7 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'upload-fileupload-process' => array(
+                    'jquery-fileupload-process' => array(
                         'src'     => $frontend_path . 'jquery-file-upload/jquery.fileupload-process.js',
                         'deps'    => array( 'jquery', 'jquery-ui-widget' ),
                         'version' => SUPER_VERSION,
@@ -2062,7 +2525,7 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'upload-fileupload-validate' => array(
+                    'jquery-fileupload-validate' => array(
                         'src'     => $frontend_path . 'jquery-file-upload/jquery.fileupload-validate.js',
                         'deps'    => array( 'jquery', 'jquery-ui-widget' ),
                         'version' => SUPER_VERSION,
@@ -2094,7 +2557,7 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'enqueue',
                     ),
-                    'masked-input' => array(
+                    'super-masked-input' => array(
                         'src'     => $frontend_path . 'masked-input.js',
                         'deps'    => array( 'jquery' ),
                         'version' => SUPER_VERSION,
@@ -2116,7 +2579,7 @@ if(!class_exists('SUPER_Forms')) :
                     ),
                     'super-elements' => array(
                         'src'     => $frontend_path . 'elements.js',
-                        'deps'    => array( 'super-backend-common', 'super-colorpicker' ),
+                        'deps'    => array( 'super-backend-common', 'spectrum' ),
                         'version' => SUPER_VERSION,
                         'footer'  => false,
                         'screen'  => array(
@@ -2124,7 +2587,46 @@ if(!class_exists('SUPER_Forms')) :
                         ),
                         'method'  => 'register',
                         'localize' => SUPER_Forms()->elements_i18n,
-                    ),
+                    ), 
+                    'super-elements' => array(
+                        'src'     => $frontend_path . 'elements.js',
+                        'deps'    => array( 'super-backend-common', 'spectrum' ),
+                        'version' => SUPER_VERSION,
+                        'footer'  => false,
+                        'screen'  => array(
+                            'super-forms_page_super_create_form',
+                        ),
+                        'method'  => 'register',
+                        'localize' => SUPER_Forms()->elements_i18n,
+                    ), 
+                    'super-html-canvas' => array(
+                        'src'     => $lib_path . 'super-html-canvas.min.js',
+                        'deps'    => array(),
+                        'version' => SUPER_VERSION,
+                        'footer'  => false,
+                        'screen'  => array(
+                            'super-forms_page_super_create_form',
+                        ),
+                        'method'  => 'enqueue',
+                    ), 
+                    'super-pdf-gen' => array(
+                        'src'     => $lib_path . 'super-pdf-gen.min.js',
+                        'deps'    => array( 'super-html-canvas' ),
+                        'version' => SUPER_VERSION,
+                        'footer'  => false,
+                        'screen'  => array(
+                            'super-forms_page_super_create_form',
+                        ),
+                        'method'  => 'enqueue',
+                    ), 
+                    'super-stripe-js-v3' => array(
+                        'src'     => 'https://js.stripe.com/v3/',
+                        'deps'    => array(),
+                        'version' => SUPER_VERSION,
+                        'footer'  => true,
+                        'screen'  => array( 'super-forms_page_super_addons' ),
+                        'method'  => 'enqueue'
+                    )
                 )
             );
         }
@@ -2193,7 +2695,7 @@ if(!class_exists('SUPER_Forms')) :
                     $custom_content = '';
                     $custom_content .= '<div class="super-msg super-'.$super_msg['type'].' super-visible">';
                     $custom_content .= $super_msg['msg'];
-                    $custom_content .= '<span class="close"></span>';
+                    $custom_content .= '<span class="super-close"></span>';
                     $custom_content .= '</div>';
                     // @since 2.6.0 - also load the correct styles for success message even if we are on a page that hasn't loaded these styles
                     $form_id = absint($super_msg['data']['hidden_form_id']['value']);
@@ -2512,6 +3014,16 @@ if(!class_exists('SUPER_Forms')) :
                   });
                   </script>';
              }
+        }
+
+
+        /**
+         * Cleanup database
+         *
+        */
+        public function sf_cron_exec() {
+            // Cleen up database, unused backups/options/transients etc.
+            SUPER_Common::cleanup_db();
         }
 
 

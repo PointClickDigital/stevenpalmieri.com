@@ -23,6 +23,8 @@ $set_empty_attributes = array(
     'retrieve_method_delimiter',
     'retrieve_method_enclosure',                        
     'retrieve_method_taxonomy',
+    'retrieve_method_post_terms_label',
+    'retrieve_method_post_terms_value',
     'retrieve_method_product_attribute',
     'retrieve_method_post',
     'retrieve_method_post_status',
@@ -76,7 +78,7 @@ $array['form_elements'] = array(
                     'group' => 'form_elements',
                     'data' => array(
                         'name' => esc_html__( 'email', 'super-forms' ),
-                        'email' => esc_html__( 'Email address', 'super-forms' ) . ':',
+                        'email' => esc_html__( 'E-mail address', 'super-forms' ) . ':',
                         'placeholder' => esc_html__( 'Your E-mail Address', 'super-forms' ),
                         'placeholderFilled' => esc_html__( 'E-mail Address', 'super-forms' ),
                         'type' => 'email',
@@ -472,6 +474,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'auto_suggest' => array(
@@ -501,6 +504,8 @@ $array['form_elements'] = array(
                         'retrieve_method_delimiter' => SUPER_Shortcodes::sf_retrieve_method_delimiter( $attributes['retrieve_method_delimiter'], 'retrieve_method' ),
                         'retrieve_method_enclosure' => SUPER_Shortcodes::sf_retrieve_method_enclosure( $attributes['retrieve_method_enclosure'], 'retrieve_method' ),                        
                         'retrieve_method_taxonomy' => SUPER_Shortcodes::sf_retrieve_method_taxonomy( $attributes['retrieve_method_taxonomy'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_label' => SUPER_Shortcodes::sf_retrieve_method_post_terms_label( $attributes['retrieve_method_post_terms_label'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_value' => SUPER_Shortcodes::sf_retrieve_method_post_terms_value( $attributes['retrieve_method_post_terms_value'], 'retrieve_method' ),
                         'retrieve_method_product_attribute' => SUPER_Shortcodes::sf_retrieve_method_product_attribute( $attributes['retrieve_method_product_attribute'], 'retrieve_method' ),
                         'retrieve_method_post' => SUPER_Shortcodes::sf_retrieve_method_post( $attributes['retrieve_method_post'], 'retrieve_method' ),
                         'retrieve_method_post_status' => SUPER_Shortcodes::sf_retrieve_method_post_status( $attributes['retrieve_method_post_status'], 'retrieve_method' ),
@@ -619,7 +624,7 @@ $array['form_elements'] = array(
                         ),
                         'address_api_key' => array(
                             'name' => esc_html__( 'Google API key', 'super-forms' ), 
-                            'label' => sprintf( esc_html__( 'In order to make calls you have to enable these libraries in your %sAPI manager%s:%s- Google Maps JavaScript API%s- Google Places API Web Service', 'super-forms' ), '<a target="_blank" href="https://console.developers.google.com">', '</a>', '<br />', '<br />' ),
+                            'label' => sprintf( esc_html__( 'In order to make calls you have to enable these libraries in your %1$sAPI manager%2$s:%3$s- Google Maps JavaScript API%3$s- Google Places API Web Service', 'super-forms' ), '<a target="_blank" href="https://console.developers.google.com">', '</a>', '<br />' ),
                             'desc' => esc_html__( 'Required to do API calls to retrieve data', 'super-forms' ), 
                             'default'=> ( !isset( $attributes['address_api_key'] ) ? '' : $attributes['address_api_key'] ),
                             'filter'=>true,
@@ -627,12 +632,47 @@ $array['form_elements'] = array(
                             'filter_value'=>'true',
                             'required'=>true,
                         ),
+                        'address_api_types' => array(
+                            'name' => esc_html__( 'The types of place results to return', 'super-forms' ), 
+                            'label' => sprintf( esc_html__( 'In general only a single type is allowed. If no type is specified, all types will be returned.%3$s%1$sSupported types are:%2$s%3$s- %1$sgeocode%2$s: return only geocoding results, rather than business results. Generally, you use this request to disambiguate results where the location specified may be indeterminate.%3$s- %1$saddress%2$s: return only geocoding results with a precise address. Generally, you use this request when you know the user will be looking for a fully specified address.%3$s- %1$sestablishment%2$s: return only business results.%3$s- %1$s(regions)%2$s: return any result matching the following types: locality, sublocality, postal_code, country, administrative_area_level_1, administrative_area_level_2%3$s- %1$s(cities)%2$s: type collection instructs the Places service to return results that match locality or administrative_area_level_3%3$s', 'super-forms' ), '<strong>', '</strong>', '<br />' ),
+                            'default'=> ( !isset( $attributes['address_api_types'] ) ? 'address' : $attributes['address_api_types'] ),
+                            'filter'=>true,
+                            'parent'=>'enable_address_auto_complete',
+                            'filter_value'=>'true',
+                            'required'=>true,
+                            'allow_empty' => true,
+                        ),
+                        'address_api_countries' => array(
+                            'name' => esc_html__( 'Restrict result by countrie(s)', 'super-forms' ),
+                            'label' => esc_html__( 'Only search for results within the provided countries. Countries must be passed as a two character, ISO 3166-1 Alpa-2 compatible country code. You can filter by up to 5 countries. Seperated by comma. For example: fr,nl,de would restrict your results to places within France, Netherlands and Germany. While us,pr,vi,gu,mp would restrict your results to places within the United States and its unincorporated organized territories.', 'super-forms' ),
+                            'default'=> ( !isset( $attributes['address_api_countries'] ) ? '' : $attributes['address_api_countries'] ),
+                            'filter'=>true,
+                            'parent'=>'enable_address_auto_complete',
+                            'filter_value'=>'true',
+                            'required'=>true,
+                        ),
+                        'address_api_region' => array(
+                            'name' => esc_html__( 'Region', 'super-forms' ),
+                            'label' => esc_html__( 'This will prioritize search result within the provided region. The region parameter accepts Unicode region subtag identifiers which (generally) have a one-to-one mapping to country code Top-Level Domains (ccTLDs). Most Unicode region identifiers are identical to ISO 3166-1 codes, with some notable exceptions. For example, Great Britain\'s ccTLD is "uk" (corresponding to the domain .co.uk) while its region identifier is "GB".', 'super-forms' ),
+                            'default'=> ( !isset( $attributes['address_api_region'] ) ? '' : $attributes['address_api_region'] ),
+                            'filter'=>true,
+                            'parent'=>'enable_address_auto_complete',
+                            'filter_value'=>'true'
+                        ),
+                        'address_api_language' => array(
+                            'name' => esc_html__( 'Language', 'super-forms' ),
+                            'label' => sprintf( esc_html__( 'List of supported language codes: %sSupported Languages%s', 'super-forms' ), '<a href="https://developers.google.com/maps/faq?hl=nl#languagesupport">', '</a>'),
+                            'default'=> ( !isset( $attributes['address_api_language'] ) ? 'en' : $attributes['address_api_language'] ),
+                            'filter'=>true,
+                            'parent'=>'enable_address_auto_complete',
+                            'filter_value'=>'true'
+                        ),
                         'enable_address_auto_populate' => array(
-                            'desc' => esc_html__( 'Auto populate address fields', 'super-forms' ), 
+                            'desc' => esc_html__( 'Auto populate data with fields', 'super-forms' ), 
                             'default'=> ( !isset( $attributes['enable_address_auto_populate'] ) ? '' : $attributes['enable_address_auto_populate'] ),
                             'type' => 'checkbox', 
                             'values' => array(
-                                'true' => esc_html__( 'Enable address auto populate', 'super-forms' ),
+                                'true' => esc_html__( 'Map data with form fields', 'super-forms' ),
                             ),
                             'filter'=>true,
                             'parent'=>'enable_address_auto_complete',
@@ -677,6 +717,8 @@ $array['form_elements'] = array(
                         'keywords_retrieve_method_delimiter' => SUPER_Shortcodes::sf_retrieve_method_delimiter( $attributes['keywords_retrieve_method_delimiter'], 'keywords_retrieve_method' ),
                         'keywords_retrieve_method_enclosure' => SUPER_Shortcodes::sf_retrieve_method_enclosure( $attributes['keywords_retrieve_method_enclosure'], 'keywords_retrieve_method' ),                        
                         'keywords_retrieve_method_taxonomy' => SUPER_Shortcodes::sf_retrieve_method_taxonomy( $attributes['keywords_retrieve_method_taxonomy'], 'keywords_retrieve_method' ),
+                        'keywords_retrieve_method_post_terms_label' => SUPER_Shortcodes::sf_retrieve_method_post_terms_label( $attributes['keywords_retrieve_method_post_terms_label'], 'keywords_retrieve_method' ),
+                        'keywords_retrieve_method_post_terms_value' => SUPER_Shortcodes::sf_retrieve_method_post_terms_value( $attributes['keywords_retrieve_method_post_terms_value'], 'keywords_retrieve_method' ),
                         'keywords_retrieve_method_product_attribute' => SUPER_Shortcodes::sf_retrieve_method_product_attribute( $attributes['keywords_retrieve_method_product_attribute'], 'keywords_retrieve_method' ),
                         'keywords_retrieve_method_post' => SUPER_Shortcodes::sf_retrieve_method_post( $attributes['keywords_retrieve_method_post'], 'keywords_retrieve_method' ),
                         'keywords_retrieve_method_post_status' => SUPER_Shortcodes::sf_retrieve_method_post_status( $attributes['keywords_retrieve_method_post_status'], 'keywords_retrieve_method' ),
@@ -714,7 +756,7 @@ $array['form_elements'] = array(
                     'name' => esc_html__( 'Contact entry search (populate form with data)', 'super-forms' ),
                     'fields' => array(
                         'enable_search' => array(
-                            'label' => sprintf( esc_html__( 'By default it will search for contact entries based on their title.%sA filter hook can be used to retrieve different data.', 'super-forms' ), '<br />' ),
+                            'label' => sprintf( esc_html__( 'Search contact entries based on their title. By default all entry data will be populated unless defined otherwise in the "Fields to skip" setting below. To retrieve the contact entry status you can add a field named: %2$shidden_contact_entry_status%3$s (which will be populated with the current status of the entry). To retrieve the entry ID you can name the field: %2$shidden_contact_entry_id%3$s. To retrieve the entry Title you can name the field: %2$shidden_contact_entry_title%3$s', 'super-forms' ), '<br />', '<strong style="color:red;">', '</strong>' ),
                             'desc' => esc_html__( 'Wether or not to use the contact entry search feature', 'super-forms' ), 
                             'default'=> ( !isset( $attributes['enable_search'] ) ? '' : $attributes['enable_search'] ),
                             'type' => 'checkbox', 
@@ -930,6 +972,7 @@ $array['form_elements'] = array(
                         'may_be_empty' => $allow_empty,
                         'may_be_empty_conditions' => $allow_empty_conditions,
                         'error' => $error,  
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     )
                 ),
                 'advanced' => array(
@@ -1165,6 +1208,8 @@ $array['form_elements'] = array(
                         'retrieve_method_delimiter' => SUPER_Shortcodes::sf_retrieve_method_delimiter( $attributes['retrieve_method_delimiter'], 'retrieve_method' ),
                         'retrieve_method_enclosure' => SUPER_Shortcodes::sf_retrieve_method_enclosure( $attributes['retrieve_method_enclosure'], 'retrieve_method' ),
                         'retrieve_method_taxonomy' => SUPER_Shortcodes::sf_retrieve_method_taxonomy( $attributes['retrieve_method_taxonomy'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_label' => SUPER_Shortcodes::sf_retrieve_method_post_terms_label( $attributes['retrieve_method_post_terms_label'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_value' => SUPER_Shortcodes::sf_retrieve_method_post_terms_value( $attributes['retrieve_method_post_terms_value'], 'retrieve_method' ),
                         'retrieve_method_product_attribute' => SUPER_Shortcodes::sf_retrieve_method_product_attribute( $attributes['retrieve_method_product_attribute'], 'retrieve_method' ),
                         'retrieve_method_post' => SUPER_Shortcodes::sf_retrieve_method_post( $attributes['retrieve_method_post'], 'retrieve_method' ),
                         'retrieve_method_post_status' => SUPER_Shortcodes::sf_retrieve_method_post_status( $attributes['retrieve_method_post_status'], 'retrieve_method' ),
@@ -1196,7 +1241,8 @@ $array['form_elements'] = array(
                         'validation' => $validation_empty,
                         'may_be_empty' => $allow_empty,
                         'may_be_empty_conditions' => $allow_empty_conditions,
-                        'error' => $error
+                        'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     )
                 ),
 
@@ -1401,6 +1447,8 @@ $array['form_elements'] = array(
                         'retrieve_method_delimiter' => SUPER_Shortcodes::sf_retrieve_method_delimiter( $attributes['retrieve_method_delimiter'], 'retrieve_method' ),
                         'retrieve_method_enclosure' => SUPER_Shortcodes::sf_retrieve_method_enclosure( $attributes['retrieve_method_enclosure'], 'retrieve_method' ),
                         'retrieve_method_taxonomy' => SUPER_Shortcodes::sf_retrieve_method_taxonomy( $attributes['retrieve_method_taxonomy'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_label' => SUPER_Shortcodes::sf_retrieve_method_post_terms_label( $attributes['retrieve_method_post_terms_label'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_value' => SUPER_Shortcodes::sf_retrieve_method_post_terms_value( $attributes['retrieve_method_post_terms_value'], 'retrieve_method' ),
                         'retrieve_method_product_attribute' => SUPER_Shortcodes::sf_retrieve_method_product_attribute( $attributes['retrieve_method_product_attribute'], 'retrieve_method' ),
                         'retrieve_method_post' => SUPER_Shortcodes::sf_retrieve_method_post( $attributes['retrieve_method_post'], 'retrieve_method' ),
                         'retrieve_method_post_status' => SUPER_Shortcodes::sf_retrieve_method_post_status( $attributes['retrieve_method_post_status'], 'retrieve_method' ),
@@ -1445,6 +1493,7 @@ $array['form_elements'] = array(
                         'may_be_empty' => $allow_empty,
                         'may_be_empty_conditions' => $allow_empty_conditions,
                         'error' => $error,  
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     )
                 ),
                 'advanced' => array(
@@ -1558,6 +1607,8 @@ $array['form_elements'] = array(
                         'retrieve_method_delimiter' => SUPER_Shortcodes::sf_retrieve_method_delimiter( $attributes['retrieve_method_delimiter'], 'retrieve_method' ),
                         'retrieve_method_enclosure' => SUPER_Shortcodes::sf_retrieve_method_enclosure( $attributes['retrieve_method_enclosure'], 'retrieve_method' ),
                         'retrieve_method_taxonomy' => SUPER_Shortcodes::sf_retrieve_method_taxonomy( $attributes['retrieve_method_taxonomy'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_label' => SUPER_Shortcodes::sf_retrieve_method_post_terms_label( $attributes['retrieve_method_post_terms_label'], 'retrieve_method' ),
+                        'retrieve_method_post_terms_value' => SUPER_Shortcodes::sf_retrieve_method_post_terms_value( $attributes['retrieve_method_post_terms_value'], 'retrieve_method' ),
                         'retrieve_method_product_attribute' => SUPER_Shortcodes::sf_retrieve_method_product_attribute( $attributes['retrieve_method_product_attribute'], 'retrieve_method' ),
                         'retrieve_method_post' => SUPER_Shortcodes::sf_retrieve_method_post( $attributes['retrieve_method_post'], 'retrieve_method' ),
                         'retrieve_method_post_status' => SUPER_Shortcodes::sf_retrieve_method_post_status( $attributes['retrieve_method_post_status'], 'retrieve_method' ),
@@ -1602,6 +1653,7 @@ $array['form_elements'] = array(
                         'may_be_empty' => $allow_empty,
                         'may_be_empty_conditions' => $allow_empty_conditions,
                         'error' => $error,  
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     )
                 ),
                 'advanced' => array(
@@ -1695,6 +1747,7 @@ $array['form_elements'] = array(
                         'may_be_empty' => $allow_empty_no_filter,
                         'may_be_empty_conditions' => $allow_empty_conditions,
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -1840,7 +1893,8 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
 
-                        'error' => $error
+                        'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -1941,6 +1995,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -2083,6 +2138,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -2239,6 +2295,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -2382,6 +2439,7 @@ $array['form_elements'] = array(
                             'steps'=>1,
                         ),
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     )
                 ),
                 'advanced' => array(
@@ -2489,6 +2547,11 @@ $array['form_elements'] = array(
                         'description'=>$description,
                         'placeholder' => SUPER_Shortcodes::placeholder($attributes, ''),
                         'tooltip' => $tooltip,
+                        'validation' => $validation_empty,
+                        'may_be_empty' => $allow_empty,
+                        'may_be_empty_conditions' => $allow_empty_conditions,
+                        'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                         'localization' => array(
                             'name' => esc_html__( 'Choose a localization (for language and format)', 'super-forms' ), 
                             'label' => esc_html__( 'English / Western formatting is the default', 'super-forms' ), 
@@ -2571,15 +2634,50 @@ $array['form_elements'] = array(
                             ),
                             'i18n' => true
                         ),
+                        'format' => array(
+                            'name'=>esc_html__( 'Date Format', 'super-forms' ), 
+                            'desc'=>esc_html__( 'Change the date format', 'super-forms' ), 
+                            'default'=> ( !isset( $attributes['format']) ? 'dd-mm-yy' : $attributes['format']),
+                            'filter'=>true,
+                            'type'=>'select', 
+                            'values'=>array(
+                                'custom' => esc_html__( 'Custom date format', 'super-forms' ),
+                                'dd-mm-yy' => esc_html__( 'European - dd-mm-yy', 'super-forms' ),
+                                'mm/dd/yy' => esc_html__( 'Default - mm/dd/yy', 'super-forms' ),
+                                'yy-mm-dd' => esc_html__( 'ISO 8601 - yy-mm-dd', 'super-forms' ),
+                                'd M, y' => esc_html__( 'Short - d M, y', 'super-forms' ),
+                                'd MM, y' => esc_html__( 'Medium - d MM, y', 'super-forms' ),
+                                'DD, d MM, yy' => esc_html__( 'Full - DD, d MM, yy', 'super-forms' ),
+                            ),
+                            'i18n'=>true
+                        ),
+                        'custom_format' => array(
+                            'name'=>'Enter a custom Date Format',
+                            'default'=> ( !isset( $attributes['custom_format']) ? 'dd-mm-yy' : $attributes['custom_format']),
+                            'filter'=>true,
+                            'parent'=>'format',
+                            'filter_value'=>'custom',
+                            'i18n'=>true
+                        ),
+                        'minlength' => array(
+                            'name'=>esc_html__( 'Date range (minimum)', 'super-forms' ),
+                            'label'=> sprintf( esc_html__( 'Amount in days to add or deduct based on current day%s(leave blank to remove limitations)', 'super-forms' ), '<br />' ),
+                            'default'=> ( !isset( $attributes['minlength']) ? '' : $attributes['minlength']),
+                        ),
+                        'maxlength' => array(
+                            'name'=>esc_html__( 'Date range (maximum)', 'super-forms' ),
+                            'label'=> sprintf( esc_html__( 'Amount in days to add or deduct based on current day%s(leave blank to remove limitations)', 'super-forms' ), '<br />' ),
+                            'default'=> ( !isset( $attributes['maxlength']) ? '' : $attributes['maxlength']),
+                        ),
                         'range' => array(
-                            'name'=>esc_html__( 'Enter a range', 'super-forms' ), 
-                            'desc'=>esc_html__( 'Example 100 years in the past and 5 years in the future: -100:+5', 'super-forms' ), 
+                            'name'=>esc_html__( 'Year range', 'super-forms' ), 
+                            'label'=>esc_html__( 'Example 100 years in the past and 5 years in the future: -100:+5', 'super-forms' ), 
                             'default'=> ( !isset( $attributes['range']) ? '-100:+5' : $attributes['range']),
                         ),
                         'value' => array(
                             'default'=> ( !isset( $attributes['value'] ) ? '' : $attributes['value'] ),
                             'name' => esc_html__( 'Default value', 'super-forms' ), 
-                            'desc' => esc_html__( 'Set a default value for this field (leave blank for none)', 'super-forms' ),
+                            'label' => esc_html__( 'Set a default value for this field (leave blank for none)', 'super-forms' ),
                             'i18n'=>true
                         ),
                         'current_date' => array(
@@ -2642,35 +2740,10 @@ $array['form_elements'] = array(
                             'type'=> 'textarea',
                             'default'=> ( !isset( $attributes['excl_days_override'] ) ? '' : $attributes['excl_days_override'] ),
                         ),
-                        'format' => array(
-                            'name'=>esc_html__( 'Date Format', 'super-forms' ), 
-                            'desc'=>esc_html__( 'Change the date format', 'super-forms' ), 
-                            'default'=> ( !isset( $attributes['format']) ? 'dd-mm-yy' : $attributes['format']),
-                            'filter'=>true,
-                            'type'=>'select', 
-                            'values'=>array(
-                                'custom' => esc_html__( 'Custom date format', 'super-forms' ),
-                                'dd-mm-yy' => esc_html__( 'European - dd-mm-yy', 'super-forms' ),
-                                'mm/dd/yy' => esc_html__( 'Default - mm/dd/yy', 'super-forms' ),
-                                'yy-mm-dd' => esc_html__( 'ISO 8601 - yy-mm-dd', 'super-forms' ),
-                                'd M, y' => esc_html__( 'Short - d M, y', 'super-forms' ),
-                                'd MM, y' => esc_html__( 'Medium - d MM, y', 'super-forms' ),
-                                'DD, d MM, yy' => esc_html__( 'Full - DD, d MM, yy', 'super-forms' ),
-                            ),
-                            'i18n'=>true
-                        ),
-                        'custom_format' => array(
-                            'name'=>'Enter a custom Date Format',
-                            'default'=> ( !isset( $attributes['custom_format']) ? 'dd-mm-yy' : $attributes['custom_format']),
-                            'filter'=>true,
-                            'parent'=>'format',
-                            'filter_value'=>'custom',
-                            'i18n'=>true
-                        ),
                         // @since 3.1.0 - option to change the first day of the week on date picker element
                         'first_day' => array(
                             'name'=>esc_html__( 'First day of week', 'super-forms' ), 
-                            'desc'=>esc_html__( 'Change the first day of the week e.g Sunday or Monday', 'super-forms' ), 
+                            'label'=>esc_html__( 'Change the first day of the week e.g Sunday or Monday', 'super-forms' ), 
                             'default'=> ( !isset( $attributes['first_day']) ? '1' : $attributes['first_day']),
                             'type'=>'select', 
                             'values'=>array(
@@ -2750,28 +2823,10 @@ $array['form_elements'] = array(
                             'steps' => 1, 
                             'name' => esc_html__( 'The number of months to show at once', 'super-forms' ), 
                         ),
-                        'validation' => $validation_empty,
-                        'may_be_empty' => $allow_empty,
-                        'may_be_empty_conditions' => $allow_empty_conditions,
-                        'error' => $error,
-                    ),
-                ),
-                'advanced' => array(
-                    'name' => esc_html__( 'Advanced', 'super-forms' ),
-                    'fields' => array(
-                        'disabled' => $disabled,
-                        'autocomplete' => $autocomplete,
-                        'grouped' => $grouped,
-                        'width' => $width,
-                        'wrapper_width' => $wrapper_width,
-                        'minlength' => array(
-                            'name'=>esc_html__( 'Date range (minimum)', 'super-forms' ),
-                            'desc'=> sprintf( esc_html__( 'Amount in days to add or deduct based on current day%s(leave blank to remove limitations)', 'super-forms' ), '<br />' ),
-                            'default'=> ( !isset( $attributes['minlength']) ? '' : $attributes['minlength']),
-                        ),
+
                         'connected_min' => array(
                             'name'=>esc_html__( 'Min. Connect with other datepicker', 'super-forms' ),
-                            'desc'=>esc_html__( 'Achieve date range with 2 datepickers', 'super-forms' ),
+                            'label'=>esc_html__( 'Achieve date range with 2 datepickers', 'super-forms' ),
                             'default'=> ( !isset( $attributes['connected_min']) ? '' : $attributes['connected_min']),
                             'type'=>'select',
                             'values'=>array(
@@ -2786,14 +2841,9 @@ $array['form_elements'] = array(
                             'steps' => 1, 
                             'name' => esc_html__( 'Days to add/deduct based on connected datepicker', 'super-forms' ), 
                         ),
-                        'maxlength' => array(
-                            'name'=>esc_html__( 'Date range (maximum)', 'super-forms' ),
-                            'desc'=> sprintf( esc_html__( 'Amount in days to add or deduct based on current day%s(leave blank to remove limitations)', 'super-forms' ), '<br />' ),
-                            'default'=> ( !isset( $attributes['maxlength']) ? '' : $attributes['maxlength']),
-                        ),
                         'connected_max' => array(
                             'name'=>esc_html__( 'Max. Connect with other datepicker', 'super-forms' ),
-                            'desc'=>esc_html__( 'Achieve date range with 2 datepickers', 'super-forms' ),
+                            'label'=>esc_html__( 'Achieve date range with 2 datepickers', 'super-forms' ),
                             'default'=> ( !isset( $attributes['connected_max']) ? '' : $attributes['connected_max']),
                             'type'=>'select',
                             'values'=>array(
@@ -2808,7 +2858,16 @@ $array['form_elements'] = array(
                             'steps' => 1, 
                             'name' => esc_html__( 'Days to add/deduct based on connected datepicker', 'super-forms' ), 
                         ),
-
+                    ),
+                ),
+                'advanced' => array(
+                    'name' => esc_html__( 'Advanced', 'super-forms' ),
+                    'fields' => array(
+                        'disabled' => $disabled,
+                        'autocomplete' => $autocomplete,
+                        'grouped' => $grouped,
+                        'width' => $width,
+                        'wrapper_width' => $wrapper_width,
                         'exclude' => $exclude,
                         'exclude_entry' => $exclude_entry, // @since 3.3.0 - exclude data from being saved into contact entry
                         'error_position' => $error_position,
@@ -2864,7 +2923,13 @@ $array['form_elements'] = array(
                         'email' => SUPER_Shortcodes::email($attributes, ''),
                         'label' => $label,
                         'description'=>$description,
-                        'placeholder' => SUPER_Shortcodes::placeholder($attributes, ''),
+                        'placeholder' => SUPER_Shortcodes::placeholder( $attributes, '' ),
+                        'placeholderFilled' => SUPER_Shortcodes::placeholderFilled( $attributes, '' ),
+                        'value' => array(
+                            'default'=> ( !isset( $attributes['value'] ) ? '' : $attributes['value'] ),
+                            'name' => esc_html__( 'Default value', 'super-forms' ), 
+                            'desc' => esc_html__( 'Set a default time for this field (leave blank for none)', 'super-forms' )
+                        ),
                         'current_time' => array(
                             'default'=> ( !isset( $attributes['current_time'] ) ? '' : $attributes['current_time'] ),
                             'type' => 'checkbox', 
@@ -2873,16 +2938,6 @@ $array['form_elements'] = array(
                                 'true' => esc_html__( 'Return the current time as default value', 'super-forms' ),
                             )
                         ),
-                        'tooltip' => $tooltip,
-                        'validation' => $validation_empty,
-                        'may_be_empty' => $allow_empty,
-                        'may_be_empty_conditions' => $allow_empty_conditions,
-                        'error' => $error,
-                    ),
-                ),
-                'time_format' => array(
-                    'name' => esc_html__( 'Time Format', 'super-forms' ),
-                    'fields' => array(
                         'format' => array(
                             'name'=>esc_html__( 'Choose a Time format', 'super-forms' ),
                             'desc'=>esc_html__( 'How times should be displayed in the list and input element.', 'super-forms' ),
@@ -2898,19 +2953,17 @@ $array['form_elements'] = array(
                         'step' => SUPER_Shortcodes::slider($attributes, $default=15, $min=1, $max=60, $steps=1, esc_html__( 'Steps between times in minutes', 'super-forms' ), '', $key='step'),
                         'minlength' => array(
                             'name'=>esc_html__( 'The time that should appear first in the dropdown list (Minimum Time)', 'super-forms' ),
-                            'desc'=>sprintf( esc_html__( 'Example: 09:00%s(leave blank to disable this feature)', 'super-forms' ), '<br />' ),
-                            'default'=> ( !isset( $attributes['minlength']) ? '' : $attributes['minlength']),
-                            'type'=>'time',
+                            'label'=>sprintf( esc_html__( 'Example: 09:00%sYou can also use {tags}, for instance to dynamically retrieve a timestamp (epoch). This way you can use it in combination with the Calculator Add-on to calculate a time in the future, for instance 2 hours in the future (leave blank to disable this feature)', 'super-forms' ), '<br />' ),
+                            'default'=> ( !isset( $attributes['minlength']) ? '' : $attributes['minlength'])
                         ),
                         'maxlength' => array(
                             'name'=>esc_html__( 'The time that should appear last in the dropdown list (Maximum Time)', 'super-forms' ),
-                            'desc'=>sprintf( esc_html__( 'Example: 17:00%s(leave blank to disable this feature)', 'super-forms' ), '<br />' ),
-                            'default'=> ( !isset( $attributes['maxlength']) ? '' : $attributes['maxlength']),
-                            'type'=>'time',
+                            'label'=>sprintf( esc_html__( 'Example: 17:00%sYou can also use {tags}, for instance to dynamically retrieve a timestamp (epoch). This way you can use it in combination with the Calculator Add-on to calculate a time in the future, for instance 2 hours in the future (leave blank to disable this feature)', 'super-forms' ), '<br />' ),
+                            'default'=> ( !isset( $attributes['maxlength']) ? '' : $attributes['maxlength'])
                         ),
                         'range' => array(
                             'name'=>esc_html__( 'Disable time options by ranges', 'super-forms' ),
-                            'desc'=>sprintf( esc_html__( 'Example:%s0:00|9:00%s17:00|0:00%s(enter each range on a new line)', 'super-forms' ), '<br />', '<br />', '<br />' ),
+                            'desc'=>sprintf( esc_html__( 'Example:%1$s0:00|9:00%1$s17:00|0:00%1$s(enter each range on a new line)', 'super-forms' ), '<br />' ),
                             'type'=>'textarea',
                             'default'=> ( !isset( $attributes['range']) ? '' : $attributes['range']),
                         ),                            
@@ -2924,6 +2977,12 @@ $array['form_elements'] = array(
                                 'true'=>'Show duration',
                             ),
                         ),
+                        'tooltip' => $tooltip,
+                        'validation' => $validation_empty,
+                        'may_be_empty' => $allow_empty,
+                        'may_be_empty_conditions' => $allow_empty_conditions,
+                        'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -2995,6 +3054,7 @@ $array['form_elements'] = array(
                         'tooltip' => $tooltip,
                         'validation' => $validation_not_empty,
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -3087,6 +3147,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -3163,6 +3224,7 @@ $array['form_elements'] = array(
                         'conditional_validation_value' => $conditional_validation_value,
                         'conditional_validation_value2' => $conditional_validation_value2, // @since 3.6.0
                         'error' => $error,
+                        'emptyError' => (isset($emptyError) ? $emptyError : ''),
                     ),
                 ),
                 'advanced' => array(
@@ -3464,29 +3526,6 @@ $array['form_elements'] = array(
                             'filter_value'=>'true',
                             'filter'=>true,
                             'i18n'=>true
-                        ),
-                     
-
-                        // @since 3.4.0 - contact entry statuses
-                        'entry_status' => array(
-                            'name'=>esc_html__( 'Contact entry status after submitting', 'super-forms' ),
-                            'desc'=>esc_html__( 'What status should the contact entry get after submitting the form?', 'super-forms' ),
-                            'default'=> ( !isset( $attributes['entry_status']) ? '' : $attributes['entry_status']),
-                            'type'=>'select',
-                            'values'=> $statuses,
-                            'parent'=>'action',
-                            'filter_value'=>'submit',
-                            'filter'=>true,
-                        ),
-                        'entry_status_update' => array(
-                            'name'=>esc_html__( 'Contact entry status after updating a contact entry', 'super-forms' ),
-                            'desc'=>esc_html__( 'This will only be useful if the form updates a previous created entry', 'super-forms' ),
-                            'default'=> ( !isset( $attributes['entry_status_update']) ? '' : $attributes['entry_status_update']),
-                            'type'=>'select',
-                            'values'=> $statuses,
-                            'parent'=>'action',
-                            'filter_value'=>'submit',
-                            'filter'=>true,
                         ),
                         // @since 2.0.0
                         'loading' => array(

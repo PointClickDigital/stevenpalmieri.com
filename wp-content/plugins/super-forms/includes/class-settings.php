@@ -1000,15 +1000,7 @@ class SUPER_Settings {
                     'filter' => true,
                     'parent' => 'smtp_debug',
                     'filter_value' => '1,2,3,4',
-                ),
-                // 'smtp_send_test_email' => array(
-                //     'name' => esc_html__( 'E-mail Test', 'super-forms' ),
-                //     'desc' => esc_html__( 'Send a Test Email', 'super-forms' ),
-                //     'type' => 'smtp_test',
-                //     'filter' => true,
-                //     'parent' => 'smtp_enabled',
-                //     'filter_value' => 'enabled'
-                // )
+                )
             )
         );
         $array = apply_filters( 'super_settings_after_global_overriding_filter', $array, array( 'settings'=>$settings ) );
@@ -1117,7 +1109,7 @@ class SUPER_Settings {
                         'yes' => esc_html__('Save as Contact Entry', 'super-forms' ),
                         'no' => esc_html__('Do not save data', 'super-forms' ),
                     )
-                ),
+                ), 
                 // @since 4.5.0 - do not save empty values for contact entries
                 'contact_entry_exclude_empty' => array(
                     'name' => esc_html__( 'Do not save empty values', 'super-forms' ),
@@ -1160,7 +1152,7 @@ class SUPER_Settings {
                 // @since 3.4.0  - custom contact entry status
                 'contact_entry_custom_status' => array(
                     'name' => esc_html__( 'Contact entry status', 'super-forms' ),
-                    'label' => sprintf( esc_html__( 'You can add custom statuses via %sSuper Forms > Settings > Backend Settings%s if needed', 'super-forms' ), '<a target="blank" href="' . admin_url() . 'admin.php?page=super_settings#backend-settings">', '</a>'),
+                    'label' => sprintf( esc_html__( 'You can add custom statuses via %sSuper Forms > Settings > Backend Settings%s if needed', 'super-forms' ), '<a target="blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#backend-settings') . '">', '</a>'),
                     'type'=>'select',
                     'default' => self::get_value( $default, 'contact_entry_custom_status', $settings, '' ),
                     'values' => $statuses,
@@ -1182,7 +1174,7 @@ class SUPER_Settings {
                 ),
                 'contact_entry_title' => array(
                     'name' => esc_html__('Enter a custom entry title', 'super-forms' ),
-                    'desc' => esc_html__( 'You can use field tags {field_name} if you want', 'super-forms' ),
+                    'label' => esc_html__( 'You can use field tags {field_name} if you want', 'super-forms' ),
                     'default' => self::get_value( $default, 'contact_entry_title', $settings, esc_html__( 'Contact entry', 'super-forms' ) ),
                     'filter'=>true,
                     'parent'=>'enable_custom_entry_title',
@@ -1196,6 +1188,57 @@ class SUPER_Settings {
                         'true' => esc_html__( 'Append entry ID after the custom title', 'super-forms' ),
                     ),
                     'parent' => 'enable_custom_entry_title',
+                    'filter_value' => 'true'
+                ),
+                // @since 4.9.600 - prevent submitting form when entry title already exists
+                'contact_entry_unique_title' => array(
+                    'default' => self::get_value( $default, 'contact_entry_unique_title', $settings, '' ),
+                    'type' => 'checkbox',
+                    'filter'=>true,
+                    'values' => array(
+                        'true' => esc_html__( 'Prevent submitting form when entry title already exists', 'super-forms' ),
+                    ),
+                    'parent' => 'enable_custom_entry_title',
+                    'filter_value' => 'true'
+                ),
+                'contact_entry_unique_title_compare' => array(
+                    'name' => esc_html__( 'Compare duplicate contact entry title against:', 'super-forms' ),
+                    'default' => self::get_value( $default, 'contact_entry_unique_title_compare', $settings, 'form' ),
+                    'type'=>'select',
+                    'values'=>array(
+                        'form' => esc_html__( 'Compare against current form entries only (default)', 'super-forms' ),
+                        'global' => esc_html__( 'Compare against all entries (all forms)', 'super-forms' ),
+                        'ids' => esc_html__( 'Compare against entries from the following form ID\'s (specific forms only)', 'super-forms' ),
+                    ),
+                    'filter'=>true,
+                    'parent' => 'contact_entry_unique_title',
+                    'filter_value' => 'true'
+                ),
+                'contact_entry_unique_title_trashed' => array(
+                    'default' => self::get_value( $default, 'contact_entry_unique_title_trashed', $settings, '' ),
+                    'type' => 'checkbox',
+                    'values' => array(
+                        'true' => esc_html__( 'Also compare against trashed contact entries', 'super-forms' ),
+                    ),
+                    'filter'=>true,
+                    'parent' => 'contact_entry_unique_title',
+                    'filter_value' => 'true'
+                ),
+                'contact_entry_unique_title_form_ids' => array(
+                    'name' => esc_html__('Enter form ID\'s to compare duplicate entry title against', 'super-forms' ),
+                    'label' => esc_html__( 'Seperate each form ID by a comma.', 'super-forms' ) . ' ' . esc_html__( 'You can use field tags {field_name} if you want', 'super-forms' ),
+                    'default' => self::get_value( $default, 'contact_entry_unique_title_form_ids', $settings, '' ),
+                    'filter'=>true,
+                    'parent'=>'contact_entry_unique_title_compare',
+                    'filter_value'=>'ids'
+                ),
+                'contact_entry_unique_title_msg' => array(
+                    'name' => esc_html__('Duplicate entry title error message', 'super-forms' ),
+                    'label' => esc_html__('This message will be displayed to the user if an entry with the same title already exists based on above configuration', 'super-forms' ),
+                    'type'=>'textarea',
+                    'default' => self::get_value( $default, 'contact_entry_unique_title_msg', $settings, esc_html__( 'Could not submit the form because a contact entry with the exact same title already exists!', 'super-forms' ) ),
+                    'filter'=>true,
+                    'parent' => 'contact_entry_unique_title',
                     'filter_value' => 'true'
                 ),
 
@@ -1223,8 +1266,7 @@ class SUPER_Settings {
                 ),
                 'retrieve_last_entry_form' => array(
                     'name' => esc_html__( 'Set a form ID to retrieve data from (seperated by comma)', 'super-forms' ),
-                    'label' => esc_html__( 'You are allowed to use multiple ID\'s. Please note that always the last entry will be used.', 'super-forms' ),
-                    'desc' => esc_html__( 'This allows you to retrieve entry data from a different form and autopopulate it inside this form.', 'super-forms' ),
+                    'label' => esc_html__( 'You are allowed to use multiple ID\'s. Please note that always the last entry will be used.', 'super-forms' ) . ' ' . esc_html__( 'This allows you to retrieve entry data from a different form and autopopulate it inside this form.', 'super-forms' ),
                     'default' => self::get_value( $default, 'retrieve_last_entry_form', $settings, '' ),
                     'filter'=>true,
                     'parent' => 'retrieve_last_entry_data',
@@ -1257,7 +1299,7 @@ class SUPER_Settings {
                 // @since 3.4.0  - allow to update the contact entry status after updating the entry
                 'contact_entry_custom_status_update' => array(
                     'name' => esc_html__( 'Contact entry status after updating', 'super-forms' ),
-                    'label' => sprintf( esc_html__( 'You can add custom statuses via %sSuper Forms > Settings > Backend Settings%s if needed', 'super-forms' ), '<a target="blank" href="' . admin_url() . 'admin.php?page=super_settings#backend-settings">', '</a>' ),
+                    'label' => sprintf( esc_html__( 'You can add custom statuses via %sSuper Forms > Settings > Backend Settings%s if needed', 'super-forms' ), '<a target="blank" href="' . esc_url(admin_url() . 'admin.php?page=super_settings#backend-settings') . '">', '</a>' ),
                     'type'=>'select',
                     'default' => self::get_value( $default, 'contact_entry_custom_status_update', $settings, '' ),
                     'values' => $statuses,
@@ -1265,8 +1307,14 @@ class SUPER_Settings {
                     'parent' => 'update_contact_entry',
                     'filter_value' => 'true'
                 ),
-
-
+                'form_processing_overlay' => array(
+                    'default' => self::get_value( $default, 'form_processing_overlay', $settings, 'true' ),
+                    'type' => 'checkbox',
+                    'filter'=>true,
+                    'values' => array(
+                        'true' => esc_html__( 'Display form processing overlay (popup)', 'super-forms' ),
+                    ),
+                ),
                 'form_show_thanks_msg' => array(
                     'default' => self::get_value( $default, 'form_show_thanks_msg', $settings, 'true' ),
                     'type' => 'checkbox',
@@ -1277,7 +1325,7 @@ class SUPER_Settings {
                 ),
                 'form_thanks_title' => array(
                     'name' => esc_html__( 'Thanks Title', 'super-forms' ),
-                    'desc' => esc_html__( 'A custom thank you title shown after a user completed the form.', 'super-forms' ),
+                    'label' => esc_html__( 'A custom thank you title shown after a user completed the form.', 'super-forms' ),
                     'default' => self::get_value( $default, 'form_thanks_title', $settings, esc_html__( 'Thank you!', 'super-forms' ) ),
                     'filter'=>true,
                     'parent' => 'form_show_thanks_msg',
@@ -1286,7 +1334,7 @@ class SUPER_Settings {
                 ),
                 'form_thanks_description' => array(
                     'name' => esc_html__( 'Thanks Description', 'super-forms' ),
-                    'desc' => esc_html__( 'A custom thank you description shown after a user completed the form.', 'super-forms' ),
+                    'label' => esc_html__( 'A custom thank you description shown after a user completed the form.', 'super-forms' ),
                     'default' => self::get_value( $default, 'form_thanks_description', $settings, esc_html__( 'We will reply within 24 hours.', 'super-forms' ) ),
                     'type'=>'textarea',
                     'filter'=>true,
@@ -1296,7 +1344,7 @@ class SUPER_Settings {
                 ),
                 'form_preload' => array(
                     'name' => esc_html__( 'Preloader (form loading icon)', 'super-forms' ),
-                    'desc' => esc_html__( 'Custom use of preloader for the form.', 'super-forms' ),
+                    'label' => esc_html__( 'Custom use of preloader for the form.', 'super-forms' ),
                     'type'=>'select',
                     'default' => self::get_value( $default, 'form_preload', $settings, '1' ),
                     'values'=>array(
@@ -1359,10 +1407,24 @@ class SUPER_Settings {
                     'default' => self::get_value( $default, 'form_recaptcha_v3_secret', $settings, '' ),
                 ),
 
+                // Google Maps API
                 'form_google_places_api' => array(
                     'hidden' => true,
-                    'name' => '<a href="https://console.developers.google.com/" target="_blank">'.esc_html__( 'Google API key', 'super-forms' ).'</a>',
+                    'name' => '<a href="https://console.developers.google.com/" target="_blank">'.esc_html__( 'Google Maps API - Key', 'super-forms' ).'</a>',
+                    'label' => esc_html__( 'The API key will be used for the Google Map element, Address Autocomplete and other features related to the Google Maps API', 'super-forms' ).'</a>',
                     'default' => self::get_value( $default, 'form_google_places_api', $settings, '' ),
+                ),
+                'google_maps_api_language' => array(
+                    'hidden' => true,
+                    'name' => esc_html__( 'Google Maps API - Language', 'super-forms' ),
+                    'label' => sprintf( esc_html__( 'The language to use. This affects the names of controls, copyright notices, driving directions, and control labels, as well as the responses to service requests. List of supported language codes: %sSupported Languages%s', 'super-forms' ), '<a href="https://developers.google.com/maps/faq?hl=nl#languagesupport">', '</a>'),
+                    'default'=> ( !isset( $attributes['google_maps_api_language'] ) ? 'en' : $attributes['google_maps_api_language'] ),
+                ),
+                'google_maps_api_region' => array(
+                    'hidden' => true,
+                    'name' => esc_html__( 'Google Maps API - Region', 'super-forms' ),
+                    'label' => esc_html__( 'The region code to use. This alters the map\'s behavior based on a given country or territory. The region parameter accepts Unicode region subtag identifiers which (generally) have a one-to-one mapping to country code Top-Level Domains (ccTLDs). Most Unicode region identifiers are identical to ISO 3166-1 codes, with some notable exceptions. For example, Great Britain\'s ccTLD is "uk" (corresponding to the domain .co.uk) while its region identifier is "GB".', 'super-forms' ),
+                    'default'=> ( !isset( $attributes['google_maps_api_region'] ) ? '' : $attributes['google_maps_api_region'] ),
                 ),
                 
                 // @since 2.2.0 - Custom form post method
@@ -2384,16 +2446,39 @@ class SUPER_Settings {
         );
         $array = apply_filters( 'super_settings_after_theme_colors_filter', $array, array( 'settings'=>$settings ) );
 
-        
+        /** 
+         *  Font families
+         *
+         *  @since      2.9.0
+        */
+        $array['font_family'] = array(
+            'name' => esc_html__( 'Font family', 'super-forms' ),
+            'label' => esc_html__( 'Font family', 'super-forms' ),
+            'fields' => array(
+                'font_google_fonts' => array(
+                    'name' => esc_html__( 'Import fonts via URL (put each on a new line)', 'super-forms' ),
+                    'label' => sprintf( esc_html__( 'Click %shere%s to search for google fonts%sCopy past the URL e.g:%shttps://fonts.googleapis.com/css?family=Raleway', 'super-forms' ), '<a target="_blank" href="https://fonts.google.com/">', '</a>', '<br />', '<br />' ),
+                    'default' => self::get_value( $default, 'font_google_fonts', $settings, '' ),
+                    'type' => 'textarea',
+                ),
+                'font_global_family' => array(
+                    'name' => esc_html__( 'Global font family', 'super-forms' ),
+                    'label' => esc_html__( 'Defaults to "Helvetica", "Arial", sans-serif (when left blank). To use for example Raleway google font you can enter: \'Raleway\', sans-serif', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_family', $settings, '"Helvetica", "Arial", sans-serif' ),
+                ),
+            )
+        );
+
         /** 
          *  Font styles
          *
          *  @since      2.9.0
         */
-        $array['font_styles'] = array(        
+        $array['font_styles'] = array(
             'name' => esc_html__( 'Font styles', 'super-forms' ),
             'label' => esc_html__( 'Font styles', 'super-forms' ),
             'fields' => array(
+                // Globals
                 'font_global_size' => array(
                     'name' => esc_html__( 'Global font size', 'super-forms' ),
                     'label' => esc_html__( '(12 = default)', 'super-forms' ),
@@ -2403,6 +2488,25 @@ class SUPER_Settings {
                     'max'=>50,
                     'steps'=>1,
                 ),
+                'font_global_lineheight' => array(
+                    'name' => esc_html__( 'Global line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_lineheight', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
+                ),
+                'font_global_weight' => array(
+                    'name' => esc_html__( 'Global font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_weight', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
+                ),
+                // Labels
                 'font_label_size' => array(
                     'name' => esc_html__( 'Field label font size', 'super-forms' ),
                     'label' => esc_html__( '(16 = default)', 'super-forms' ),
@@ -2412,6 +2516,25 @@ class SUPER_Settings {
                     'max'=>50,
                     'steps'=>1,
                 ),
+                'font_label_lineheight' => array(
+                    'name' => esc_html__( 'Field label line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_label_lineheight', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
+                ),
+                'font_label_weight' => array(
+                    'name' => esc_html__( 'Field label font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_label_weight', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
+                ),
+                // Descriptions
                 'font_description_size' => array(
                     'name' => esc_html__( 'Field description font size', 'super-forms' ),
                     'label' => esc_html__( '(14 = default)', 'super-forms' ),
@@ -2421,18 +2544,118 @@ class SUPER_Settings {
                     'max'=>50,
                     'steps'=>1,
                 ),
-                'font_google_fonts' => array(
-                    'name' => esc_html__( 'Import fonts via URL (put each on a new line)', 'super-forms' ),
-                    'label' => sprintf( esc_html__( 'Click %shere%s to search for google fonts%sCopy past the URL e.g:%shttps://fonts.googleapis.com/css?family=Raleway', 'super-forms' ), '<a target="_blank" href="https://fonts.google.com/">', '</a>', '<br />', '<br />' ),
-                    'default' => self::get_value( $default, 'font_google_fonts', $settings, '' ),
-                    'type' => 'textarea',
-                    
+                'font_description_lineheight' => array(
+                    'name' => esc_html__( 'Field description line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_description_lineheight', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
                 ),
-                'font_global_family' => array(
-                    'name' => esc_html__( 'Global font family', 'super-forms' ),
-                    'label' => esc_html__( '(leave blank for default) e.g: \'Raleway\', sans-serif', 'super-forms' ),
-                    'default' => self::get_value( $default, 'font_global_family', $settings, '"Open Sans",sans-serif' ),
-                    
+                'font_description_weight' => array(
+                    'name' => esc_html__( 'Field description font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_description_weight', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
+                ),
+            )
+        );
+        /** 
+         *  Font styles mobile/responsiveness
+         *
+         *  @since      4.9.52
+        */
+        $array['font_styles_mobile'] = array(
+            'name' => esc_html__( 'Font styles (mobile/responsive)', 'super-forms' ),
+            'label' => esc_html__( 'Font styles (mobile/responsive)', 'super-forms' ),
+            'fields' => array(
+                // Globals
+                'font_global_size_mobile' => array(
+                    'name' => esc_html__( 'Global font size', 'super-forms' ),
+                    'label' => esc_html__( '(16 = default)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_size_mobile', $settings, 16 ),
+                    'type'=>'slider',
+                    'min'=>8,
+                    'max'=>50,
+                    'steps'=>1,
+                ),
+                'font_global_lineheight_mobile' => array(
+                    'name' => esc_html__( 'Global line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_lineheight_mobile', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
+                ),
+                'font_global_weight_mobile' => array(
+                    'name' => esc_html__( 'Global font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_global_weight_mobile', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
+                ),
+                // Labels
+                'font_label_size_mobile' => array(
+                    'name' => esc_html__( 'Field label font size', 'super-forms' ),
+                    'label' => esc_html__( '(20 = default)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_label_size_mobile', $settings, 20 ),
+                    'type'=>'slider',
+                    'min'=>8,
+                    'max'=>50,
+                    'steps'=>1,
+                ),
+                'font_label_lineheight_mobile' => array(
+                    'name' => esc_html__( 'Field label line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_label_lineheight_mobile', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
+                ),
+                'font_label_weight_mobile' => array(
+                    'name' => esc_html__( 'Field label font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_label_weight_mobile', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
+                ),
+                // Descriptions
+                'font_description_size_mobile' => array(
+                    'name' => esc_html__( 'Field description font size', 'super-forms' ),
+                    'label' => esc_html__( '(16 = default)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_description_size_mobile', $settings, 16 ),
+                    'type'=>'slider',
+                    'min'=>8,
+                    'max'=>50,
+                    'steps'=>1,
+                ),
+                'font_description_lineheight_mobile' => array(
+                    'name' => esc_html__( 'Field description line height', 'super-forms' ),
+                    'label' => esc_html__( '(default line height is 1.2)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_description_lineheight_mobile', $settings, 1.2 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>5,
+                    'steps'=>0.01,
+                ),
+                'font_description_weight_mobile' => array(
+                    'name' => esc_html__( 'Field description font weight', 'super-forms' ),
+                    'label' => esc_html__( '(set to 0 to use normal font weight)', 'super-forms' ),
+                    'default' => self::get_value( $default, 'font_description_weight_mobile', $settings, 0 ),
+                    'type'=>'slider',
+                    'min'=>0,
+                    'max'=>900,
+                    'steps'=>100,
                 ),
             )
         );
@@ -2752,21 +2975,21 @@ class SUPER_Settings {
                 '<div class="super-export-import-single-form">',
 
                     '<div class="super-field">
-                        <div class="field-name">' . esc_html__( 'Export form settings and elements', 'super-forms' ) . ':</div>
+                        <div class="super-field-name">' . esc_html__( 'Export form settings and elements', 'super-forms' ) . ':</div>
                         <span class="super-button super-export super-clear">' . esc_html__( 'Export', 'super-forms' ) . '</span>
                     </div>',
 
                     '<div class="super-field">
-                        <div class="field-name">' . esc_html__( 'Import form settings and elements', 'super-forms' ) . ':</div>
-                        <div class="field-label">' . esc_html__( 'Browse import file and choose what you want to import', 'super-forms' ) . '</div>
-                        <div class="field-input">
+                        <div class="super-field-name">' . esc_html__( 'Import form settings and elements', 'super-forms' ) . ':</div>
+                        <div class="super-field-label">' . esc_html__( 'Browse import file and choose what you want to import', 'super-forms' ) . '</div>
+                        <div class="super-field-input">
                         <div class="image-field browse-files" data-file-type="text/html" data-multiple="false">
                             <span class="button super-insert-files"><i class="fas fa-plus"></i> Browse files</span>
                             <ul class="file-preview"></ul>
-                            <input type="hidden" name="import-file" class="element-field">
+                            <input type="hidden" name="import-file" class="super-element-field">
                             </div>
                         </div>
-                        <div class="field-input">
+                        <div class="super-field-input">
                             <div class="super-checkbox">
                                 <label>
                                     <input type="checkbox" name="import-settings">' . esc_html__( 'Import settings', 'super-forms' ) . '
@@ -2832,31 +3055,7 @@ class SUPER_Settings {
             ),
         );
         $array = apply_filters( 'super_settings_after_export_import_filter', $array, array( 'settings'=>$settings ) );
-
-
-        /** 
-         *	Support
-         *
-         *	@since		1.0.0
-        */
-        $array['support'] = array(
-            'hidden' => true,
-            'name' => esc_html__( 'Support', 'super-forms' ),
-            'label' => esc_html__( 'Support', 'super-forms' ),
-            'html' => array(
-                '<p>For support please contact us through Envato: <a href="http://codecanyon.net/user/feeling4design">feeling4design</a></p>',
-                '<div class="super-subscribe">',
-                    '<h3>Staying up to date:</h3>',
-                    '<p>',
-                        'To stay up to date with the latest news regarding Super Forms, <a target="_blank" href="https://codecanyon.net/user/feeling4design/followers">follow us on codecanyon</a> and <a target="_blank" href="https://my.sendinblue.com/users/subscribe/js_id/37455/id/1">subscribe to our newsletter</a>.',
-                    '</p>',
-                '</div>',
-                
-            ),
-        );
         $array = apply_filters( 'super_settings_after_support_filter', $array, array( 'settings'=>$settings ) );
-
-        
         $array = apply_filters( 'super_settings_end_filter', $array, array( 'settings'=>$settings ) );
         
         return $array;

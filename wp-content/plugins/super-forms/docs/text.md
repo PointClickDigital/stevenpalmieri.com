@@ -5,7 +5,6 @@ The text field element is used for many purposes, in this guide we will explain 
 * [Features](#features) - _covers all of it's features_
 * [Settings](#settings) - _covers all possible settings_
 
-
 ## Features
 
 * [Auto Suggest](auto-suggest)
@@ -16,12 +15,12 @@ The text field element is used for many purposes, in this guide we will explain 
 * **Keyword Field**
 * **Contact Entry Search**
 
-
 ## Settings
 
 **General Settings:**
+
 * **Unique Field Name**
-* **Email Label**
+* **E-mail Label**
 * **Field Label**
 * **Field Description**
 * **Placeholder**
@@ -33,6 +32,7 @@ The text field element is used for many purposes, in this guide we will explain 
 * **Error Message**
 
 **Advanced Settings:**
+
 * **Disable The Input Field**
 * **Make Field Read-Only**
 * **Disable Autocompletion**
@@ -45,7 +45,7 @@ The text field element is used for many purposes, in this guide we will explain 
 * **Minimum Number Allowed**
 * **Field Width**
 * **Wrapper Width**
-* **Exclude From Email**
+* **Exclude From E-mail**
 * **Exclude From Contact Entry**
 * **Error Message Positioning**
 * **Custom TAB Index**
@@ -54,6 +54,7 @@ The text field element is used for many purposes, in this guide we will explain 
 
 **Icon Settings:**
 _This feature is covered under the guide [Icons](icons)_
+
 * **Icon Positioning**
 * **Icon Alignment**
 * **Icon**

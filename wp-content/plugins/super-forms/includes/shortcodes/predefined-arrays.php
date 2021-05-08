@@ -45,7 +45,7 @@ $special_validations = array(
     'values'=>array(
         'none' => esc_html__( 'None', 'super-forms' ),
         'empty' => esc_html__( 'Required Field (not empty)', 'super-forms' ), 
-        'email' => esc_html__( 'Email address', 'super-forms' ), 
+        'email' => esc_html__( 'E-mail address', 'super-forms' ), 
         'phone' => esc_html__( 'Phone number', 'super-forms' ), 
         'numeric' => esc_html__( 'Numeric', 'super-forms' ),
         'float' => esc_html__( 'Float', 'super-forms' ),
@@ -101,8 +101,14 @@ $validation_not_empty = array(
 );
 $error = array(
     'default'=> (!isset($attributes['error']) ? '' : $attributes['error']),
-    'name'=>esc_html__( 'Error Message', 'super-forms' ), 
-    'desc'=>esc_html__( 'A message to show up when field was filled out incorrectly.', 'super-forms' ),
+    'name'=>esc_html__( 'Validation error message', 'super-forms' ), 
+    'label'=>esc_html__( 'Error message to display to the user when the field was filled out incorrectly (when the validation failed)', 'super-forms' ),
+    'i18n' => true
+);
+$emptyError = array(
+    'default'=> (!isset($attributes['emptyError']) ? '' : $attributes['emptyError']),
+    'name'=>esc_html__( '(optional) Empty error message', 'super-forms' ), 
+    'label'=>esc_html__( 'Error message to display to the user when the field was not filled out. Falls back to the "Validation error message" if left blank.', 'super-forms' ),
     'i18n' => true
 );
 $allow_empty = array(
@@ -303,8 +309,9 @@ $exclude = array(
     'values'=>array(
         '0'=>esc_html__( 'Do not exclude from emails', 'super-forms' ),
         '1'=>esc_html__( 'Exclude from confirmation email', 'super-forms' ), 
-
-        // Since version 1.0.4
+        // @since 4.9.471
+        '3'=>esc_html__( 'Exclude from admin email', 'super-forms' ),
+        // @since 1.0.4
         '2'=>esc_html__( 'Exclude from all emails', 'super-forms' )
     )
 );

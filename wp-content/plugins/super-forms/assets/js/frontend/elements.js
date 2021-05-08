@@ -37,6 +37,12 @@
                 decimal: $decimal_seperator,
                 precision: $decimals
             });
+            if(this.dataset.defaultValue!==''){
+                $(this).maskMoney('mask', this.dataset.defaultValue);
+                $(this).parents('.super-currency').addClass('super-filled');
+            }else{
+                $(this).parents('.super-currency').removeClass('super-filled');
+            }
         });
     };
 
@@ -158,19 +164,27 @@
                             $connected_min_days = parseInt($this.dataset.connectedMinDays, 10);
                             min_date = Date.parseExact(original_selectedDate, $parse_format).add({ days: $connected_min_days }).toString($format);
                             $($connected_date).datepicker('option', 'minDate', min_date );
-                            if($connected_date.value===''){
-                                $connected_date.value = min_date;
-                            }
-                            $parse = Date.parseExact($connected_date.value, $parse_format);
-                            if($parse!==null){
-                                selectedDate = $parse.toString($format);
-                                d = Date.parseExact(selectedDate, $format);
-                                year = d.toString('yyyy');
-                                month = d.toString('MM');
-                                day = d.toString('dd');          
-                                selectedDate = new Date(Date.UTC(year, month-1, day));
-                                $connected_date.dataset.mathDiff = selectedDate.getTime();
-                                SUPER.init_connected_datepicker($connected_date, $connected_date.value, $parse_format, oneDay);
+                            var maxPicks =($this.dataset.maxpicks ? parseInt($this.dataset.maxpicks, 10) : 1);
+                            if(maxPicks<=1){
+                                if($connected_date.value===''){
+                                    $connected_date.value = min_date;
+                                }
+                                if($connected_date.value===''){
+                                    $connected_date.parentNode.classList.remove('super-filled');
+                                }else{
+                                    $connected_date.parentNode.classList.add('super-filled');
+                                }
+                                $parse = Date.parseExact($connected_date.value, $parse_format);
+                                if($parse!==null){
+                                    selectedDate = $parse.toString($format);
+                                    d = Date.parseExact(selectedDate, $format);
+                                    year = d.toString('yyyy');
+                                    month = d.toString('MM');
+                                    day = d.toString('dd');          
+                                    selectedDate = new Date(Date.UTC(year, month-1, day));
+                                    $connected_date.dataset.mathDiff = selectedDate.getTime();
+                                    SUPER.init_connected_datepicker($connected_date, $connected_date.value, $parse_format, oneDay);
+                                }
                             }
                         }
                     }
@@ -186,6 +200,11 @@
                             $($connected_date).datepicker('option', 'maxDate', max_date );
                             if($connected_date.value===''){
                                 $connected_date.value = max_date;
+                            }
+                            if($connected_date.value===''){
+                                $connected_date.parentNode.classList.remove('super-filled');
+                            }else{
+                                $connected_date.parentNode.classList.add('super-filled');
                             }
                             $parse = Date.parseExact($connected_date.value, $parse_format);
                             if($parse!==null){
@@ -203,7 +222,7 @@
                 }
             }
         }
-        SUPER.after_field_change_blur_hook($this);
+        SUPER.after_field_change_blur_hook({el: $this});
     };
 
     // init Datepicker
@@ -223,7 +242,7 @@
         nodes = document.querySelectorAll('.super-datepicker:not(.super-picker-initialized)');
         for (i = 0; i < nodes.length; ++i) {
             var el = nodes[i],
-                form = SUPER.get_frontend_or_backend_form(el),
+                form = SUPER.get_frontend_or_backend_form({el: el}),
                 format = el.dataset.format, //'MM/dd/yyyy';
                 jsformat = el.dataset.jsformat, //'MM/dd/yyyy';
                 isRTL = (el.closest('.super-form') ? el.closest('.super-form').classList.contains('super-rtl') : false),
@@ -231,7 +250,7 @@
                 max = el.dataset.maxlength,
                 workDays,
                 weekends,
-                regex = /\{(.*?)\}/g,
+                regex = /{([^\\\/\s"'+]*?)}/g,
                 range = el.dataset.range,
                 maxPicks =(el.dataset.maxpicks ? parseInt(el.dataset.maxpicks, 10) : 1),
                 firstDay = el.dataset.firstDay,
@@ -251,6 +270,45 @@
                 parseFormat = [
                     jsformat
                 ];
+
+                // If localization is being used, use this date format instead
+                // Make sure to convert to correct format before using, plus update data attribute
+                if(localization!==''){
+                    if(typeof $.datepicker.regional[localization] !== 'undefined'){
+                        format = $.datepicker.regional[localization].dateFormat;
+                        var jsformat = format;
+                        jsformat = jsformat.replace('DD', 'dddd');
+                        var regex = /MM/i;
+                        if(regex.test(jsformat)){
+                            jsformat = jsformat.replace('MM', 'MMMM');
+                        }else{
+                            regex = /M/i;
+                            if(regex.test(jsformat)){
+                                jsformat = jsformat.replace('M', 'MMM');
+                            }
+                        }
+                        jsformat = jsformat.replace('mm', 'MM');
+                        regex = /yy/i;
+                        if(regex.test(jsformat)){
+                            jsformat = jsformat.replace('yy', 'yyyy');
+                        }else{
+                            regex = /y/i;
+                            if(regex.test(jsformat)){
+                                jsformat = jsformat.replace('y', 'yy');
+                            }
+                        }
+                        parseFormat = [
+                            jsformat
+                        ];
+                        el.dataset.format = format;
+                        el.dataset.jsformat = jsformat;
+                    }
+                }
+
+            // Check if range is valid value, if not set to default one
+            if(range.indexOf(':')===-1){
+                range = '-100:+5';
+            }
             
             // yy = short year
             // yyyy = long year
@@ -305,13 +363,8 @@
                 el.dataset.mathAge = '0';
             }
 
-            var multiDatesClassName = '',
-                singleDatesClassName = '';
-            if(maxPicks>1){
-                multiDatesClassName = 'super-datepicker-multidates';
-            }else{
+            var multiDatesClassName = 'super-datepicker-multidates',
                 singleDatesClassName = 'super-datepicker-singledates';
-            }
             var options = {
                 onClose: function( selectedDate ) {
                     SUPER.init_connected_datepicker(this, selectedDate, parseFormat, oneDay);
@@ -330,7 +383,8 @@
                         found = (days.indexOf(day.toString()) > -1);
                         if(found){
                             if(typeof exclDaysOverride !== 'undefined'){
-                                exclDaysOverrideReplaced = SUPER.update_variable_fields.replace_tags(form, regex, exclDaysOverride);
+                                regex = /{([^\\\/\s"'+]*?)}/g;
+                                exclDaysOverrideReplaced = SUPER.update_variable_fields.replace_tags({form: form, regex: regex, value: exclDaysOverride});
                                 exclDaysOverrideReplaced = exclDaysOverrideReplaced.split("\n");
                                 date = ('0' + dt.getDate()).slice(-2);
                                 month = ('0' + (dt.getMonth()+1)).slice(-2);
@@ -376,7 +430,8 @@
                         }
                     }
                     if(typeof exclDates !== 'undefined'){
-                        exclDatesReplaced = SUPER.update_variable_fields.replace_tags(form, regex, exclDates);
+                        regex = /{([^\\\/\s"'+]*?)}/g;
+                        exclDatesReplaced = SUPER.update_variable_fields.replace_tags({form: form, regex: regex, value: exclDates});
                         exclDatesReplaced = exclDatesReplaced.split("\n");
                         date = ('0' + dt.getDate()).slice(-2);
                         month = ('0' + (dt.getMonth()+1)).slice(-2);
@@ -428,17 +483,23 @@
                     return [];
                 },
                 beforeShow: function(input, inst) {
+                    var maxPicks = (inst.settings.maxPicks ? inst.settings.maxPicks : 1);
                     widget = $(inst).datepicker('widget');
                     widget[0].classList.add('super-datepicker-dialog');
-                    if(multiDatesClassName!=='') widget[0].classList.add(multiDatesClassName);
-                    if(singleDatesClassName!=='') widget[0].classList.add(singleDatesClassName);
-                    $('.super-datepicker[data-connected-min="'+$(this).attr('name')+'"]').each(function(){
-                        if($(this).val()!==''){
-                            connectedMinDays = $(this).data('connected-min-days');
-                            minDate = Date.parseExact($(this).val(), parseFormat).add({ days: connectedMinDays }).toString(jsformat);
-                            $(el).datepicker('option', 'minDate', minDate );
-                        }
-                    });
+                    if(maxPicks<=1){
+                        widget[0].classList.remove(multiDatesClassName);
+                        widget[0].classList.add(singleDatesClassName);
+                        $('.super-datepicker[data-connected-min="'+$(this).attr('name')+'"]').each(function(){
+                            if($(this).val()!==''){
+                                connectedMinDays = $(this).data('connected-min-days');
+                                minDate = Date.parseExact($(this).val(), parseFormat).add({ days: connectedMinDays }).toString(jsformat);
+                                $(el).datepicker('option', 'minDate', minDate );
+                            }
+                        });
+                    }else{
+                        widget[0].classList.add(multiDatesClassName);
+                        widget[0].classList.remove(singleDatesClassName);
+                    }
                     $('.super-datepicker[data-connected-max="'+$(this).attr('name')+'"]').each(function(){
                         if($(this).val()!==''){
                             connectedMaxDays = $(this).data('connected-max-days');
@@ -474,19 +535,45 @@
                 showOtherMonths: showOtherMonths,
                 selectOtherMonths: selectOtherMonths
             };
-            if(maxPicks>1){
-                options.maxPicks = maxPicks;
-                $(el).multiDatesPicker(options);
-            }else{
-                $(el).datepicker(options);
-            }
-
-            // @since 4.9.3 - Datepicker localization (language and format)
-            if(localization!==''){
-                if(typeof $.datepicker.regional[localization] !== 'undefined'){
-                    $.datepicker.regional[localization].yearSuffix = '';
-                    $(el).datepicker( "option", $.datepicker.regional[localization] );
+            
+            // Do a try catch because otherwise user might be locked out from the builder page if they made a mistake in entering for instance the "range" (yearRange)
+            try {
+                if(maxPicks>1){
+                    options.maxPicks = maxPicks;
+                    $(el).multiDatesPicker(options);
+                    // @since 4.9.583 - Fixes issue where the month would change back to January after selecting a second date or more
+                    $.datepicker._selectDateOverload = $.datepicker._selectDate;
+                    $.datepicker._selectDate = function (id, dateStr) {
+                        var target = $(id);
+                        var inst = this._getInst(target[0]);
+                        inst.inline = true;
+                        $.datepicker._selectDateOverload(id, dateStr);
+                        inst.inline = false;
+                        if (target[0].multiDatesPicker != null) {
+                            target[0].multiDatesPicker.changed = false;
+                        } else {
+                            target.multiDatesPicker.changed = false;
+                        }
+                        this._updateDatepicker(inst);
+                        // Close datepicker if it isn't a so called Multi-datepicker, or when maxPicks is set to 1
+                        if(typeof inst.settings.maxPicks==='undefined' || inst.settings.maxPicks<=1 ){
+                            $(target).datepicker('hide');
+                        }
+                    };
+                }else{
+                    $(el).datepicker(options);
                 }
+                // @since 4.9.3 - Datepicker localization (language and format)
+                if(localization!==''){
+                    if(typeof $.datepicker.regional[localization] !== 'undefined'){
+                        $.datepicker.regional[localization].yearSuffix = '';
+                        $(el).datepicker( "option", $.datepicker.regional[localization] );
+                    }
+                }
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.log(error);
+                alert(error);
             }
 
             $(el).parent().find('.super-icon').css('cursor','pointer');
@@ -540,7 +627,7 @@
             d = new Date(Date.UTC(yyyy, mm, dd, $h, $m, $s));
             $timestamp = d.getTime();
             $this[0].dataset.mathDiff = $timestamp;
-            SUPER.after_field_change_blur_hook($this[0]);
+            SUPER.after_field_change_blur_hook({el: $this[0]});
         }
 
         // Init timepickers
@@ -548,7 +635,9 @@
             // Only if timepicker is a function
             if (typeof $.fn.timepicker !== 'function') return false;
             var $this = $(this),
-                $is_rtl = $this.closest('.super-form').hasClass('super-rtl'),
+                form = SUPER.get_frontend_or_backend_form({el: this}),
+                regex = /{([^\\\/\s"'+]*?)}/g,
+                $is_rtl = form.classList.contains('super-rtl'),
                 $orientation = 'l',
                 format = $this.data('format'),
                 step = $this.data('step'),
@@ -562,17 +651,41 @@
 
             if(min==='') min = '00:00';
             if(max==='') max = '23:59';
+            if(typeof min !== 'undefined') {
+                min = min.toString();
+                min = SUPER.update_variable_fields.replace_tags({form: form, regex: regex, value: min});
+                if(min.indexOf(':')===-1){
+                    if(min !== parseInt(min, 10)){
+                        min = parseInt(min, 10);
+                        var prevMin = min - (min % (step*60));
+                        min = prevMin + 1800;
+                    }
+                }
+            }
+            if(typeof max !== 'undefined') {
+                max = max.toString();
+                max = SUPER.update_variable_fields.replace_tags({form: form, regex: regex, value: max});
+                if(max.indexOf(':')===-1){
+                    if(max !== parseInt(max, 10)){
+                        max = parseInt(max, 10);
+                        var prevMax = max - (max % (step*60));
+                        max = prevMax + 1800;
+                    }
+                }
+            }
             if((range!=='') && (typeof range !== 'undefined')){
                 range = range.split('\n');
                 $.each(range, function(key, value ) {
                     finalrange.push(value.split('|'));
                 });
             }
-            $form_id = $this.closest('.super-form').attr('id');
-            $form_size = $this.closest('.super-form').data('field-size');
+            $form_id = form.id;
+            $form_size = form.dataset.fieldSize;
             if($is_rtl===true){
                 $orientation = 'r';
             }
+
+
             $this.timepicker({
                 className: $form_id+' super-timepicker-dialog super-field-size-'+$form_size,
                 timeFormat: format,
@@ -904,6 +1017,7 @@
                     }
                 }
             }
+            SUPER.init_super_responsive_form_fields({form: $parent[0]});
         });
 
         // @since 3.1.0 - auto transform to uppercase
@@ -930,7 +1044,7 @@
                 $words = $text.match(/\S+/g);
                 $words = $words ? $words.length : 0;
                 $this.attr('data-word-count', $words);
-                SUPER.after_field_change_blur_hook($this[0]);
+                SUPER.after_field_change_blur_hook({el: $this[0]});
             }, $time);
         });
 
@@ -957,7 +1071,7 @@
                 if($new_value < $min) return false;
             }
             $input_field.val($new_value);
-            SUPER.after_field_change_blur_hook($input_field[0]);
+            SUPER.after_field_change_blur_hook({el: $input_field[0]});
         });
         // @since 4.9.0 - Quantity field only allow number input
         $doc.on('input', '.super-quantity .super-shortcode-field', function() {
@@ -974,7 +1088,7 @@
             }
             $this.toggleClass('super-active');
             $input_field.val($new_value);
-            SUPER.after_field_change_blur_hook($input_field[0]);
+            SUPER.after_field_change_blur_hook({el: $input_field[0]});
         });
 
         // @since 2.1 - trigger field change hook after currency field value has changed
@@ -989,10 +1103,10 @@
                     clearTimeout($calculation_threshold);
                 }
                 $calculation_threshold = setTimeout(function () {
-                    SUPER.after_field_change_blur_hook($this[0]);
+                    SUPER.after_field_change_blur_hook({el: $this[0]});
                 }, $threshold);
             }else{
-                SUPER.after_field_change_blur_hook($this[0]);
+                SUPER.after_field_change_blur_hook({el: $this[0]});
             }
         });
         
@@ -1042,12 +1156,12 @@
                 array,
                 match,
                 number,
-                regex = /\{(.*?)\}/g,
+                regex = /{([^\\\/\s"'+]*?)}/g,
                 oldv,
                 duplicate_dynamically;
 
             function return_replace_names(value, new_count, replace_names){
-                regex = /{(.*?)}/g;
+                regex = /{([^\\\/\s"'+]*?)}/g;
                 while ((vv = regex.exec(value)) !== null) {
                     // This is necessary to avoid infinite loops with zero-width matches
                     if (vv.index === regex.lastIndex) {
@@ -1064,7 +1178,7 @@
             parent = el.closest('.super-duplicate-column-fields');
             // If custom padding is being used set $column to be the padding wrapper `div`
             column = ( el.parentNode.classList.contains('super-column-custom-padding') ? el.closest('.super-column-custom-padding') : parent.closest('.super-column') );
-            form = SUPER.get_frontend_or_backend_form(el, form);
+            form = SUPER.get_frontend_or_backend_form({el: el, form: form});
             var duplicateColumns = column.querySelectorAll('.super-duplicate-column-fields');
             firstColumn = duplicateColumns[0];
             found = column.querySelectorAll('.super-duplicate-column-fields').length;
@@ -1107,7 +1221,7 @@
                 last_tab_index = '';
             }
             last_tab_index = parseFloat(last_tab_index);
-
+            
             // First rename then loop through conditional logic and update names, otherwise we might think that the field didn't exist!
             added_fields = {};
             added_fields_with_suffix = {};
@@ -1148,6 +1262,7 @@
                 if( field.classList.contains('ui-timepicker-input') ) field.classList.remove('ui-timepicker-input');
                 field_counter++;
             }
+            
             // @since 4.6.0 - update html field tags attribute
             // @since 4.6.0 - update accordion title and description field tags attribute
             // @since 4.9.6 - update google maps field tags attribute
@@ -1191,6 +1306,7 @@
                                     v = v.toString().split(';');
                                     name = v[0];
                                     // First check if the field even exists, if not just skip
+                                    
                                     found_field = SUPER.field(form, name);
                                     if(!found_field){
                                         // Do nothing
@@ -1316,7 +1432,7 @@
             // DO NOT TURN THE BELOW 2 HOOKS AROUND OR IT
             // WILL BRAKE THE CALCULATOR ELEMENT
             // ############ !!!! IMPORTANT !!!! ############
-
+            
             // @since 2.4.0 - hook after adding new column
             SUPER.after_duplicating_column_hook(form, unique_field_names, clone);            
 
@@ -1343,7 +1459,7 @@
 
             // @since 2.4.0 - update conditional logic and other variable fields based on the newly added fields
             Object.keys(added_fields).forEach(function(index) {
-                SUPER.after_field_change_blur_hook(added_fields[index], form);
+                SUPER.after_field_change_blur_hook({el: added_fields[index], form: form});
             });
 
             SUPER.init_common_fields();
@@ -1395,7 +1511,7 @@
                 });
                 foundElements[i][0].dataset.fields = dataFields;
             }
-            SUPER.init_replace_html_tags(undefined, form);
+            SUPER.init_replace_html_tags({el: undefined, form: form});
 
             // Because we must trigger field change, we can not delete the nodes just yet
             // Instead we make this dynamic column hidden, and then trigger field change hook
@@ -1411,19 +1527,19 @@
 
             // Update conditional logic and other variable fields based on the removed fields in this dynamic column
             Object.keys(removedFields).forEach(function(index) {
-                SUPER.after_field_change_blur_hook(removedFields[index], form);
+                SUPER.after_field_change_blur_hook({el: removedFields[index], form: form});
             });
 
             // Now we can remove the dynamic column
             parent.remove();
 
             // Reload google maps
-            SUPER.google_maps_api.initMaps(undefined, form);
+            SUPER.google_maps_api.initMaps({form: form});
             
         });
 
         // Close messages
-        $doc.on('click', '.super-msg .close', function(){
+        $doc.on('click', '.super-msg .super-close', function(){
             $(this).parents('.super-msg:eq(0)').fadeOut(500);
         });
 
@@ -1471,14 +1587,14 @@
                         itemsToShow.push(nodes[i]);
                         regex = RegExp([value].join('|'), 'gi');
                         stringBold = text.replace(regex, '<span>$&</span>');
-                        stringBold = stringBold.replace(/\r?\n|\r/g, "");
+                        stringBold = stringBold.replace(/ /g, '\u00a0');
                         nodes[i].innerHTML = stringBold;
                     }else{
                         itemsToHide.push(nodes[i]);
                     }
                 }
                 [].forEach.call(itemsToShow, function (el) {
-                    el.style.display = 'block';
+                    el.style.display = 'flex';
                 });
                 [].forEach.call(itemsToHide, function (el) {
                     el.style.display = 'none';
@@ -1566,8 +1682,8 @@
                         words = [value]; 
                         regex = RegExp(words.join('|'), 'gi');
                         replacement = '<span>$&</span>';
-                        stringBold = nodes[i].innerText.replace(regex, replacement);
-                        stringBold = stringBold.replace(/\r?\n|\r/g, "");
+                        stringBold = nodes[i].dataset.searchValue.replace(regex, replacement);
+                        stringBold = stringBold.replace(/ /g, '\u00a0');
                         nodes[i].innerHTML = stringBold;
                         nodes[i].classList.add('super-active');
                     }else{
@@ -1609,7 +1725,7 @@
                     $('.super-timepicker').timepicker('hide');
                 }
             }else{
-                if(!$(this).hasClass('super-focus')){
+                if( (!$(this).hasClass('super-focus')) && (!$(this).hasClass('super-datepicker')) ){
                     if($(this).closest('.super-form').hasClass('super-window-first-responsiveness') || $(this).closest('.super-form').hasClass('super-window-second-responsiveness') ){
                         $('html, body').animate({
                             scrollTop: $(this).offset().top-20
@@ -1646,9 +1762,9 @@
             field.classList.remove('super-string-found');
             wrapper.classList.add('super-overlap');
             wrapper.parentNode.classList.add('super-filled');
-            SUPER.after_field_change_blur_hook(wrapper.querySelector('.super-shortcode-field'));
+            SUPER.after_field_change_blur_hook({el: wrapper.querySelector('.super-shortcode-field')});
             if(populate=='true'){
-                SUPER.populate_form_data_ajax(field);
+                SUPER.populate_form_data_ajax({el: field});
             }
         });
         // On removing item
@@ -1665,7 +1781,7 @@
             wrapper.classList.remove('super-overlap');
             wrapper.parentNode.classList.remove('super-filled');
             field.focus();
-            SUPER.after_field_change_blur_hook(field);
+            SUPER.after_field_change_blur_hook({el: field});
         });
 
         // Update autosuggest
@@ -1678,7 +1794,7 @@
             $(this).addClass('super-active');
             $field.find('.super-shortcode-field').val($value);
             $field.removeClass('super-focus').removeClass('super-string-found');
-            SUPER.after_field_change_blur_hook($field.find('.super-shortcode-field')[0]);
+            SUPER.after_field_change_blur_hook({el: $field.find('.super-shortcode-field')[0]});
         });
 
         // Update dropdown
@@ -1693,7 +1809,6 @@
                 value,
                 name,
                 validation,
-                duration,
                 max,
                 min,
                 total,
@@ -1704,7 +1819,7 @@
             e.stopPropagation();
             if(field.classList.contains('super-focus-dropdown')){
                 field.classList.remove('super-focus-dropdown');
-                form = SUPER.get_frontend_or_backend_form(this);
+                form = SUPER.get_frontend_or_backend_form({el: this});
                 wrapper = this.closest('.super-field-wrapper');
                 input = wrapper.querySelector('.super-shortcode-field');
                 parent = this.closest('.super-dropdown-ui');
@@ -1754,16 +1869,15 @@
                     input.value = values;
                 }
                 if(input.value===''){
-                    wrapper.classList.remove('super-filled');
+                    field.classList.remove('super-filled');
                 }else{
-                    wrapper.classList.add('super-filled');
+                    field.classList.add('super-filled');
                 }
                 validation = input.dataset.validation;
                 if(typeof validation !== 'undefined' && validation !== false){
-                    duration = SUPER.get_duration();
-                    SUPER.handle_validations(input, validation, '', duration, form);
+                    SUPER.handle_validations({el: input, form: form, validation: validation});
                 }
-                SUPER.after_dropdown_change_hook(input);
+                SUPER.after_dropdown_change_hook({el: input});
             }
         });
 
@@ -1777,17 +1891,16 @@
             if(this.classList.contains('super-fileupload')) return false;
             var keyCode = e.keyCode || e.which; 
             if (keyCode != 9) { 
-                var $form = SUPER.get_frontend_or_backend_form(this);
-                var $duration = SUPER.get_duration();
-                var $validation = this.dataset.validation;
-                var $conditional_validation = this.dataset.conditionalValidation;
-                SUPER.handle_validations(this, $validation, $conditional_validation, $duration, $form);
-                SUPER.after_field_change_blur_hook(this);
+                var form = SUPER.get_frontend_or_backend_form({el: this}),
+                    validation = this.dataset.validation,
+                    conditionalValidation = this.dataset.conditionalValidation;
+                SUPER.handle_validations({el: this, form: form, validation: validation, conditionalValidation: conditionalValidation});
+                SUPER.after_field_change_blur_hook({el: this});
             }
         });
 
         $doc.on('click', '.super-form .super-radio > .super-field-wrapper .super-item', function (e) {
-            var $form,$this,$parent,$field,$active,$validation,$duration;
+            var $form,$this,$parent,$field,$active,$validation;
             if( e.target.localName=='a' ) {
                 if(e.target.target=='_blank'){
                     window.open(
@@ -1798,7 +1911,7 @@
                     window.location.href = e.target.href;
                 }
             }else{
-                $form = SUPER.get_frontend_or_backend_form(this);
+                $form = SUPER.get_frontend_or_backend_form({el: this});
                 $this = this.querySelector('input[type="radio"]');
                 if(this.classList.contains('super-active')) return true;
                 $parent = this.closest('.super-field-wrapper');
@@ -1807,12 +1920,11 @@
                 if($active) $active.classList.remove('super-active');
                 this.classList.add('super-active');
                 $validation = $field.dataset.validation;
-                $duration = SUPER.get_duration();
                 $field.value = $this.value;
                 if(typeof $validation !== 'undefined' && $validation !== false){
-                    SUPER.handle_validations($field, $validation, '', $duration, $form);
+                    SUPER.handle_validations({el: $field, form: $form, validation: $validation});
                 }
-                SUPER.after_radio_change_hook($field);
+                SUPER.after_radio_change_hook({el: $field});
             }
             return false;
         });
@@ -1826,8 +1938,7 @@
                 $field,
                 $counter,
                 $maxlength,
-                $validation,
-                $duration;
+                $validation;
 
             if( e.target.localName=='a' ) {
                 if(e.target.target=='_blank'){
@@ -1839,7 +1950,7 @@
                     window.location.href = e.target.href;
                 }
             }else{
-                $form = SUPER.get_frontend_or_backend_form(this);
+                $form = SUPER.get_frontend_or_backend_form({el: this});
                 $checkbox = this.querySelector('input[type="checkbox"]');
                 $parent = $checkbox.closest('.super-field-wrapper');
                 $field = $parent.querySelector('input[type="hidden"]');
@@ -1863,18 +1974,16 @@
                 }
                 $field.value = $value;
                 $validation = $field.dataset.validation;
-                $duration = SUPER.get_duration();
                 if(typeof $validation !== 'undefined' && $validation !== false){
-                    SUPER.handle_validations($field, $validation, '', $duration, $form);
+                    SUPER.handle_validations({el: $field, form: $form, validation: $validation});
                 }
-                SUPER.after_checkbox_change_hook($field);
+                SUPER.after_checkbox_change_hook({el: $field});
             }
             return false;
         });
 
         $doc.on('change', '.super-form select', function () {
-            var $form = SUPER.get_frontend_or_backend_form(this),
-                $duration = SUPER.get_duration(),
+            var $form = SUPER.get_frontend_or_backend_form({el: this}),
                 $min = this.dataset.minlength,
                 $max = this.dataset.maxlength,
                 $validation;
@@ -1888,11 +1997,10 @@
                 this.closest('.super-field').classList.remove('super-error-active');
             }
             $validation = this.dataset.validation;
-            $duration = SUPER.get_duration();
             if(typeof $validation !== 'undefined' && $validation !== false){
-                SUPER.handle_validations(this, $validation, '', $duration, $form);
+                SUPER.handle_validations({el: this, form: $form, validation: $validation});
             }
-            SUPER.after_dropdown_change_hook(this);
+            SUPER.after_dropdown_change_hook({el: this});
         });
         
         $doc.on('mouseleave','.super-button .super-button-wrap',function(){
@@ -1967,6 +2075,7 @@
             var i, nodes,
                 el = this,
                 form = el.closest('.super-form'),
+                form_id = form.querySelector('input[name="hidden_form_id"]').value,
                 currentActive = form.querySelector('.super-multipart.super-active'),          
                 currentActiveTab = form.querySelector('.super-multipart-step.super-active'),
                 activeChildren = Array.prototype.slice.call( currentActiveTab.parentNode.children ),
@@ -1984,10 +2093,12 @@
             if(activeIndex < index){ // Always allow going to previous step
                 validate = currentActive.dataset.validate;
                 if(validate=='true'){
-                    result = SUPER.validate_form( currentActive, el, true, e, true );
+                    result = SUPER.validate_form({el: el, form: currentActive, submitButton: el, validateMultipart: true, event: e});
                     if(result!==true) return false;
                 }
             }
+            window.location.hash = 'step-'+form_id+'-'+(parseInt(index,10)+1);
+
             progress = 100 / total;
             progress = progress * (index+1);
             multipart = form.querySelectorAll('.super-multipart')[index];
@@ -2012,6 +2123,8 @@
             // Focus first TAB index field in next multi-part
             super_focus_first_tab_index_field(e, form, multipart);
 
+            // Update HTML element to reflect changes e.g foreach() and if statements
+            SUPER.init_replace_html_tags({form: form});
         });
         
         // @since 4.7.0 - translation language switcher
@@ -2058,7 +2171,7 @@
                 complete: function(){
                     $form.addClass('super-initialized');
                     SUPER.init_common_fields();
-                    SUPER.init_replace_html_tags(undefined, $form[0]);
+                    SUPER.init_replace_html_tags({el: undefined, form: $form[0]});
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     // eslint-disable-next-line no-console
@@ -2076,6 +2189,7 @@
                 index,
                 el = this,
                 form = el.closest('.super-form'),
+                form_id = form.querySelector('input[name="hidden_form_id"]').value,
                 total = form.querySelectorAll('.super-multipart').length,
                 current = form.querySelector('.super-multipart-step.super-active'),
                 children = Array.prototype.slice.call( current.parentNode.children ),
@@ -2104,7 +2218,7 @@
                 // @since 2.0.0 - validate multi-part before going to next step
                 validate = form.querySelector('.super-multipart.super-active').dataset.validate;
                 if(validate=='true'){
-                    result = SUPER.validate_form( form.querySelector('.super-multipart.super-active'), el, true, e, true );
+                    result = SUPER.validate_form({el: el, form: form.querySelector('.super-multipart.super-active'), submitButton: el, validateMultipart: true, event: e});
                     if(result!==true) return false;
                 }
                 if(total>current_step+1){
@@ -2121,6 +2235,7 @@
                     index = current_step+1;
                 }
             }
+            window.location.hash = 'step-'+form_id+'-'+(parseInt(index,10)+1);
 
             // @since 3.3.0 - make sure to skip the multi-part if no visible elements are found
             skip = super_skip_multipart(el, form);
@@ -2153,9 +2268,11 @@
         });
 
         // @since 4.9.3 - Adaptive Placeholders
-        var adaptivePlaceholder = document.querySelectorAll('.super-adaptive-placeholder');
-        for (var i = 0; i < adaptivePlaceholder.length; i++) {
-            var input = adaptivePlaceholder[i].parentNode.querySelector('.super-shortcode-field');
+        var nodes = document.querySelectorAll('.super-adaptive-placeholder');
+        for (var i = 0; i < nodes.length; i++) {
+            var input = nodes[i].parentNode.querySelector('.super-shortcode-field');
+            if(!input) continue;
+
             input.onclick = input.onfocus = function () {
                 this.closest('.super-shortcode').classList.add('super-focus');
             }
@@ -2165,21 +2282,30 @@
                 }
             }
             input.addEventListener('keyup', function () {
+                var placeholder = this.parentNode.querySelector('.super-adaptive-placeholder').dataset.placeholder;
+                var placeholderFilled = this.parentNode.querySelector('.super-adaptive-placeholder').dataset.placeholderfilled;
+                var span = this.parentNode.querySelector('.super-adaptive-placeholder').children[0];
+                
                 var filled = true,
                     parent = this.closest('.super-shortcode');
                 if(parent.classList.contains('super-currency')){
                     if($(this).maskMoney('unmasked')[0]===0){
-                       filled = false;
+                        filled = false;
                     }
                 }
                 if (this.value.length === 0) filled = false;
                 if(filled){
                     parent.classList.add('super-filled');
+                    span.innerHTML = placeholderFilled;
                 }else{
                     parent.classList.remove('super-filled');
+                    span.innerHTML = placeholder;
                 }
             });
-            input.oncut = input.onpaste = function () {
+            input.oncut = input.onpaste = function (event) {
+                var placeholder = this.parentNode.querySelector('.super-adaptive-placeholder').dataset.placeholder;
+                var placeholderFilled = this.parentNode.querySelector('.super-adaptive-placeholder').dataset.placeholderfilled;
+                var span = this.parentNode.querySelector('.super-adaptive-placeholder').children[0];
                 var filled = true,
                     input = event.target,
                     parent = event.target.closest('.super-shortcode');
@@ -2187,15 +2313,17 @@
                 if(parent.classList.contains('super-currency')){
                     if($(input).maskMoney('unmasked')[0]===0){
                         filled = false;
-                     }
+                    }
                 }
                 if (event.type == 'cut' || event.type == 'paste') {
                     setTimeout(function () {
                         if (input.value.length === 0) filled = false;
                         if(filled){
                             parent.classList.add('super-filled');
+                            span.innerHTML = placeholderFilled;
                         }else{
                             parent.classList.remove('super-filled');
+                            span.innerHTML = placeholder;
                         }
                     }, 100);
                 }
@@ -2314,7 +2442,7 @@
             }
             // Scroll to bottom of tags container
             tagsContainer.scrollTop = tagsContainer.scrollHeight;
-            SUPER.after_field_change_blur_hook(keywordField);
+            SUPER.after_field_change_blur_hook({el: keywordField});
         },
         add: function(e, target){
             var i,
@@ -2389,7 +2517,7 @@
                 field = target.closest('.super-field'),
                 tagsContainer = wrapper.querySelector('.super-autosuggest-tags > div'),
                 keywordField = wrapper.querySelector('.super-shortcode-field'),
-                max = parseInt(keywordField.dataset.maxlength, 10),
+                max = (keywordField.dataset.maxlength ? parseInt(keywordField.dataset.maxlength, 10) : 0),
                 nodes = wrapper.querySelectorAll('.super-dropdown-ui .super-item');
 
             if(method=='free'){
@@ -2402,7 +2530,7 @@
                     if(keywordField.value.split(',').indexOf(tag)===-1){
                         if(typeof duplicates[tag]==='undefined'){
                             counter++;
-                            if(counter<=max){
+                            if(max===0 || counter<=max){
                                 if(splitMethod!='comma') tag = tag.replace(/ /g,'');
                                 if( (tag!=='') && (tag.length>1) ) {
                                     html += '<span class="super-noselect super-keyword-tag" sfevents=\'{"click":"keywords.remove"}\' data-value="'+tag+'" title="remove this tag">'+tag+'</span>';
@@ -2562,7 +2690,7 @@
         app.delegate(document, eventType, elements, function (e, target) {
             if (eventType == 'click') {
                 if (!app.inPath(e, 'super-focus')) {
-                    var i, nodes = document.querySelectorAll('.super-focus');
+                    var i, nodes = document.querySelectorAll('.super-keyword-tags.super-focus');
                     for(i=0; i < nodes.length; i++){
                         nodes[i].classList.remove('super-focus');
                     }

@@ -12,7 +12,7 @@
         $doc.on('click', '.super-checkbox input[type="checkbox"]',function(){
             var $this = $(this);
             var $parent = $this.parents('.super-checkbox:eq(0)');
-            var $field = $parent.parent().children('.element-field');
+            var $field = $parent.parent().children('.super-element-field');
             var $selected = '';
             var $counter = 0;
             $parent.find('input[type="checkbox"]').each(function(){
@@ -236,7 +236,7 @@
 
         $doc.on('click','.super-settings .super-export-entries',function(){
             var $this = $(this);
-            var $old_html = $this.html();
+            var $oldHtml = $this.html();
             var $type = $this.data('type');
             var $from = $('.super-export-import-entries input[name="from"]').val();
             var $till = $('.super-export-import-entries input[name="till"]').val();
@@ -257,11 +257,12 @@
                 success: function (data) {
                     window.location.href = data;
                 },
-                error: function(){
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr, ajaxOptions, thrownError);
                     alert(super_settings_i18n.export_entries_error);
                 },
                 complete: function(){
-                    $this.html($old_html);
+                    $this.html($oldHtml);
                 }
             });
         });
@@ -300,8 +301,9 @@
                     success: function () {
                         location.reload();
                     },
-                    error: function(){
-                        $('.save .message').removeClass('success').addClass('error').html(super_settings_i18n.restore_default_error);
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $('.save .message').removeClass('super-success').addClass('error').html(super_settings_i18n.restore_default_error);
+                        console.log(xhr, ajaxOptions, thrownError);
                     }
                 });
             }
@@ -310,9 +312,9 @@
         $doc.on('click','.super-settings .save-settings',function(){ 
             var $this = $(this);
             $this.html(super_settings_i18n.save_loading);
-            $('.save .message').removeClass('error').removeClass('success');
+            $('.save .message').removeClass('error').removeClass('super-success');
             var $data = [];
-            $('.super-fields .element-field').each(function(){
+            $('.super-fields .super-element-field').each(function(){
                 var $this = $(this);
                 var $hidden = false;
                 $this.parents('.super-field.super-filter').each(function(){
@@ -340,7 +342,7 @@
                     data = $.parseJSON(data);
                     if((data !== null) && (data.error !== 'undefined')){
                         if(data.error=='smtp_error'){
-                            $('.save .message').removeClass('success').addClass('error').html(data.msg);
+                            $('.save .message').removeClass('super-success').addClass('error').html(data.msg);
                             var $tab = $('input[name="smtp_username"]').parents('.super-fields:eq(0)').index() - 1;
                             $('.super-tabs > li, .super-wrapper > .super-fields').removeClass('super-active');
                             $('.super-tabs li:eq('+$tab+')').addClass('super-active');
@@ -349,10 +351,11 @@
                         }
                     }
                     $this.html(super_settings_i18n.save_settings);
-                    $('.save .message').removeClass('error').addClass('success').html(super_settings_i18n.save_success);
+                    $('.save .message').removeClass('error').addClass('super-success').html(super_settings_i18n.save_success);
                 },
-                error: function(){
-                    $('.save .message').removeClass('success').addClass('error').html(super_settings_i18n.save_error);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('.save .message').removeClass('super-success').addClass('error').html(super_settings_i18n.save_error);
+                    console.log(xhr, ajaxOptions, thrownError);
                 }
             });
         });
@@ -416,11 +419,12 @@
                 },
                 success: function(){
                     $button.val(super_settings_i18n.save_settings);
-                    $('.save .message').removeClass('error').addClass('success').html(super_settings_i18n.save_success);
+                    $('.save .message').removeClass('error').addClass('super-success').html(super_settings_i18n.save_success);
                     location.reload();
                 },
-                error: function(){
-                    $('.save .message').removeClass('success').addClass('error').html(super_settings_i18n.save_error);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('.save .message').removeClass('super-success').addClass('error').html(super_settings_i18n.save_error);
+                    console.log(xhr, ajaxOptions, thrownError);
                 },
                 complete: function(){
                     $button.removeClass('super-loading');
@@ -472,7 +476,8 @@
                         }, 10*limit);
                     }
                 },
-                error: function(){
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr, ajaxOptions, thrownError);
                     alert(super_settings_i18n.export_forms_error);
                 }
             });
@@ -497,7 +502,7 @@
                 $preview.html('');
             });
             $button.on('click', function () {
-                var $old_html = $button.html();
+                var $oldHtml = $button.html();
                 $button.html(super_settings_i18n.import_working);
                 $('.ui-widget-overlay').hide();
                 $this.parents('.shortcode-dialog').hide();
@@ -536,11 +541,12 @@
                                         $('<div>'+super_settings_i18n.import_completed+'!</div>').insertAfter($button);
                                         $button.remove();
                                     },
-                                    error: function(){
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        console.log(xhr, ajaxOptions, thrownError);
                                         alert(super_settings_i18n.import_error);
                                     },
                                     complete: function(){
-                                        $button.html($old_html);
+                                        $button.html($oldHtml);
                                     }
                                 });
                             }
@@ -554,64 +560,5 @@
                 $frame.open();
             });
         });
-
-
-        // @since   1.0.6
-        // $doc.on('click','.super-settings .super-send-smtp-test', function(){
-        //     var $button = $(this);
-        //     $button.addClass('super-loading');
-        //     var $email = $('input[name="smpt_test_to"]').val();
-        //     var $html = $('input[name="smpt_test_html"]').prop('checked');
-        //     $.ajax({
-        //         url: ajaxurl,
-        //         type: 'post',
-        //         data: {
-        //             action: 'super_smtp_test',
-        //             email: $email,
-        //             html: $html
-        //         },
-        //         success: function (result) {
-        //             var $result = JSON.parse(result);
-        //             // var $html;
-        //             // if($result.error==true){
-        //             //     $html = '<div class="super-msg error">';
-        //             //     if(typeof $result.fields !== 'undefined'){
-        //             //         $.each($result.fields, function( index, value ) {
-        //             //             $(value+'[name="'+index+'"]').parent().addClass('error');
-        //             //         });
-        //             //     }                               
-        //             // }else{
-        //             //     $html = '<div class="super-msg success">';
-        //             // }
-        //             // if($result.redirect){
-        //             //     window.location.replace($result.redirect);
-        //             // }else{
-        //             //     $html += $result.msg;
-        //             //     $html += '<span class="close"></span>';
-        //             //     $html += '</div>';
-        //             //     var $new_message = $($html).insertBefore($msg_container);
-        //             //     $msg_container.remove();
-        //             //     $('html, body').animate({
-        //             //         scrollTop: $new_message.offset().top-200
-        //             //     }, 1000);
-        //             //     if($result.error==false){
-        //             //         var $duration = super_register_common_i18n.duration;
-        //             //         $form.find('.super-field, .super-multipart-steps').fadeOut($duration);
-        //             //         setTimeout(function () {
-        //             //             $form.find('.super-field').remove();
-        //             //         }, $duration);
-        //             //     }
-        //             // }
-        //         },
-        //         error: function (xhr, ajaxOptions, thrownError) {
-        //             console.log(xhr, ajaxOptions, thrownError);
-        //             alert('Failed to resend activation code, please try again');
-        //         },
-        //         complete: function() {
-        //             $button.removeClass('super-loading');
-        //         }
-        //     });
-        // });
-
     });
 })(jQuery);
