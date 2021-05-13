@@ -43,10 +43,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				<div class="wcf-content-main-head">
-					<div class="wcf-content-modal-title"><h1><?php echo $pre_checkout_popup_title; ?></h1></div>
+					<div class="wcf-content-modal-title"><h1><?php echo wp_kses_post( $pre_checkout_popup_title ); ?></h1></div>
 
 					<?php if(!empty($pre_checkout_popup_sub_title)){ ?>
-						<div class="wcf-content-modal-sub-title"><span><?php echo $pre_checkout_popup_sub_title; ?></span></div>
+						<div class="wcf-content-modal-sub-title"><span><?php echo esc_html( $pre_checkout_popup_sub_title ); ?></span></div>
 					<?php } ?>	
 				</div>
 
@@ -57,23 +57,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<img src="<?php echo $src; ?>" />
 					</div>
 					<div class="wcf-pre-checkout-info wcf-pre-checkout-offer-product-details">
-						<div class="wcf-pre-checkout-offer-product-title"><h1><?php echo $product_title; ?></h1></div>
+						<div class="wcf-pre-checkout-offer-product-title"><h1><?php echo esc_html( $product_title ); ?></h1></div>
 						
 						<?php if(!empty($price_html)){ ?>
 							<div class="wcf-pre-checkout-offer-price"><?php echo $price_html; ?></div>
 						<?php }?>
 
-						<div class="wcf-pre-checkout-offer-desc"><span><?php echo $product_description; ?></span></div>
+						<div class="wcf-pre-checkout-offer-desc"><span><?php echo wp_kses_post( $product_description ); ?></span></div>
 						
 						<input type="hidden" value="add" class="wcf-pre-checkout-offer-action" name="wcf-pre-checkout-offer-action">
 					</div>
 					<div class="wcf-pre-checkout-offer-actions">
 						<div class="wcf-pre-checkout-offer-btn-action wcf-pre-checkout-add-cart-btn">
 							<button class="wcf-pre-checkout-offer-btn button alt" data-wcf-pre-checkout-offer-btn type="submit" data-pre-checkout-offer-flow="<?php echo base64_encode($checkout_id); ?>">
-							<?php echo $pre_checkout_popup_btn_text; ?></button>
+							<?php echo esc_html( $pre_checkout_popup_btn_text ); ?></button>
 						</div>
 						<div class="wcf-pre-checkout-offer-btn-action wcf-pre-checkout-skip-btn">
-							<a class="wcf-pre-checkout-skip" data-wcf-pre-checkout-skip href="javascript:void(0);"><?php echo $pre_checkout_popup_skip_btn_text; ?></a>
+							<a class="wcf-pre-checkout-skip" data-wcf-pre-checkout-skip href="javascript:void(0);"><?php echo esc_html( $pre_checkout_popup_skip_btn_text ); ?></a>
 						</div>
 					</div>
 				</div>

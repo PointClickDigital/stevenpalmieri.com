@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<div class="wcf-bump-order-wrap wcf-bump-order-style-1 wcf-<?php echo $order_bump_pos; ?>">
+<div class="wcf-bump-order-wrap wcf-bump-order-style-1 wcf-<?php echo esc_attr( $order_bump_pos ); ?>">
 	
 	<?php $this->get_order_bump_hidden_data( $product_id, $order_bump_checked ); ?>
 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<label>
 				<?php if( isset( $bump_order_blinking_arrow ) ){ echo $bump_order_blinking_arrow;} ?>
 				<input type="checkbox" id="wcf-bump-order-cb" class="wcf-bump-order-cb" name="wcf-bump-order-cb" value="<?php echo $product_id; ?>" <?php checked( $order_bump_checked, true, true ); ?>>
-				<span class="wcf-bump-order-label"><?php echo $order_bump_label; ?>
+				<span class="wcf-bump-order-label"><?php echo esc_html( $order_bump_label ); ?>
 				</span>
 			</label>
 		</div>
@@ -43,14 +43,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<!-- Offer box  -->
 					<div class="wcf-bump-order-offer">
-						<span class="wcf-bump-order-bump-highlight"><?php echo $order_bump_hl_text; ?>
+						<span class="wcf-bump-order-bump-highlight"><?php echo wp_kses_post( $order_bump_hl_text ); ?>
 						</span>
 					</div>
 					<!-- Offer box  -->
 
 					<!-- wcf-bump-order-desc -->
 					<div class="wcf-bump-order-desc">
-						<?php echo $order_bump_desc; ?>
+						<?php echo wp_kses_post( $order_bump_desc ); ?>
 					</div>
 					<!-- wcf-bump-order-desc -->
 				</div>

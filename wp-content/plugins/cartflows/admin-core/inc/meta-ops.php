@@ -30,6 +30,16 @@ class MetaOps {
 			return;
 		}
 
+		$allowed_html = array(
+			'a'      => array(
+				'href' => array(),
+			),
+			'br'     => array(),
+			'strong' => array(),
+			'p'      => array(),
+			'span'   => array(),
+		);
+
 		foreach ( $post_meta as $key => $data ) {
 
 			if ( ! isset( $_POST[ $key ] ) ) { //phpcs:ignore
@@ -58,6 +68,26 @@ class MetaOps {
 					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) { //phpcs:ignore
 						$meta_value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $key ] ) ); //phpcs:ignore
 					}
+					break;
+
+				case 'FILTER_SANITIZE_COLOR':
+					// Sanitizes a hex color with #.
+					$meta_value = sanitize_hex_color( $_POST[ $key ] ); //phpcs:ignore
+					break;
+
+				case 'FILTER_SANITIZE_FONT_FAMILY':
+					// FILTER_FLAG_NO_ENCODE_QUOTES - Do not encode the single and double quotes.
+					$meta_value = filter_input( INPUT_POST, $key, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES );
+					break;
+
+				case 'FILTER_WP_KSES':
+					// It allow only tags that are defined in $allowed_html variable.
+					$meta_value = wp_kses( $_POST[ $key ], $allowed_html ); // phpcs:ignore
+					break;
+
+				case 'FILTER_WP_KSES_POST':
+						// wp_kses_post() allow only the same tags that are allowed in WP Posts.
+						$meta_value = wp_kses_post( $_POST[ $key ] ); // phpcs:ignore
 					break;
 
 				case 'FILTER_CARTFLOWS_CHECKOUT_PRODUCTS':

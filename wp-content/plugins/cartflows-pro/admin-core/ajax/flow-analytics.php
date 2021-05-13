@@ -60,6 +60,15 @@ class FlowAnalytics extends AjaxBase {
 	 */
 	public function set_visit_data() {
 
+		$response_data = array( 'message' => $this->get_error_msg( 'permission' ) );
+
+		/**
+		 * Check permission
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( $response_data );
+		}
+
 		$flow_id = isset( $_POST['flow_id'] ) ? intval( $_POST['flow_id'] ) : 0;
 
 		$report = \Cartflows_Pro_Analytics_Reports::get_instance();
@@ -85,7 +94,22 @@ class FlowAnalytics extends AjaxBase {
 	 */
 	public function reset_flow_analytics() {
 
-		check_ajax_referer( 'cartflows_pro_reset_flow_analytics', 'security' );
+		$response_data = array( 'message' => $this->get_error_msg( 'permission' ) );
+
+		/**
+		 * Check permission
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( $response_data );
+		}
+
+		/**
+		 * Nonce verification
+		 */
+		if ( ! check_ajax_referer( 'cartflows_pro_reset_flow_analytics', 'security', false ) ) {
+			$response_data = array( 'message' => $this->get_error_msg( 'nonce' ) );
+			wp_send_json_error( $response_data );
+		}
 
 		global $wpdb;
 		$visit_db       = $wpdb->prefix . CARTFLOWS_PRO_VISITS_TABLE;

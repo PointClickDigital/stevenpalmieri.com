@@ -136,7 +136,7 @@ if ( ! class_exists( 'Cartflows_Loader' ) ) {
 			define( 'CARTFLOWS_BASE', plugin_basename( CARTFLOWS_FILE ) );
 			define( 'CARTFLOWS_DIR', plugin_dir_path( CARTFLOWS_FILE ) );
 			define( 'CARTFLOWS_URL', plugins_url( '/', CARTFLOWS_FILE ) );
-			define( 'CARTFLOWS_VER', '1.6.13' );
+			define( 'CARTFLOWS_VER', '1.6.14' );
 			define( 'CARTFLOWS_SLUG', 'cartflows' );
 			define( 'CARTFLOWS_SETTINGS', 'cartflows_settings' );
 			define( 'CARTFLOWS_NAME', 'CartFlows' );

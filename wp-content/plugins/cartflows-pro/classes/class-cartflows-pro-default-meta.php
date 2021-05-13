@@ -207,7 +207,7 @@ class Cartflows_Pro_Default_Meta {
 				),
 				'wcf-offer-discount'                  => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-offer-discount-value'            => array(
 					'default'  => '',
@@ -219,15 +219,15 @@ class Cartflows_Pro_Default_Meta {
 				),
 				'wcf-enable-offer-product-variation'  => array(
 					'default'  => 'no',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-offer-product-variation-options' => array(
 					'default'  => 'inline',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-enable-offer-product-quantity'   => array(
 					'default'  => 'no',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-custom-script'                   => array(
 					'default'  => '',
@@ -235,15 +235,15 @@ class Cartflows_Pro_Default_Meta {
 				),
 				'wcf-no-next-step'                    => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-yes-next-step'                   => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-replace-main-order'              => array(
 					'default'  => 'no',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 			);
 		}

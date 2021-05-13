@@ -132,6 +132,10 @@ class Cartflows_Pro_Analytics_Reports {
 	 */
 	public function reset_flow_analytics() {
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		check_ajax_referer( 'wcf_reset_flow_analytics', 'security' );
 		global $wpdb;
 		$visit_db       = $wpdb->prefix . CARTFLOWS_PRO_VISITS_TABLE;

@@ -116,7 +116,7 @@ class Cartflows_Pro_Offer_Subscriptions {
 			}
 
 			$transaction_id = $offer_product['transaction_id'];
-			$start_date     = $order->get_date_created() ? $order->get_date_created()->date( 'Y-m-d H:i:s' ) : date( 'Y-m-d H:i:s' ); //phpcs:ignore
+			$start_date     = wcs_get_datetime_utc_string( wcs_get_objects_property( $order, 'date_created' ) ); //phpcs:ignore
 			$period         = WC_Subscriptions_Product::get_period( $product );
 			$interval       = WC_Subscriptions_Product::get_interval( $product );
 			$trial_period   = WC_Subscriptions_Product::get_trial_period( $product );

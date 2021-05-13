@@ -71,7 +71,7 @@ class Cartflows_Pro_Analytics_Tracking {
 			}
 
 			$current_step = $post->ID;
-			$cookie_name  = 'wcf-visited-flow-' . $current_flow;
+			$cookie_name  = CARTFLOWS_VISITED_FLOW_COOKIE . $current_flow;
 			$cookie       = isset( $_COOKIE[ $cookie_name ] ) ? json_decode( sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) ), true ) : array();
 			$is_returning = in_array( $current_step, $cookie, true );
 
@@ -79,7 +79,7 @@ class Cartflows_Pro_Analytics_Tracking {
 				array_push( $cookie, $current_step );
 			}
 
-			setcookie( $cookie_name, wp_json_encode( $cookie ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, true );
+			setcookie( $cookie_name, wp_json_encode( $cookie ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 
 			$this->save_conversion_data( $current_step );
 			$this->save_visit( $current_flow, $current_step, $is_returning );
@@ -133,7 +133,7 @@ class Cartflows_Pro_Analytics_Tracking {
 
 		wcf()->logger->log( __CLASS__ . '::' . __FUNCTION__ . ' : Entering ' );
 
-		$step_cookie_name = 'wcf-step-visited-' . $flow_id;
+		$step_cookie_name = CARTFLOWS_VISITED_STEP_COOKIE . $flow_id;
 		$step_cookie_data = isset( $_COOKIE[ $step_cookie_name ] ) ? json_decode( sanitize_text_field( wp_unslash( $_COOKIE[ $step_cookie_name ] ) ), true ) : array();
 
 		wcf()->logger->log( PHP_EOL . '==== Log Start ====' . PHP_EOL );
@@ -177,7 +177,7 @@ class Cartflows_Pro_Analytics_Tracking {
 				/* Update data in cokkie */
 				$step_cookie_data[ $control_id ]['conversion'] = 'yes';
 
-				setcookie( 'wcf-step-visited-' . $flow_id, wp_json_encode( $step_cookie_data ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, true );
+				setcookie( CARTFLOWS_VISITED_STEP_COOKIE . $flow_id, wp_json_encode( $step_cookie_data ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 				$_COOKIE[ $step_cookie_name ] = $step_cookie_data;
 
 				wcf()->logger->log( 'Conversion Stored : ' . PHP_EOL . print_r( $step_cookie_data, true ) . PHP_EOL ); //phpcs:ignore
@@ -247,7 +247,7 @@ class Cartflows_Pro_Analytics_Tracking {
 
 		/* Set current visit id */
 		$wcf_step_obj     = wcf_pro_get_step( $step_id );
-		$step_cookie_name = 'wcf-step-visited-' . $flow_id;
+		$step_cookie_name = CARTFLOWS_VISITED_STEP_COOKIE . $flow_id;
 		$step_cookie_data = isset( $_COOKIE[ $step_cookie_name ] ) ? json_decode( sanitize_text_field( wp_unslash( $_COOKIE[ $step_cookie_name ] ) ), true ) : array();
 		$step_control_id  = $wcf_step_obj->get_control_step();
 		$step_type        = $wcf_step_obj->get_step_type();
@@ -260,7 +260,7 @@ class Cartflows_Pro_Analytics_Tracking {
 			'conversion'      => 'no',
 		);
 
-		setcookie( 'wcf-step-visited-' . $flow_id, wp_json_encode( $step_cookie_data ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, true );
+		setcookie( CARTFLOWS_VISITED_STEP_COOKIE . $flow_id, wp_json_encode( $step_cookie_data ), strtotime( '+1 year' ), '/', COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 	}
 
 	/**

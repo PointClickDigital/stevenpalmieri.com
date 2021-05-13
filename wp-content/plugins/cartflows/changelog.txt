@@ -1,3 +1,6 @@
+Version 1.6.14 - Wednesday, 12th May 2021
+- Fix: If one of the variations is out of stock on checkout, it will be skipped, and the next will get added.
+
 Version 1.6.13 - Thursday, 29th April 2021
 - Improvement: Hardened the security of the plugin.
 

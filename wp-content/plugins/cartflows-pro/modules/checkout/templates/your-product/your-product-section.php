@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="wcf-product-option-wrap wcf-yp-skin-<?php echo self::$product_option_data['selected_skin']; ?> wcf-product-option-<?php echo self::$product_option_data['position']; ?>">
-	<h3 id="your_products_heading"> <?php echo $this->product_option_title(); ?> </h3>
+<div class="wcf-product-option-wrap wcf-yp-skin-<?php echo esc_attr( self::$product_option_data['selected_skin'] ); ?> wcf-product-option-<?php echo esc_attr( self::$product_option_data['position'] ); ?>">
+	<h3 id="your_products_heading"> <?php echo esc_html( $this->product_option_title() ); ?> </h3>
 	<div class="wcf-qty-options">
 
 	<?php

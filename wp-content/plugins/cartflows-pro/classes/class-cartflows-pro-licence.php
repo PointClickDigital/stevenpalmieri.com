@@ -121,10 +121,9 @@ if ( ! class_exists( 'CartFlows_Pro_Licence' ) ) :
 		/**
 		 * License Inactive Notice
 		 *
-		 * @param string $default Default notice.
 		 * @since 1.0.0
 		 */
-		public function inactive_notice( $default ) {
+		public function inactive_notice() {
 
 			if ( 'Activated' === $this->activate_status ) {
 				return;

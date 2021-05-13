@@ -151,7 +151,7 @@ class Cartflows_Pro_Ab_Test_Factory {
 	 */
 	public function check_step_cookie() {
 
-		$cookie_name = 'cartflows-ab-test-' . $this->control_step_id;
+		$cookie_name = CARTFLOWS_AB_TEST_COOKIE . $this->control_step_id;
 
 		if ( isset( $_COOKIE[ $cookie_name ] ) ) {
 			return true;
@@ -165,7 +165,7 @@ class Cartflows_Pro_Ab_Test_Factory {
 	 */
 	public function get_step_cookie() {
 
-		$cookie_name = 'cartflows-ab-test-' . $this->control_step_id;
+		$cookie_name = CARTFLOWS_AB_TEST_COOKIE . $this->control_step_id;
 
 		if ( isset( $_COOKIE[ $cookie_name ] ) ) {
 			return intval( $_COOKIE[ $cookie_name ] );
@@ -179,12 +179,12 @@ class Cartflows_Pro_Ab_Test_Factory {
 	 */
 	public function set_step_cookie() {
 
-		$cookie_name = 'cartflows-ab-test-' . $this->control_step_id;
+		$cookie_name = CARTFLOWS_AB_TEST_COOKIE . $this->control_step_id;
 		$cookiepath  = $this->get_cookiepath();
 		$expire_time = time() + ( 30 * 24 * 60 * MINUTE_IN_SECONDS );
 		$value       = $this->show_variation_id;
 
-		setcookie( $cookie_name, $value, $expire_time, $cookiepath, COOKIE_DOMAIN, true );
+		setcookie( $cookie_name, $value, $expire_time, $cookiepath, COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 	}
 
 	/**

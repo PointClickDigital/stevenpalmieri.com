@@ -13,7 +13,7 @@ $checkout_layout = wcf()->options->get_checkout_meta_value( $checkout_id, 'wcf-c
 $fields_skins    = wcf()->options->get_checkout_meta_value( $checkout_id, 'wcf-fields-skins' );
 
 ?>
-<div id="wcf-embed-checkout-form" class="wcf-embed-checkout-form wcf-embed-checkout-form-<?php echo $checkout_layout; ?> wcf-field-<?php echo $fields_skins; ?>">
+<div id="wcf-embed-checkout-form" class="wcf-embed-checkout-form wcf-embed-checkout-form-<?php echo esc_attr( $checkout_layout ); ?> wcf-field-<?php echo esc_attr( $fields_skins ); ?>">
 <!-- CHECKOUT SHORTCODE -->
 <?php do_action( 'cartflows_add_before_main_section', $checkout_layout ); ?>
 

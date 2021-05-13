@@ -578,17 +578,32 @@ class Cartflows_Checkout_Markup {
 
 									$product_childrens = $_product->get_children();
 
-									if ( isset( $product_childrens[0] ) ) {
-										$variation      = wc_get_product( $product_childrens[0] );
-										$_product_price = $variation->get_price();
-										$custom_price   = $this->calculate_discount( '', $discount_type, $discount_value, $_product_price );
+									$variation_product    = '';
+									$variation_product_id = 0;
+
+									foreach ( $product_childrens as $key => $v_id ) {
+
+										$_var_product = wc_get_product( $v_id );
+
+										if ( $_var_product->is_in_stock() ) {
+											$variation_product_id = $v_id;
+											$variation_product    = $_var_product;
+											break;
+										}
+									}
+
+									if ( $variation_product ) {
+										$_product_price = $variation_product->get_price();
+
+										$custom_price = $this->calculate_discount( '', $discount_type, $discount_value, $_product_price );
 										if ( ! empty( $custom_price ) ) {
 											$cart_item_data = array(
 												'custom_price' => $custom_price,
 												'data' => $data,
 											);
 										}
-										$cart_key = WC()->cart->add_to_cart( $product_childrens[0], $quantity, 0, array(), $cart_item_data );
+
+										$cart_key = WC()->cart->add_to_cart( $variation_product_id, $quantity, 0, array(), $cart_item_data );
 										$cart_product_count++;
 									} else {
 										echo '<p>' . esc_html__( 'Variations Not set', 'cartflows' ) . '</p>';

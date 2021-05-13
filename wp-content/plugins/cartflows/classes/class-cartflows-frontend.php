@@ -477,7 +477,7 @@ class Cartflows_Frontend {
 				$flow_script = '<script>' . $flow_script . '</script>';
 			}
 			echo '<!-- Flow Custom CartFlows Script -->';
-			echo $flow_script;
+			echo html_entity_decode( $flow_script );
 			echo '<!-- End Flow Custom CartFlows Script -->';
 		}
 
@@ -486,7 +486,7 @@ class Cartflows_Frontend {
 				$script = '<script>' . $script . '</script>';
 			}
 			echo '<!-- Custom CartFlows Script -->';
-			echo $script;
+			echo html_entity_decode( $script );
 			echo '<!-- End Custom CartFlows Script -->';
 		}
 	}

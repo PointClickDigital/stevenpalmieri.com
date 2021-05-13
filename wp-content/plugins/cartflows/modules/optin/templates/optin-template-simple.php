@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $optin_layout = 'one-column';
 $fields_skins = wcf()->options->get_optin_meta_value( $optin_id, 'wcf-input-fields-skins' );
 ?>
-<div id="wcf-optin-form" class="wcf-optin-form wcf-optin-form-one-column wcf-field-<?php echo $fields_skins; ?>">
+<div id="wcf-optin-form" class="wcf-optin-form wcf-optin-form-one-column wcf-field-<?php echo esc_attr( $fields_skins ); ?>">
 
 <!-- CHECKOUT SHORTCODE -->
 <?php do_action( 'cartflows_optin_before_main_section', $optin_layout ); ?>

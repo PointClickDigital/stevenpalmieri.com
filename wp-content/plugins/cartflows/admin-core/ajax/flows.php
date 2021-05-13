@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CartflowsAdmin\AdminCore\Ajax\AjaxBase;
 use CartflowsAdmin\AdminCore\Inc\AdminHelper;
+use CartflowsAdmin\AdminCore\Inc\MetaOps;
 
 /**
  * Class Flows.
@@ -140,26 +141,22 @@ class Flows extends AjaxBase {
 		);
 
 		if ( isset( $_POST['flow_id'] ) ) {
-			$flow_id        = intval( $_POST['flow_id'] );
+			$flow_id = intval( $_POST['flow_id'] );
+
+			if ( empty( $flow_id ) ) {
+				wp_send_json_success( $response_data );
+			}
+
 			$new_flow_title = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : get_the_title( $flow_id );
+
 			if ( '' === $new_flow_title ) {
 				$new_flow_title = __( '(no title)', 'cartflows' );
 			}
 
-			$new_flow_slug    = isset( $_POST['post_name'] ) ? sanitize_text_field( wp_unslash( $_POST['post_name'] ) ) : '';
-			$flow_index       = isset( $_POST['wcf-flow-indexing'] ) ? sanitize_text_field( wp_unslash( $_POST['wcf-flow-indexing'] ) ) : '';
-			$sanbox_mode      = isset( $_POST['wcf-testing'] ) ? sanitize_text_field( wp_unslash( $_POST['wcf-testing'] ) ) : 'no';
-			$enable_analytics = isset( $_POST['wcf-enable-analytics'] ) ? sanitize_text_field( wp_unslash( $_POST['wcf-enable-analytics'] ) ) : 'no';
-			$flow_script      = isset( $_POST['wcf-flow-custom-script'] ) ? wp_unslash( $_POST['wcf-flow-custom-script'] ) : ''; //phpcs:ignore
+			$new_flow_slug = isset( $_POST['post_name'] ) ? sanitize_text_field( wp_unslash( $_POST['post_name'] ) ) : '';
 
-			update_post_meta( $flow_id, 'wcf-testing', $sanbox_mode );
-			update_post_meta( $flow_id, 'wcf-enable-analytics', $enable_analytics );
-			update_post_meta( $flow_id, 'wcf-flow-custom-script', $flow_script );
-			update_post_meta( $flow_id, 'wcf-flow-indexing', $flow_index );
-		}
-
-		if ( empty( $flow_id ) ) {
-			wp_send_json_success( $response_data );
+			$post_meta = wcf()->options->get_flow_fields( $flow_id );
+			MetaOps::save_meta_fields( $flow_id, $post_meta );
 		}
 
 		$new_flow_data = array(

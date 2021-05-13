@@ -167,7 +167,7 @@ class Cartflows_Pro_Gateway_Mollie_Ideal extends Cartflows_Pro_Mollie_Gateway_He
 		$order_key    = isset( $_POST['order_key'] ) ? sanitize_text_field( wp_unslash( $_POST['order_key'] ) ) : '';
 		$offer_type   = isset( $_POST['offer_type'] ) ? sanitize_text_field( wp_unslash( $_POST['offer_type'] ) ) : '';
 		$offer_action = isset( $_POST['offer_action'] ) ? sanitize_text_field( wp_unslash( $_POST['offer_action'] ) ) : '';
-		$session_key  = isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) : '';
+		$session_key  = isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) : '';
 		$order        = wc_get_order( $order_id );
 		$variation_id = '';
 		$input_qty    = '';

@@ -40,6 +40,7 @@ class Cartflows_Pro_Session {
 	public function __construct() {
 
 		define( 'CARTFLOWS_SESSION_EXPIRE_TIME', 30 );
+
 	}
 
 	/**
@@ -60,8 +61,8 @@ class Cartflows_Pro_Session {
 	 */
 	public function set_session( $flow_id, $data = array() ) {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 		} else {
 			$key = $flow_id . '_' . md5( time() . wp_rand() );
 		}
@@ -70,7 +71,7 @@ class Cartflows_Pro_Session {
 		$cookiepath      = $this->get_cookiepath();
 
 		// Set the browser cookie to expire in 30 minutes.
-		setcookie( 'cartflows_session_' . $flow_id, $key, time() + $expiration_time * MINUTE_IN_SECONDS, $cookiepath, COOKIE_DOMAIN, true );
+		setcookie( CARTFLOWS_SESSION_COOKIE . $flow_id, $key, time() + $expiration_time * MINUTE_IN_SECONDS, $cookiepath, COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 
 		// Try to grab the transient from the database, if it exists.
 		$transient = $data;
@@ -101,12 +102,12 @@ class Cartflows_Pro_Session {
 	 */
 	public function update_session( $flow_id, $data = array() ) {
 
-		if ( ! isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( ! isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
 			$this->set_session( $flow_id, $data );
 		}
 
-		$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+		$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 		// Try to grab the transient from the database, if it exists.
 		$transient = get_transient( 'cartflows_data_' . $key );
@@ -115,7 +116,7 @@ class Cartflows_Pro_Session {
 		$cookiepath      = $this->get_cookiepath();
 
 		// Set the browser cookie to expire in 30 minutes.
-		setcookie( 'cartflows_session_' . $flow_id, $key, time() + $expiration_time * MINUTE_IN_SECONDS, $cookiepath, COOKIE_DOMAIN, true );
+		setcookie( CARTFLOWS_SESSION_COOKIE . $flow_id, $key, time() + $expiration_time * MINUTE_IN_SECONDS, $cookiepath, COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 
 		// Store the transient, but expire in 30 minutes.
 		set_transient( 'cartflows_data_' . $key, $transient, $expiration_time * MINUTE_IN_SECONDS );
@@ -130,9 +131,9 @@ class Cartflows_Pro_Session {
 	 */
 	public function destroy_session( $flow_id ) {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
-			$key        = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key        = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 			$cookiepath = $this->get_cookiepath();
 
 			// Delete Transient.
@@ -140,10 +141,10 @@ class Cartflows_Pro_Session {
 
 			wp_cache_delete( 'cartflows_data_' . $key );
 
-			unset( $_COOKIE[ 'cartflows_session_' . $flow_id ] );
+			unset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] );
 
 			// empty value and expiration one hour before.
-			setcookie( 'cartflows_session_' . $flow_id, $key, time() - 3600, $cookiepath, COOKIE_DOMAIN, true );
+			setcookie( CARTFLOWS_SESSION_COOKIE . $flow_id, $key, time() - 3600, $cookiepath, COOKIE_DOMAIN, CARTFLOWS_HTTPS );
 
 			wcf()->logger->log( '==== Start ====' . PHP_EOL . 'Flow-' . $flow_id . ' Session Destroyed : ' . $key . PHP_EOL . ' Current Step-' . wcf_get_current_step_type() . PHP_EOL . '==== Start ====' . PHP_EOL );
 		}
@@ -154,9 +155,9 @@ class Cartflows_Pro_Session {
 	 */
 	public function get_session() {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 			$data = get_transient( 'cartflows_data_' . $key );
 		}
@@ -170,9 +171,9 @@ class Cartflows_Pro_Session {
 	 */
 	public function update_data( $flow_id, $data = array() ) {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 			// Try to grab the transient from the database, if it exists.
 			$transient = get_transient( 'cartflows_data_' . $key );
@@ -200,9 +201,9 @@ class Cartflows_Pro_Session {
 	 */
 	public function get_data( $flow_id ) {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 			// Try to grab the transient from the database, if it exists.
 			$transient = get_transient( 'cartflows_data_' . $key );
@@ -228,12 +229,12 @@ class Cartflows_Pro_Session {
 
 		wcf()->logger->log( 'Active session : Entering' );
 
-		if ( isset( $_GET['wcf-sk'] ) && isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_GET['wcf-sk'] ) && isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
 			wcf()->logger->log( 'Session key and cookie found' );
 
 			$sk  = sanitize_text_field( wp_unslash( $_GET['wcf-sk'] ) );
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 			if ( $sk === $key ) {
 
@@ -275,9 +276,9 @@ class Cartflows_Pro_Session {
 	 */
 	public function get_session_key( $flow_id ) {
 
-		if ( isset( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) ) {
+		if ( isset( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) ) {
 
-			$key = sanitize_text_field( wp_unslash( $_COOKIE[ 'cartflows_session_' . $flow_id ] ) );
+			$key = sanitize_text_field( wp_unslash( $_COOKIE[ CARTFLOWS_SESSION_COOKIE . $flow_id ] ) );
 
 			return $key;
 		}

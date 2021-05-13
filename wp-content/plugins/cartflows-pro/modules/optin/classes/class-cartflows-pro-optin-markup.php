@@ -137,7 +137,7 @@ class Cartflows_Pro_Optin_Markup {
 			foreach ( $billing_fields as $field => $data ) {
 
 				if ( isset( $saved_billing_fields[ $field ] ) && isset( $data['custom'] ) && $data['custom'] ) {
-					$output .= '<p><strong>' . $data['label'] . ':</strong> ' . get_post_meta( $order_id, '_' . $field, true ) . '</p>';
+					$output .= '<p><strong>' . esc_html( $data['label'] ) . ':</strong> ' . esc_html( get_post_meta( $order_id, '_' . $field, true ) ) . '</p>';
 				}
 			}
 

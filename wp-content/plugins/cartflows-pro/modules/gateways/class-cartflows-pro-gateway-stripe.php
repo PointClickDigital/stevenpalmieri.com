@@ -64,6 +64,8 @@ class Cartflows_Pro_Gateway_Stripe {
 
 		add_action( 'cartflows_offer_before_main_order_cancel', array( $this, 'remove_the_stripe_refund_action' ), 10, 1 );
 
+		add_action( 'cartflows_offer_child_order_created_' . $this->key, array( $this, 'add_required_meta_to_child_order' ), 10, 3 );
+
 	}
 
 	/**
@@ -326,8 +328,8 @@ class Cartflows_Pro_Gateway_Stripe {
 		$fee = ! empty( $response->balance_transaction->fee ) ? WC_Stripe_Helper::format_balance_fee( $response->balance_transaction, 'fee' ) : 0;
 		$net = ! empty( $response->balance_transaction->net ) ? WC_Stripe_Helper::format_balance_fee( $response->balance_transaction, 'net' ) : 0;
 
-		$fee = $fee + WC_Stripe_Helper::get_stripe_fee( $order );
-		$net = $net + WC_Stripe_Helper::get_stripe_net( $order );
+		$fee = $fee + floatval( WC_Stripe_Helper::get_stripe_fee( $order ) );
+		$net = $net + floatval( WC_Stripe_Helper::get_stripe_net( $order ) );
 
 		WC_Stripe_Helper::update_stripe_fee( $order, $fee );
 		WC_Stripe_Helper::update_stripe_net( $order, $net );
@@ -513,6 +515,19 @@ class Cartflows_Pro_Gateway_Stripe {
 		if ( 'stripe' === $parent_order->get_payment_method() ) {
 			remove_action( 'woocommerce_order_status_cancelled', array( WC_Stripe_Order_Handler::get_instance(), 'cancel_payment' ) );
 		}
+	}
+
+	/**
+	 * Save the parent payment meta to child order.
+	 *
+	 * @param object $parent_order Object of order.
+	 * @param object $child_order Object of order.
+	 * @param int    $transaction_id transaction id.
+	 */
+	public function add_required_meta_to_child_order( $parent_order, $child_order, $transaction_id ) {
+
+		// In order to refund the upsell childe order, stripe checks if charge is captured or not.Hence need to add below key.
+		update_post_meta( $child_order->get_id(), '_stripe_charge_captured', 'yes' );
 	}
 }
 

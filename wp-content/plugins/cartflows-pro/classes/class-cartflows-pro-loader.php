@@ -180,7 +180,7 @@ if ( ! class_exists( 'Cartflows_Pro_Loader' ) ) {
 			define( 'CARTFLOWS_PRO_BASE', plugin_basename( CARTFLOWS_PRO_FILE ) );
 			define( 'CARTFLOWS_PRO_DIR', plugin_dir_path( CARTFLOWS_PRO_FILE ) );
 			define( 'CARTFLOWS_PRO_URL', plugins_url( '/', CARTFLOWS_PRO_FILE ) );
-			define( 'CARTFLOWS_PRO_VER', '1.6.11' );
+			define( 'CARTFLOWS_PRO_VER', '1.6.12' );
 			define( 'CARTFLOWS_PRO_SLUG', 'cartflows-pro' );
 			define( 'CARTFLOWS_PRO_LICENSE_URL', admin_url( 'plugins.php?cartflows-license-popup' ) );
 
@@ -191,6 +191,22 @@ if ( ! class_exists( 'Cartflows_Pro_Loader' ) ) {
 			if ( ! defined( 'CARTFLOWS_SERVER_URL' ) ) {
 				define( 'CARTFLOWS_SERVER_URL', 'https://my.cartflows.com/' );
 			}
+
+			$cookie_prefix = '';
+
+			if ( defined( 'CARTFLOWS_COOKIE_PREFIX' ) ) {
+				$cookie_prefix = CARTFLOWS_COOKIE_PREFIX;
+			}
+
+			define( 'CARTFLOWS_SESSION_COOKIE', $cookie_prefix . 'cartflows_session_' );
+
+			define( 'CARTFLOWS_VISITED_FLOW_COOKIE', $cookie_prefix . 'wcf-visited-flow-' );
+
+			define( 'CARTFLOWS_VISITED_STEP_COOKIE', $cookie_prefix . 'wcf-step-visited-' );
+
+			define( 'CARTFLOWS_AB_TEST_COOKIE', $cookie_prefix . 'cartflows-ab-test-' );
+
+			define( 'CARTFLOWS_HTTPS', is_ssl() ? true : false );
 		}
 
 		/**

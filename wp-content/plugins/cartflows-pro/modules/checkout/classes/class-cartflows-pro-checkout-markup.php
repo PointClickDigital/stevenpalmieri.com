@@ -751,7 +751,7 @@ class Cartflows_Pro_Checkout_Markup {
 
 			$two_step_html = '';
 
-				$two_step_html .= "<div class='wcf-embed-checkout-form-nav wcf-border-" . $two_step_section_border . " '>";
+				$two_step_html .= "<div class='wcf-embed-checkout-form-nav wcf-border-" . esc_attr( $two_step_section_border ) . " '>";
 
 				$two_step_html             .= "<ul class='wcf-embed-checkout-form-steps'>";
 					$two_step_html         .= "<div class='steps step-one wcf-current'>";
@@ -760,8 +760,8 @@ class Cartflows_Pro_Checkout_Markup {
 
 							$two_step_html .= "<div class='step-heading'>";
 
-								$two_step_html .= "<div class='step-name'>" . $step_one_title . '</div>';
-								$two_step_html .= "<div class='step-sub-name'>" . $step_one_sub_title . '</div>';
+								$two_step_html .= "<div class='step-name'>" . esc_html( $step_one_title ) . '</div>';
+								$two_step_html .= "<div class='step-sub-name'>" . esc_html( $step_one_sub_title ) . '</div>';
 
 							$two_step_html .= '</div>';
 
@@ -774,8 +774,8 @@ class Cartflows_Pro_Checkout_Markup {
 
 								$two_step_html .= "<div class='step-heading'>";
 
-									$two_step_html .= "<div class='step-name'>" . $step_two_title . '</div>';
-									$two_step_html .= "<div class='step-sub-name'>" . $step_two_sub_title . '</div>';
+									$two_step_html .= "<div class='step-name'>" . esc_html( $step_two_title ) . '</div>';
+									$two_step_html .= "<div class='step-sub-name'>" . esc_html( $step_two_sub_title ) . '</div>';
 
 								$two_step_html .= '</div>';
 
@@ -827,7 +827,7 @@ class Cartflows_Pro_Checkout_Markup {
 
 			$two_step_note .= "<div class='wcf-embed-checkout-form-note'>";
 
-			$two_step_note .= '<p>' . $checkout_note . '</p>';
+			$two_step_note .= '<p>' . wp_kses_post( $checkout_note ) . '</p>';
 
 			$two_step_note .= '</div>';
 
@@ -874,12 +874,12 @@ class Cartflows_Pro_Checkout_Markup {
 			if ( '' != $button_title ) {
 						$two_step_next_btn_html     .= '<span class="wcf-next-button-icon-wrap">';
 							$two_step_next_btn_html .= '<span class="dashicons dashicons-arrow-right-alt"></span>';
-							$two_step_next_btn_html .= '<span class="wcf-button-text">' . $button_title . '</span>';
+							$two_step_next_btn_html .= '<span class="wcf-button-text">' . esc_html( $button_title ) . '</span>';
 						$two_step_next_btn_html     .= '</span>';
 			}
 
 			if ( '' != $button_sub_title ) {
-						$two_step_next_btn_html .= '<span class="wcf-button-sub-text">' . $button_sub_title . '</span>';
+						$two_step_next_btn_html .= '<span class="wcf-button-sub-text">' . esc_html( $button_sub_title ) . '</span>';
 			}
 					$two_step_next_btn_html .= '</span>';
 				$two_step_next_btn_html     .= '</a>';

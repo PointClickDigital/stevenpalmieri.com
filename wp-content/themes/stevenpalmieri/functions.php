@@ -137,3 +137,19 @@ function pcd_format_price_range( $price, $from, $to ) {
 } 
  
 add_filter( 'woocommerce_format_price_range', 'pcd_format_price_range', 10, 3 );
+
+
+// Add Wholesale User Role
+
+$result = add_role(
+'wholesale',
+        __( 'Wholesaler' ),
+array(
+
+'read' => true,
+
+'edit_posts'  => false,
+
+'delete_posts'  => false,
+)
+);

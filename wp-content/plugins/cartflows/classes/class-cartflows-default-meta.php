@@ -112,11 +112,11 @@ class Cartflows_Default_Meta {
 			self::$checkout_fields = array(
 				'wcf-enable-design-settings'           => array(
 					'default'  => $this->get_show_design_meta_value(),
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-field-google-font-url'            => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_URL',
 				),
 				'wcf-checkout-products'                => array(
 					'default'  => array(),
@@ -124,35 +124,35 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-checkout-layout'                  => array(
 					'default'  => 'two-column',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-input-font-family'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-input-font-weight'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-heading-font-family'              => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-heading-font-weight'              => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-base-font-family'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-advance-options-fields'           => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-remove-product-field'             => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-checkout-place-order-button-text' => array(
 					'default'  => '',
@@ -160,103 +160,103 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-base-font-weight'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-button-font-family'               => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-button-font-weight'               => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-primary-color'                    => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-heading-color'                    => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-section-bg-color'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-hl-bg-color'                      => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-tb-padding'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-field-lr-padding'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-fields-skins'                     => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-input-field-size'                 => array(
 					'default'  => '33px',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-field-color'                      => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-bg-color'                   => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-border-color'               => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-box-border-color'                 => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-label-color'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-tb-padding'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-submit-lr-padding'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-input-button-size'                => array(
 					'default'  => '33px',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-submit-color'                     => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-hover-color'               => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-bg-color'                  => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-bg-hover-color'            => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-border-color'              => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-border-hover-color'        => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-header-logo-image'                => array(
 					'default'  => '',
@@ -329,14 +329,6 @@ class Cartflows_Default_Meta {
 			self::$flow_fields = array(
 				'wcf-steps'              => array(
 					'default'  => array(),
-					'sanitize' => 'FILTER_DEFAULT',
-				),
-				'post_title'             => array(
-					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
-				),
-				'post_name'              => array(
-					'default'  => '',
 					'sanitize' => 'FILTER_DEFAULT',
 				),
 				'wcf-flow-indexing'      => array(
@@ -414,6 +406,34 @@ class Cartflows_Default_Meta {
 				case 'FILTER_CARTFLOWS_ARRAY':
 					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) { //phpcs:ignore
 						$meta_value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $key ] ) ); //phpcs:ignore
+					}
+					break;
+
+				case 'FILTER_SANITIZE_COLOR':
+					// Sanitizes a hex color with #.
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
+						$meta_value = sanitize_hex_color( $_POST[ $key ] ); // phpcs:ignore
+					} //phpcs:ignore
+					break;
+
+				case 'FILTER_SANITIZE_FONT_FAMILY':
+					// FILTER_FLAG_NO_ENCODE_QUOTES - Do not encode the single and double quotes.
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
+						$meta_value = filter_input( INPUT_POST, $key, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES );
+					}
+					break;
+
+				case 'FILTER_WP_KSES':
+					// It allow only tags that are defined in $allowed_html variable.
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
+						$meta_value = wp_kses( $_POST[ $key ], $allowed_html ); // phpcs:ignore
+					}
+					break;
+
+				case 'FILTER_WP_KSES_POST':
+						// wp_kses_post() allow only the same tags that are allowed in WP Posts.
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
+						$meta_value = wp_kses_post( $_POST[ $key ] ); // phpcs:ignore
 					}
 					break;
 
@@ -566,67 +586,67 @@ class Cartflows_Default_Meta {
 			self::$thankyou_fields = array(
 				'wcf-enable-design-settings'    => array(
 					'default'  => $this->get_show_design_meta_value(),
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-field-google-font-url'     => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_URL',
 				),
 				'wcf-tq-text-color'             => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-tq-font-family'            => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-tq-font-size'              => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-tq-heading-color'          => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-tq-heading-font-family'    => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-tq-heading-font-wt'        => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-tq-container-width'        => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-tq-section-bg-color'       => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-tq-advance-options-fields' => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-show-overview-section'     => array(
 					'default'  => 'yes',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-show-details-section'      => array(
 					'default'  => 'yes',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-show-billing-section'      => array(
 					'default'  => 'yes',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-show-shipping-section'     => array(
 					'default'  => 'yes',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-show-tq-redirect-section'  => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-tq-redirect-link'          => array(
 					'default'  => '',
@@ -634,7 +654,7 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-tq-text'                   => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_WP_KSES_POST',
 				),
 				'wcf-custom-script'             => array(
 					'default'  => '',
@@ -737,36 +757,35 @@ class Cartflows_Default_Meta {
 				/* Style */
 				'wcf-enable-design-settings'     => array(
 					'default'  => $this->get_show_design_meta_value(),
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
-
 				'wcf-field-google-font-url'      => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_URL',
 				),
 				'wcf-primary-color'              => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-base-font-family'           => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-input-fields-skins'         => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-input-font-family'          => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-input-font-weight'          => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-input-field-size'           => array(
 					'default'  => '33px',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-field-tb-padding'           => array(
 					'default'  => '',
@@ -778,23 +797,23 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-field-color'                => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-bg-color'             => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-border-color'         => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-field-label-color'          => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-button-text'         => array(
 					'default'  => __( 'Submit', 'cartflows' ),
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-submit-font-size'           => array(
 					'default'  => '',
@@ -802,15 +821,15 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-button-font-family'         => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_FONT_FAMILY',
 				),
 				'wcf-button-font-weight'         => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_NUMBER_INT',
 				),
 				'wcf-submit-button-size'         => array(
 					'default'  => '33px',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-submit-tb-padding'          => array(
 					'default'  => '',
@@ -822,41 +841,41 @@ class Cartflows_Default_Meta {
 				),
 				'wcf-submit-button-position'     => array(
 					'default'  => 'center',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-submit-color'               => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-hover-color'         => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-bg-color'            => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-bg-hover-color'      => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-border-color'        => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 				'wcf-submit-border-hover-color'  => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_COLOR',
 				),
 
 				/* Settings */
 				'wcf-optin-pass-fields'          => array(
 					'default'  => '',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 				'wcf-optin-pass-specific-fields' => array(
 					'default'  => 'first_name',
-					'sanitize' => 'FILTER_DEFAULT',
+					'sanitize' => 'FILTER_SANITIZE_STRING',
 				),
 
 				/* Script */

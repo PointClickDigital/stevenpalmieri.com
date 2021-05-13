@@ -1,3 +1,9 @@
+Version 1.6.12 - Wednesday, 12th May 2021
+- Improvement: Hardened the security of the plugin.
+- Fix: Admin notices conflict with Gravity Forms.
+- Fix: Upsell order was not refunding for stripe.
+- Fix: A date/time difference in scheduled subscription, if the subscription product is purchased from upsell/downsell.
+
 Version 1.6.11 - Thursday, 22nd April 2021
 - New: Now, you can add products from the URL on the Checkout page.
 - Fix: The processing offer order popup was getting added on the rest of the CartFlows Pages.

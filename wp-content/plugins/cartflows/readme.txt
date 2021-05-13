@@ -3,7 +3,7 @@ Contributors: sujaypawar, wpcrafter
 Tags: woocommerce, funnel builder, sales funnels, elementor, beaver builder
 Requires at least: 5.4
 Tested up to: 5.7.1
-Stable tag: 1.6.13
+Stable tag: 1.6.14
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -125,6 +125,9 @@ Glad you asked! Most normal users have less than 3 funnels on a single website, 
 5. Easily edit anything with your page builder.
 
 == Changelog ==
+
+= Version 1.6.14 - Wednesday, 12th May 2021 =
+* Fix: If one of the variations is out of stock on checkout, it will be skipped, and the next will get added.
 
 = Version 1.6.13 - Thursday, 29th April 2021 =
 * Improvement: Hardened the security of the plugin.

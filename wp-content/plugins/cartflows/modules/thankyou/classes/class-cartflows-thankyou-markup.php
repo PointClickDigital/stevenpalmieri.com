@@ -339,7 +339,7 @@ class Cartflows_Thankyou_Markup {
 		$new_text = wcf()->options->get_thankyou_meta_value( $thank_you_id, 'wcf-tq-text' );
 
 		if ( ! empty( $new_text ) ) {
-			$woo_text = do_shortcode( $new_text );
+			$woo_text = do_shortcode( wp_kses_post( $new_text ) );
 		}
 
 		return $woo_text;

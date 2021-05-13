@@ -62,7 +62,7 @@ class Cartflows_Pro_Optin_Default_Meta {
 		/* Custom Fields Options*/
 		$fields['wcf-optin-enable-custom-fields'] = array(
 			'default'  => 'no',
-			'sanitize' => 'FILTER_DEFAULT',
+			'sanitize' => 'FILTER_SANITIZE_STRING',
 		);
 
 		$fields['wcf-optin-fields-billing'] = array(

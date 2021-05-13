@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the CartFlows plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: CartFlows 1.6.13\n"
+"Project-Id-Version: CartFlows 1.6.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cartflows\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-29T09:50:06+00:00\n"
+"POT-Creation-Date: 2021-05-11T12:28:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: cartflows\n"
@@ -77,20 +77,20 @@ msgstr ""
 msgid "Successfully saved data!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:94
+#: admin-core/ajax/flows.php:95
 msgid "No Flow IDs has been supplied to export!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:107
+#: admin-core/ajax/flows.php:108
 #: admin-core/ajax/importer.php:107
 msgid "Flows exported successfully"
 msgstr ""
 
-#: admin-core/ajax/flows.php:139
+#: admin-core/ajax/flows.php:140
 msgid "Can't update the flow data"
 msgstr ""
 
-#: admin-core/ajax/flows.php:146
+#: admin-core/ajax/flows.php:153
 #: admin-core/ajax/steps.php:403
 #: admin-core/assets/build/editor-app.js:1
 #: admin-core/assets/build/editor-app.js:2
@@ -98,77 +98,77 @@ msgstr ""
 msgid "(no title)"
 msgstr ""
 
-#: admin-core/ajax/flows.php:174
+#: admin-core/ajax/flows.php:171
 msgid "Successfully saved the flow data!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:230
+#: admin-core/ajax/flows.php:227
 msgid "Successfully deleted the Flows!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:258
-#: admin-core/ajax/flows.php:330
-#: admin-core/ajax/flows.php:864
+#: admin-core/ajax/flows.php:255
+#: admin-core/ajax/flows.php:327
+#: admin-core/ajax/flows.php:861
 msgid "No Flow IDs has been supplied to delete!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:301
-#: admin-core/ajax/flows.php:364
+#: admin-core/ajax/flows.php:298
+#: admin-core/ajax/flows.php:361
 msgid "Successfully trashed the Flows!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:397
+#: admin-core/ajax/flows.php:394
 msgid "Can't update the flow title"
 msgstr ""
 
 #. translators: %s flow id
-#: admin-core/ajax/flows.php:413
+#: admin-core/ajax/flows.php:410
 #: admin-core/ajax/steps.php:109
 msgid "Flow title updated - %s"
 msgstr ""
 
-#: admin-core/ajax/flows.php:442
+#: admin-core/ajax/flows.php:439
 msgid "No Flow ID has been supplied to clone!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:466
+#: admin-core/ajax/flows.php:463
 msgid "Invalid Flow ID has been supplied to clone!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:655
+#: admin-core/ajax/flows.php:652
 msgid "Successfully cloned the Flow!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:684
-#: admin-core/ajax/flows.php:744
-#: admin-core/ajax/flows.php:804
+#: admin-core/ajax/flows.php:681
+#: admin-core/ajax/flows.php:741
+#: admin-core/ajax/flows.php:801
 msgid "No Flow ID has been supplied to delete!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:716
+#: admin-core/ajax/flows.php:713
 msgid "Successfully restored the Flow!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:776
+#: admin-core/ajax/flows.php:773
 msgid "Successfully trashed the Flow!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:836
+#: admin-core/ajax/flows.php:833
 msgid "Successfully deleted the Flow!"
 msgstr ""
 
-#: admin-core/ajax/flows.php:906
+#: admin-core/ajax/flows.php:903
 msgid "Successfully updated the Flow status!"
 msgstr ""
 
 #. translators: %s flow id
-#: admin-core/ajax/flows.php:942
+#: admin-core/ajax/flows.php:939
 #: admin-legacy/modules/flow/class-cartflows-flow-meta.php:350
 msgid "Steps not sorted for flow - %s"
 msgstr ""
 
 #. translators: %s flow id
-#: admin-core/ajax/flows.php:982
+#: admin-core/ajax/flows.php:979
 #: admin-legacy/modules/flow/class-cartflows-flow-meta.php:386
 msgid "Steps sorted for flow - %s"
 msgstr ""
@@ -2026,7 +2026,7 @@ msgid "Button Text"
 msgstr ""
 
 #: admin-legacy/modules/optin/class-cartflows-optin-meta.php:559
-#: classes/class-cartflows-default-meta.php:796
+#: classes/class-cartflows-default-meta.php:787
 #: modules/optin/classes/class-cartflows-optin-meta-data.php:301
 #: modules/gutenberg/dist/blocks.build.js:1
 msgid "Submit"
@@ -3186,38 +3186,38 @@ msgstr ""
 msgid "No product is selected. Please select products from the %1$1scheckout meta settings%2$2s to continue."
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:594
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:609
 msgid "Variations Not set"
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:605
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:620
 msgid "This product can't be purchased"
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1099
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1140
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1114
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1155
 msgid "Coupon Code"
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1100
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1149
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1115
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1164
 #: admin-core/assets/build/settings-app.js:1
 msgid "Apply"
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1286
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1301
 msgid "Sorry there was a problem removing this coupon."
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1289
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1304
 msgid "Coupon has been removed."
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1307
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1322
 msgid "Sorry there was a problem removing "
 msgstr ""
 
-#: modules/checkout/classes/class-cartflows-checkout-markup.php:1310
+#: modules/checkout/classes/class-cartflows-checkout-markup.php:1325
 msgid " has been removed."
 msgstr ""
 

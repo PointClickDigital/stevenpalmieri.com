@@ -223,6 +223,10 @@ class Cartflows_Pro_Meta_Fields {
 	 */
 	public function add_pro_checkout_custom_field() {
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		check_ajax_referer( 'wcf-pro-add-custom-checkout-field', 'security' );
 
 		$post_id       = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
@@ -557,6 +561,10 @@ class Cartflows_Pro_Meta_Fields {
 	 * Delete checkout custom fields.
 	 */
 	public function delete_checkout_custom_field() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		check_ajax_referer( 'wcf-pro-delete-custom-checkout-field', 'security' );
 
